@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+	<th:block th:insert="~{admin/includes/header.html}"/>
+	<div id="sub" class="">
+		<div class="sub_visual">
+			<div class="sub_tit">
+				<h2>
+					<th:block th:text="${cm.title}"></th:block> 수정
+				</h2>
+			</div>
+		</div>
+		<div class="sec_wrap">
+			<div class="section section1">
+				<div class="inner">
+					<div class="board">
+						<form th:action="${cm.link + '/update'}" method="post">
+							<input type="hidden" name="idx" th:value="${data.idx}">
+							<div class="tbl_area">
+								<div class="tbl_wrap tbl_wrap1">
+									<div class="tit_box">
+										<h3 class="sTit">등록정보</h3>
+									</div>
+									<div class="tbl_box tbl_box2">
+										<table class="row_line">
+											<caption>등록정보</caption>
+											<colgroup>
+												<col width="10%">
+												<col width="*">
+											</colgroup>
+											<tbody>
+											<tr>
+												<th><label for="role_status">권한</label></th>
+												<td>
+													<select id="role_status" name="role_status" class="select_drop max200" >
+														<option value="activated" th:selected="${'ACTIVATED' eq data.status.toString()}">활성화</option>
+														<option value="paused" th:selected="${'PAUSED' eq data.status.toString()}">비활성화</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th><label for="name">권한명</label></th>
+												<td>
+													<input th:value="${data.name}" class="wid300" type="text" name="name" id="name" maxlength="20" >
+												</td>
+											</tr>
+											<tr>
+												<th><label for="name">페이지 권한</label></th>
+												<td>
+													<div class="tree">
+														<ul>
+															<li th:each="am : ${menus}" th:utext="${am.adminMenuToCheckbox(items)}"></li>
+														</ul>
+													</div>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="btnSet flex-box gap-10 justify-content-center mt30">
+                                <button type="submit" class="btn main_bg btn-save">저장</button>
+                                <a th:href="${cm.link}" class="btn border_bg btn-cancel">취소</a>
+                            </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<script src="/admin/js/menu_tree.js" type="text/javascript"></script>
+<script>
+	let sg_form = $("form");
+	$("#role_status").setValidate(sg_form, {
+		minLength: 1,
+	});
+	$("#name").setValidate(sg_form, {
+		minLength: 1,
+		maxLength: 20,
+		showIcon: true
+	});
+
+	sg_form.on("submit", function() {
+		if($(this).isValidate()) {
+			SGConfirm({
+				title: "관리자 권한 항목을 저장하시겠습니까?",
+				onsuccess: (res) => {
+					if(res) {
+						SGProcess({
+							title: "관리자 권한 항목을 저장중입니다..."
+						});
+						this.submit();
+					}
+				}
+			})
+		}
+		return false;
+	});
+</script>
+</body>
+</html>

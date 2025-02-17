@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+	<th:block th:insert="~{admin/includes/header.html}"/>
+	<div id="sub" class="">
+		<div class="sub_visual">
+			<div class="sub_tit">
+				<h2>
+					<th:block th:text="${cm.title}"></th:block>
+				</h2>
+			</div>
+		</div>
+		<div class="sec_wrap">
+			<div class="section section1">
+				<div class="inner">
+					<div class="board">
+						<form th:action="${cm.link + '/update'}" method="post" enctype="multipart/form-data" autocomplete="off">
+							<input type="hidden" name="idx">
+							<div class="tbl_area">
+								<div class="tbl_wrap tbl_wrap1">
+									<div class="tit_box">
+										<h3 class="sTit">등록정보</h3>
+									</div>
+									<div class="tbl_box tbl_box2">
+										<table class="row_line">
+											<caption>등록정보</caption>
+											<colgroup>
+												<col width="8.7%">
+												<col width="*">
+											</colgroup>
+											<tbody>
+											<tr>
+												<th><label for="title">회원권한</label></th>
+												<td th:text="${data.authorization.name}"></td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="tbl_wrap tbl_wrap1">
+									<div class="tit_box">
+										<h3 class="sTit">팝업정보</h3>
+									</div>
+									<div class="tbl_box tbl_box2">
+										<table class="row_line">
+											<caption>팝업정보</caption>
+											<colgroup>
+												<col width="8.7%">
+												<col width="*">
+											</colgroup>
+											<tbody>
+												<tr>
+													<th><label for="title">제목<span class="required">*</span></label></th>
+													<td>
+														<input type="text" name="title" id="title">
+													</td>
+												</tr>
+												<tr>
+													<th><label for="started_at">시작일<span class="required">*</span></label></th>
+													<td>
+														<p class="calendar max200">
+															<input type="text" class="input datepicker" name="started_at" id="started_at">
+															<span class="calendar_ico"><img
+																	src="/admin/images/ico_calendar.svg"></span>
+														</p>
+													</td>
+												</tr>
+												<tr>
+													<th><label for="ended_at">종료일<span class="required">*</span></label></th>
+													<td>
+														<p class="calendar max200">
+															<input type="text" class="input datepicker" name="ended_at" id="ended_at">
+															<span class="calendar_ico"><img
+																	src="/admin/images/ico_calendar.svg"></span>
+														</p>
+													</td>
+												</tr>
+												<tr>
+													<th id="popup_activate">
+														활성화<span class="required">*</span>
+													</th>
+													<td>
+														<div class="radio_box">
+															<input type="radio" name="popup_activate" id="activate_true" value="1" checked>
+															<label for="activate_true">활성화</label>
+														</div>
+														<div class="radio_box">
+															<input type="radio" name="popup_activate" id="activate_false" value="0">
+															<label for="activate_false">비활성화</label>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<th id="popup_location" rowspan="3">
+														팝업 위치<span class="required">*</span>
+													</th>
+													<td>
+														<div class="radio_box">
+															<input type="radio" name="is_center" id="is_center_true" value="1" th:checked="${data.is_center}">
+															<label for="is_center_true">가운데</label>
+														</div>
+														<div class="radio_box">
+															<input type="radio" name="is_center" id="is_center_false" value="0" th:checked="${!data.is_center}">
+															<label for="is_center_false">좌측</label>
+														</div>
+													</td>
+												</tr>
+												<tr class="popup_location">
+													<td>
+														<label for="top">상단</label>
+														<input class="max200 txt-r" type="text" name="top" id="top"> px
+													</td>
+												</tr>
+												<tr class="popup_location">
+													<td>
+														<label for="left">좌측</label>
+														<input class="wid200 txt-r" type="text" name="left" id="left"> px
+													</td>
+												</tr>
+												<tr>
+													<th>노출 기기<span class="required">*</span></th>
+													<td>
+														<div class="radio_box">
+															<input type="radio" name="device" id="device_null" value="" th:checked="${data.device eq null}">
+															<label for="device_null">총</label>
+														</div>
+														<div class="radio_box">
+															<input type="radio" name="device" id="device_pc" value="PC" th:checked="${data.device eq 'PC'}">
+															<label for="device_pc">PC만</label>
+														</div>
+														<div class="radio_box">
+															<input type="radio" name="device" id="device_mo" value="MO" th:checked="${data.device eq 'MO'}">
+															<label for="device_mo">MO만</label>
+														</div>
+														<div class="radio_box">
+															<input type="radio" name="device" id="device_app" value="APP" th:checked="${data.device eq 'APP'}">
+															<label for="device_app">앱에서만</label>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<th rowspan="2">
+														<label for="width">
+															크기<span class="required">*</span><br>
+															(최대 360x360)
+														</label>
+													</th>
+													<td>
+														<label for="width">가로</label>
+														<input type="text" id="width" name="width" class="wid200 txt-r"> px
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<label for="height">세로</label>
+														<input type="text" id="height" name="height" class="wid200 txt-r"> px
+													</td>
+												</tr>
+												<tr>
+													<th>
+														<label for="is_main_false">페이지<span class="required">*</span></label>
+													</th>
+													<td>
+														<div class="radio_box">
+															<input type="radio" name="is_main" id="is_main_false" value="0" th:checked="${!data.is_main}">
+															<label for="is_main_false">총</label>
+														</div>
+														<div class="radio_box">
+															<input type="radio" name="is_main" id="is_main_true" value="1" th:checked="${data.is_main}">
+															<label for="is_main_true">메인페이지에서만</label>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<th>
+														<label for="image_file">이미지<span class="required">*</span></label>
+													</th>
+													<td>
+														<input type="file" id="image_file" name="image_file">
+														<p class="mt5">(jpg, png, jpeg 만 파일 등록가능) 10Mb</p>
+													</td>
+												</tr>
+												<tr>
+													<th><label for="url">자세히 보기 URL<span class="required">*</span></label></th>
+													<td>
+														<input type="text" name="url" id="url">
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="btnSet flex-box gap-10 justify-content-center mt30">
+                                <button type="submit" class="btn main_bg btn-save">저장</button>
+                                <a th:href="${cm.link}" class="btn border_bg btn-cancel">취소</a>
+                            </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<script th:inline="javascript">
+
+	let data = /*[[${data}]]*/ null;
+
+	setData(data);
+
+	$("#image_file").preview({
+		default_image: data?.file?.url,
+		label: data?.file?.name,
+		width: data?.width,
+		height: data?.height,
+	});
+
+	let form = $("form");
+	$("#title").setValidate(form, {
+		label: "제목",
+		minLength: 1,
+		maxLength: 100
+	});
+	$("#started_at").setValidate(form, {
+		label: "시작일",
+		required: true,
+		type: SGValidateType.DATE
+	});
+	$("#ended_at").setValidate(form, {
+		label: "종료일",
+		required: true,
+		type: SGValidateType.DATE
+	});
+	$("input[name='is_center']").setValidate(form, {
+		label: "팝업위치",
+		required: true,
+		onchange: isCenterHandler
+	});
+	$("#top").setValidate(form, {
+		label: "상단",
+		type: SGValidateType.NUMBER,
+		required: true,
+		maxLength: 4
+	});
+	$("#left").setValidate(form, {
+		label: "좌측",
+		type: SGValidateType.NUMBER,
+		required: true,
+		maxLength: 4
+	});
+	$("input[name='device']").setValidate(form, {
+		label: "노출기기",
+		required: true
+	});
+	$("#width").setValidate(form, {
+		label: "가로 크기",
+		required: true,
+		type: SGValidateType.NUMBER,
+		maxLength: 4,
+	});
+	$("#height").setValidate(form, {
+		label: "세로 크기",
+		required: true,
+		type: SGValidateType.NUMBER,
+		maxLength: 4,
+	});
+	$("#image_file").setValidate(form, {
+		label: "이미지",
+		required: data?.file?.idx == null,
+		type: SGValidateType.FILE,
+	});
+	$("#url").setValidate(form, {
+		label: "자세히 보기 URL",
+		type: SGValidateType.LINK,
+		maxLength: 100
+	});
+
+	form.on("submit", function(event) {
+		if(form.isValidate()) {
+			SGConfirm({
+				title: "팝업 항목을 저장하시겠습니까?",
+				onsuccess: (res) => {
+					if(res) {
+						SGProcess({
+							title: "팝업을 저장중입니다...",
+						});
+						this.submit();
+					}
+				}
+			});
+		}
+		event.preventDefault();
+	});
+
+	isCenterHandler(null, data?.is_center ? "1" : "0");
+
+	function isCenterHandler(input, value) {
+		let is_center_input_field = $("#popup_location");
+		let popup_location = $(".popup_location");
+		if(!value || Object.is(value, "1")) {
+			is_center_input_field.attr("rowspan", 1);
+			popup_location.hide();
+			popup_location.find("input").val("");
+		} else {
+			is_center_input_field.attr("rowspan", 3);
+			popup_location.show();
+		}
+	}
+</script>
+</body>
+</html>

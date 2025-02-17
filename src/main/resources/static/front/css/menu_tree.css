@@ -1,0 +1,57 @@
+.tree ul {
+    list-style: none;
+    margin: 0;
+}
+
+.tree input[type="checkbox"] {
+    display: none;
+}
+
+.tree input[type="checkbox"] + label {
+    position: relative;
+    padding-left: 25px;
+    cursor: pointer;
+}
+
+.tree input[type="checkbox"] + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -2px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #bbb;
+    background-color: #fff;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+.tree input[type="checkbox"]:checked + label:before {
+    content: '\2713';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff;
+    background-color: #2dce89;
+    border-color: #2dce89;
+    outline: 1px;
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+.tree label {
+    color: #333;
+    font-size: 14px;
+}
+
+.tree ul ul {
+    border-left: 2px dashed #bbb;
+    margin-left: 10px;
+    padding-left: 10px;
+}
+
+.tree ul li {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}

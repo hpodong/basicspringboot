@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+	<th:block th:insert="~{admin/includes/header.html}"/>
+	<div id="sub" class="">
+		<div class="sub_visual">
+			<div class="sub_tit">
+				<h2>
+					<th:block th:text="${cm.title}"></th:block>
+				</h2>
+			</div>
+		</div>
+		<div class="sec_wrap">
+			<div class="section section1">
+				<div class="inner">
+					<div class="board">
+						<form th:action="${cm.link + '/update'}" method="post">
+							<input type="hidden" name="idx" th:value="${data.idx}">
+							<div class="tbl_area">
+								<div class="tbl_wrap tbl_wrap1">
+									<div class="tit_box">
+										<h3 class="sTit">등록정보</h3>
+									</div>
+									<div class="tbl_box tbl_box2">
+										<table class="row_line">
+											<caption>등록정보</caption>
+											<colgroup>
+												<col width="8.7%">
+												<col width="*">
+											</colgroup>
+											<tbody>
+											<tr>
+												<th>버전 정보</th>
+												<td th:text="${data.versionToString()}"></td>
+											</tr>
+											<tr>
+												<th>버전 빌드 번호</th>
+												<td th:text="${data.build_number}"></td>
+											</tr>
+											<tr>
+												<th>디바이스 종류</th>
+												<td th:text="${data.osToString()}"></td>
+											</tr>
+											<tr>
+												<th>버전 내용<span class="required">*</span></th>
+												<td>
+													<input type="text" name="description" id="description" th:value="${data.description}">
+												</td>
+											</tr>
+											<tr>
+												<th>버전 상태<span class="required">*</span></th>
+												<td>
+													<div class="radio_box">
+														<input type="radio" name="version_status" id="status_update" value="update" th:checked="'update' eq ${data.status}">
+														<label for="status_update">강제 업데이트</label>
+													</div>
+													<div class="radio_box">
+														<input type="radio" name="version_status" id="status_push" value="push" th:checked="'push' eq ${data.status}">
+														<label for="status_push">업데이트 알림만 확인</label>
+													</div>
+													<div class="radio_box">
+														<input type="radio" name="version_status" id="status_pass" value="pass" th:checked="'pass' eq ${data.status}">
+														<label for="status_pass">업데이트 진행안함</label>
+													</div>
+													<div class="radio_box">
+														<input type="radio" name="version_status" id="status_inspection" value="inspection" th:checked="'inspection' eq ${data.status}">
+														<label for="status_inspection">현재 서버 점검중</label>
+													</div>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="btnSet flex-box gap-10 justify-content-center mt30">
+                                <button type="submit" class="btn main_bg btn-save">저장</button>
+                                <a th:href="${cm.link}" class="btn border_bg btn-cancel">취소</a>
+                            </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<script>
+	let form = $("form");
+	form.on("submit", function(event) {
+		if(form.isValidate()) {
+			SGConfirm({
+				title: "앱 버전 항목을 저장하시겠습니까?",
+				onsuccess: (res) => {
+					if(res) {
+						SGProcess({
+							title: "앱 버전을 저장중입니다...",
+						});
+						this.submit();
+					}
+				}
+			});
+		}
+		event.preventDefault();
+	});
+</script>
+</body>
+</html>

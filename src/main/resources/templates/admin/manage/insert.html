@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+    <th:block th:insert="~{admin/includes/header.html}"/>
+    <div id="sub" class="">
+        <div class="sub_visual">
+            <div class="sub_tit">
+                <h2>
+                    <th:block th:text="${cm.title}"></th:block>
+                </h2>
+            </div>
+        </div>
+        <div class="sec_wrap">
+            <div class="section section1">
+                <div class="inner">
+                    <div class="board">
+                        <form th:action="${cm.link + '/insert'}" method="post">
+                            <div class="tbl_area">
+                                <div class="tbl_wrap tbl_wrap1">
+                                    <div class="tit_box">
+                                        <h3 class="sTit">등록정보</h3>
+                                    </div>
+                                    <div class="tbl_box tbl_box2">
+                                        <table class="row_line">
+                                            <caption>등록정보</caption>
+                                            <colgroup>
+                                                <col width="8.4%">
+                                                <col width="40%">
+                                                <col width="8.4%">
+                                                <col width="40%">
+                                            </colgroup>
+                                            <tbody>
+                                            <tr>
+                                                <th>권한<span class="required">*</span></th>
+                                                <td>
+                                                    <div class="radio_box" th:each="row:${roles}">
+                                                        <input type="radio" th:id="'role_'+${row.idx}" name="role" th:value="${row.idx}">
+                                                        <label th:for="'role_'+${row.idx}" th:text="${row.name}"></label>
+                                                    </div>
+                                                </td>
+                                                <th><label for="admin_status">상태<span class="required">*</span></label>
+                                                </th>
+                                                <td>
+                                                    <select id="admin_status" name="admin_status"
+                                                            class="max200 select_drop">
+                                                        <option value="">선택</option>
+                                                        <option value="waiting">대기</option>
+                                                        <option value="active" selected>승인</option>
+                                                        <option value="pause">정지</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><label for="id">아이디<span class="required">*</span></label></th>
+                                                <td colspan="3">
+                                                    <div class="flex-box gap-10">
+                                                        <input class="max200" type="text" name="id" id="id">
+                                                        <button type="button" class="btn btn-primary"
+                                                                id="duplicate_id_btn">중복확인
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><label for="password">비밀번호<span class="required">*</span></label>
+                                                </th>
+                                                <td colspan="3">
+                                                    <input class="wid300" type="password" id="password" name="password"
+                                                           autocomplete="new-password">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><label for="password2">비밀번호 확인<span
+                                                        class="required">*</span></label></th>
+                                                <td colspan="3">
+                                                    <input class="wid300" type="password" id="password2">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><label for="name">이름<span class="required">*</span></label></th>
+                                                <td colspan="3">
+                                                    <input class="max200" type="text" name="name" id="name">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><label for="cell">연락처<span class="required">*</span></label></th>
+                                                <td colspan="3">
+                                                    <input class="max200" type="text" id="cell" name="cell" placeholder="(“-”없이 입력)">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><label for="email1">이메일<span class="required">*</span></label></th>
+                                                <td colspan="3">
+                                                    <div class="flex-box align-items-center gap-5">
+                                                        <input class="wid200" type="text" id="email1" name="email1">
+                                                        @
+                                                        <input class="wid200" type="text" id="email2" name="email2">
+                                                        <select class="select_drop" onchange="setEmail(this)">
+                                                            <option value="">직접입력</option>
+                                                            <option value="naver.com">naver.com</option>
+                                                            <option value="gmail.com">gmail.com</option>
+                                                            <option value="nate.com">nate.com</option>
+                                                            <option value="daum.net">daum.net</option>
+                                                            <option value="hanmail.com">hanmail.com</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <label for="memo">메모</label>
+                                                </th>
+                                                <td colspan="3">
+                                                    <textarea rows="10" id="memo" name="memo"></textarea>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="btnSet flex-box gap-10 justify-content-center mt30">
+                                <button type="submit" class="btn main_bg btn-save">저장</button>
+                                <a th:href="${cm.link}" class="btn border_bg btn-cancel">취소</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<script src="/admin/js/ajax.js" type="text/javascript"></script>
+<script>
+
+    let form = $("form");
+
+    $("#role").setValidate(form, {
+        label: "권한",
+        minLength: 1,
+    });
+    $("#admin_status").setValidate(form, {
+        label: "상태",
+        minLength: 1,
+    });
+    $("#id").setValidate(form, {
+        label: "아이디",
+        minLength: 6,
+        maxLength: 30,
+        type: SGValidateType.ID
+    });
+    $("#name").setValidate(form, {
+        label: "이름",
+        minLength: 1,
+    });
+    $("#password").setValidate(form, {
+        required: true,
+        label: "비밀번호",
+        minLength: 8,
+        maxLength: 20,
+        type: SGValidateType.PASSWORD,
+    });
+    $("#password2").setValidate(form, {
+        label: "비밀번호 확인",
+        required: true,
+        minLength: 8,
+        maxLength: 30,
+        type: SGValidateType.PASSWORD,
+        onchange: function (input, value) {
+            if (value !== $("#password").val().trim()) {
+                setInvalidate(input, "비밀번호가 일치하지 않습니다.");
+            }
+        }
+    });
+
+    $("#cell").setValidate(form, {
+        label: "전화번호",
+        minLength: 13,
+        maxLength: 13,
+        type: SGValidateType.CELL,
+        onchange: function (ele, value) {
+            cellCheck(ele);
+        }
+    });
+    $("#email").setValidate(form, {
+        label: "이메일",
+        minLength: 1,
+        type: SGValidateType.EMAIL,
+        onchange: function (ele, value) {
+            emailCheck(ele);
+        }
+    });
+
+    form.on("submit", () => {
+        if (form.isValidate()) {
+            SGProcess({
+                title: "관리자 항목을 저장 중입니다..."
+            });
+        }
+    });
+
+    $("#duplicate_id_btn").click(function () {
+        let id_input = $("#id");
+        if (!id_input.val().length) {
+            SGAlert({
+                title: "아이디를 입력해주세요."
+            });
+        } else {
+            idCheck(id_input);
+        }
+    });
+
+</script>
+</body>
+</html>

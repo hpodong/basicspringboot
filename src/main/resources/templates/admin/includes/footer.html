@@ -1,0 +1,24 @@
+<footer class="page-footer">
+    <p class="mb-0">Copyright.ONVIBE all right reserved</p>
+</footer>
+</div>
+<script th:inline="javascript">
+    window.onpageshow = function(event) {
+        if (!event.persisted) {
+            let msg = /*[[${msg}]]*/ null;
+            if(msg) SGAlert({
+                title: msg,
+                type: SGAlertType.SUCCESS,
+            });
+            let err = /*[[${err}]]*/ null;
+            if(err) SGAlert({
+                title: err,
+                type: SGAlertType.ERROR,
+            });
+        }
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script src="/admin/js/common.js"></script>
+<script src="/admin/plugins/sg-validate/js/sg_validate.js"></script>
+<script src="/admin/js/preview.js"></script>

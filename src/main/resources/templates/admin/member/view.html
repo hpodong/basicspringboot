@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<div id="bodyWrap">
+	<th:block th:insert="~{admin/includes/header.html}"/>
+	<!--start page wrapper -->
+	<div id="sub" class="">
+		<div class="sub_visual">
+			<div class="sub_tit">
+				<h2>
+					<th:block th:text="${cm.title}"></th:block> 상세
+				</h2>
+			</div>
+		</div>
+		<div class="sec_wrap lesssonpro-viewPage">
+			<div class="section section1">
+				<div class="inner">
+					<div class="board">
+						<div class="tbl_area">
+							<div class="tbl_wrap tbl_wrap1">
+								<div class="tit_box flex-box justify-content-between align-items-end">
+									<h3 class="sTit">회원 정보</h3>
+									<div class="btnSet">
+										<button type="button" class="btn border222" id="leaved_btn">탈퇴하기</button>
+									</div>
+								</div>
+								<div class="tbl_box tbl_box2">
+									<table class="row_line">
+										<caption>회원 정보</caption>
+										<colgroup>
+											<col width="8.7%">
+											<col width="*">
+										</colgroup>
+										<tbody>
+										<tr>
+											<th>가입경로</th>
+											<td th:text="${data.socialsToString()}"></td>
+										</tr>
+										<tr>
+											<th>아이디</th>
+											<td th:text="${data.id}"></td>
+										</tr>
+										<tr>
+											<th>이름</th>
+											<td th:text="${data.name}"></td>
+										</tr>
+										<tr>
+											<th>연락처</th>
+											<td th:text="${data.cell}"></td>
+										</tr>
+										<tr>
+											<th>최근 로그인일자</th>
+											<td th:text="${#dates.format(data.latest_logged_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+										</tr>
+										<tr>
+											<th>가입일</th>
+											<td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+										</tr>
+										<tr>
+											<th>추천인</th>
+											<td th:text="${''}"></td>
+										</tr>
+										<tr>
+											<th>마케팅 목적의 정보 수신동의</th>
+											<td th:text="${data.accessMarketingToString()}"></td>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="btnSet clear">
+								<div class="right">
+									<a th:href="${cm.link} + '/update?idx=' + ${data.idx}" class="btn primary">수정</a>
+								</div>
+							</div>
+							<div class="tbl_wrap tbl_wrap1">
+								<div class="tit_box">
+									<h3 class="sTit">포인트 정보</h3>
+								</div>
+								<div class="tbl_box tbl_box2">
+									<table class="row_line">
+										<caption>포인트 정보</caption>
+										<colgroup>
+											<col width="8.7%">
+											<col width="*">
+										</colgroup>
+										<tbody>
+										<tr>
+											<th>보유포인트</th>
+											<td>
+												<th:block th:text="${#numbers.formatInteger(point, 1, 'COMMA')} + '원'"></th:block>
+												<span>
+<!--													<button type="button" class="btn btn-primary" th:data-popup-idx="${row.idx}">포인트 내역</button>-->
+													<button type="button" class="btn btn-primary inb" id="point_btn">포인트 내역</button>
+												</span>
+											</td>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="btnSet clear">
+								<div class="left">
+									<a th:href="${cm.link}" class="btn-bottom btn-gray-bottom">목록</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<!--end wrapper-->
+<!--start switcher-->
+
+<script th:inline="javascript">
+	const idx = /*[[${data.idx}]]*/ null;
+	const id = /*[[${data.id}]]*/ null;
+	const name = /*[[${data.name}]]*/ null;
+
+	function deleteCheck (form) {
+		SGConfirm({
+			title: `${name}(${id}) 회원을 삭제하시겠습니까?`,
+			type: SGAlertType.WARNING,
+			onsuccess: function(res) {
+				if(res) form.submit();
+			}
+		});
+		return false;
+	}
+
+	$("#point_btn").click(function() {
+		const width = 960;
+		const height = 1011.5;
+		openWindowPopup({
+			url: `/admin/point/member/popup/${idx}`,
+			width,
+			height
+		})
+	});
+
+	$("#leaved_btn").click(function() {
+		SGConfirm({
+			title: "회원을 탈퇴처리하시겠습니까?",
+			onsuccess: (res) => {
+				if(res) {
+					ajaxRequest({
+						url: `/admin/member/leaved/${idx}`,
+						onsuccess: (res) => {
+							if(res) {
+								SGAlert({
+									title: "탈퇴처리 되었습니다.",
+									onsuccess: (res) => {
+										if(res) location.href = '/admin/delete/member';
+									}
+								});
+							} else {
+								SGAlert({
+									title: "주문 중인 상품이 있어서 탈퇴가 불가능합니다.",
+									type: SGAlertType.WARNING
+								})
+							}
+						}
+					});
+				}
+			}
+		})
+	});
+</script>
+</body>
+</html>

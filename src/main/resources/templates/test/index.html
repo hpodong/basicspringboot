@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript"	src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+</head>
+<body>
+<button th:each="product : ${data}" th:text="${product.name}" th:data-idx="${product.idx}" th:data-price="${product.price}" onclick="goOrder(this);">
+
+</button>
+<script>
+    IMP.init("imp68353057");
+    function goOrder(_this) {
+        const product_idx = $(_this).data("idx");
+        const price = $(_this).data("price");
+        $.ajax({
+            url: "/api/test/order",
+            dataType: "JSON",
+            type: "POST",
+            data: {
+                product_idx,
+                price
+            },
+            async: false,
+            success: function(res) {
+            },
+            error: function(err) {
+                console.error(err);
+            }
+        })
+        IMP.request_pay(
+            {
+                pg: "html5_inicis",		//KG이니시스 pg파라미터 값
+                pay_method: "card",		//결제 방법
+                merchant_uid: "123322457",//주문번호
+                name: "당근 10kg",		//상품 명
+                amount: 1,			//금액
+                buyer_email: "gildong@gmail.com",
+                buyer_name: "홍길동",
+                buyer_tel: "010-4242-4242",
+                buyer_addr: "서울특별시 강남구 신사동",
+                buyer_postcode: "01181"
+            },
+            function(res) {
+                if(res.success) {
+                    $.ajax({
+                        url: "/api/test/cancel",
+                        dataType: "JSON",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            uid: res.imp_uid,
+                            merchant_uid: res.merchant_uri,
+                            amount: res.paid_amount,
+                        }),
+                        async: false,
+                        success: function(res) {
+                        },
+                        error: function(err) {
+                            console.error(err);
+                        }
+                    });
+                } else {
+
+                }
+            }
+        );
+    }
+</script>
+</body>
+</html>

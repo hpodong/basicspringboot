@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+	<th:block th:insert="~{admin/includes/header.html}"/>
+	<div id="sub" class="">
+		<div class="sub_visual">
+			<div class="sub_tit">
+				<h2>
+					<th:block th:text="${cm.title}"></th:block> 수정
+				</h2>
+			</div>
+		</div>
+		<div class="sec_wrap">
+			<div class="section section1">
+				<div class="inner">
+					<div class="board">
+						<form th:action="${cm.link + '/update'}" method="post">
+							<input type="hidden" name="idx" th:value="${data.idx}">
+							<div class="tbl_area">
+								<div class="tbl_wrap tbl_wrap1">
+									<div class="tit_box">
+										<h3 class="sTit">등록정보</h3>
+									</div>
+									<div class="tbl_box tbl_box2">
+										<table class="row_line">
+											<caption>등록정보</caption>
+											<colgroup>
+												<col width="10.6%">
+												<col width="39.4%">
+												<col width="10.6%">
+												<col width="39.4%">
+											</colgroup>
+											<tbody>
+											<tr>
+												<th><label for="status">상태</label></th>
+												<td>
+													<select id="status" name="notice_status" class="select_drop wid200">
+														<option value="active" th:selected="${'active' eq data.status}">활성화</option>
+														<option value="pause" th:selected="${'pause' eq data.status}">비활성화</option>
+													</select>
+												</td>
+												<th><label for="sort">순서</label></th>
+												<td>
+													<input class="wid200" type="text" name="sort" id="sort" th:value="${data.sort}">
+												</td>
+											</tr>
+											<tr>
+												<th>회원 종류</th>
+												<td>
+													<select id="category_idx" name="category_idx" class="wid200 select_drop">
+														<option value="">선택</option>
+														<option th:each="c : ${categories}" th:value="${c.idx}" th:text="${c.name}" th:selected="${c.idx eq data.category_idx}"></option>
+													</select>
+												</td>
+												<th>필수 여부</th>
+												<td>
+													<select id="is_required" name="is_required" class="wid200 select_drop" >
+														<option value="0" th:selected="${!data.is_required}">선택</option>
+														<option value="1" th:selected="${data.is_required}">필수</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th><label for="title">제목</label></th>
+												<td colspan="3">
+													<input type="text" name="title" id="title" th:value="${data.title}">
+												</td>
+											</tr>
+											<tr>
+												<th>
+													<label for="desc">내용</label>
+												</th>
+												<td colspan="3">
+													<textarea id="desc" name="desc" rows="10" th:utext="${data.desc}"></textarea>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="btnSet flex-box gap-10 justify-content-center mt30">
+                                <button type="submit" class="btn main_bg btn-save">저장</button>
+                                <a th:href="${cm.link}" class="btn border_bg btn-cancel">취소</a>
+                            </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<script>
+	let form = $("form");
+	$("#status").setValidate(form, {
+		label: "상태",
+		minLength: 1,
+	});
+	$("#category_idx").setValidate(form, {
+		label: "회원 종류",
+		required: true,
+	});
+	$("#is_required").setValidate(form, {
+		label: "필수 여부",
+		required: true,
+	});
+	$("#sort").setValidate(form, {
+		label: "순서",
+		maxLength: 11,
+		required: false,
+		type: "number"
+	});
+	$("#title").setValidate(form, {
+		label: "제목",
+		minLength: 1,
+		maxLength: 100
+	});
+	$("#desc").setValidate(form, {
+		label: "내용",
+		minLength: 1,
+	});
+
+	form.on("submit", function() {
+		if($(this).isValidate()) {
+			SGConfirm({
+				title: "약관 항목을 저장하시겠습니까?",
+				onsuccess: (res) => {
+					if(res) this.submit();
+				}
+			})
+		}
+		return false;
+	});
+</script>
+</body>
+</html>

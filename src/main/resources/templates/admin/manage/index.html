@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}"></head>
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+    <!--sidebar wrapper -->
+    <th:block th:insert="~{admin/includes/header.html}"/>
+    <div id="sub" class="">
+        <div class="sub_visual">
+            <div class="sub_tit">
+                <h2 th:text="${cm.title}"></h2>
+            </div>
+        </div>
+
+        <!-- 본문 시작 -->
+        <div class="sec_wrap">
+            <div class="section section1">
+                <div class="inner">
+                    <div class="searchWrap">
+                        <form id="searchForm" th:action="${cm.link}">
+                            <table class="searchTable">
+                                <caption> 게시글검색</caption>
+                                <colgroup>
+                                    <col width="10.3%">
+                                    <col width="40%">
+                                    <col width="10.3%">
+                                    <col width="40%">
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th>권한</th>
+                                    <td>
+                                        <select name="ar" class="select_drop max200" style="display: none;">
+                                            <option value="">전체</option>
+                                            <option th:each="role : ${roles}" th:text="${role.name}"
+                                                    th:value="${role.idx}"></option>
+                                        </select>
+                                    </td>
+                                    <th>검색어</th>
+                                    <td colspan="3">
+                                        <div class="srch_word">
+                                            <div class="wte_word clear">
+                                                <select name="t" class="select_drop" style="display: none;">
+                                                    <option value="">전체</option>
+                                                    <option value="id">아이디</option>
+                                                    <option value="name">이름</option>
+                                                    <option value="cell">연락처</option>
+                                                    <option value="email">이메일</option>
+                                                </select>
+                                                <input type="text" name="q" class="search_val1" th:value="${param.q}">
+                                            </div>
+                                            <div class="btn_box btn_box2 clear">
+                                                <input type="submit" value="검색" class="btn_search">
+                                                <input type="reset" value="초기화" class="btn_search">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <input type="hidden" name="p" id="page" th:value="${data.curPage}">
+                        </form>
+                    </div>
+                    <!-- //search_warp -->
+                    <form th:action="${cm.link + '/delete'}" class="form-inline" method="post"
+                          onsubmit="return deleteCheck(this);">
+                        <div class="tbl_area">
+                            <div class="tbl_tit">
+                                전체 <strong th:text="${data.count}"></strong><em>건</em>
+                                <!--<span>(<i
+                                    th:text="${data.curPage}"></i>/<i th:text="${data.pageCount}"></i> 페이지)</span>-->
+                            </div>
+                            <div class="scroll_list_wrap">
+                                <div class="tbl_box tbl_box5 list-page">
+                                    <table>
+                                        <caption>목록</caption>
+                                        <colgroup>
+                                            <col width="70px"/>
+                                            <col width="70px"/>
+                                            <!--                                        <col width="7%"/>-->
+                                            <col width="10%"/>
+                                            <col width="10%"/>
+                                            <col width="10%"/>
+                                            <col width="12%"/>
+                                            <col width="*"/>
+                                            <col width="10%"/>
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th class="chk_th" scope="col">
+                                                <div class="check_box">
+                                                    <input type="checkbox" id="all_chk">
+                                                    <label for="all_chk">전체선택</label>
+                                                </div>
+                                            </th>
+                                            <th scope="col">번호</th>
+                                            <!--                                        <th scope="col">상태</th>-->
+                                            <th scope="col">권한</th>
+                                            <th scope="col">아이디</th>
+                                            <th scope="col">이름</th>
+                                            <th scope="col">연락처</th>
+                                            <th scope="col">이메일</th>
+                                            <th scope="col">등록일</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:if="${data.count == 0}">
+                                            <td colspan="9">관리자 항목이 없습니다.</td>
+                                        </tr>
+                                        <tr th:if="${data.count != 0}" th:each="row: ${data.list}">
+                                            <td class="chk_td">
+                                                <div class="check_box">
+                                                    <input type="checkbox" th:id="'chk_'+${row.idx}" name="idx"
+                                                           th:value="${row.idx}">
+                                                    <label th:for="'chk_'+${row.idx}"></label>
+                                                </div>
+                                            </td>
+                                            <td th:text="${row.row_num}" th:data-idx="${row.idx}"></td>
+                                            <!--                                        <td th:data-idx="${row.idx}">-->
+                                            <!--                                            <span th:class="'status ' + ${row.status}"-->
+                                            <!--                                                  th:text="${row.statusToString()}"></span>-->
+                                            <!--                                        </td>-->
+                                            <td th:text="${row.role}" th:data-idx="${row.idx}"></td>
+                                            <td th:text="${row.id}" th:data-idx="${row.idx}" class="txt-l"></td>
+                                            <td th:text="${row.name}" th:data-idx="${row.idx}" class="txt-l"></td>
+                                            <td th:text="${row.cell}" th:data-idx="${row.idx}"></td>
+                                            <td th:text="${row.email}" th:data-idx="${row.idx}" class="txt-l"></td>
+                                            <td th:text="${#dates.format(row.created_at, 'yyyy-MM-dd')}"
+                                                th:data-idx="${row.idx}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- //tbl_area -->
+                        <div class="btnSet clear">
+                            <div class="left">
+                                <button type="submit" class="btn border222 btn-list-delete wid70_px">삭제</button>
+                            </div>
+                            <div class="right">
+                                <a th:href="${cm.link} + '/insert'" class="btn primary">등록</a>
+                            </div>
+                        </div>
+                    </form>
+                    <th:block th:insert="~{admin/includes/page_nation.html}"></th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<!--end wrapper-->
+<!--start switcher-->
+<script src="/admin/js/index.js" type="text/javascript"></script>
+<script>
+
+    $("select[name='ar']").change(function () {
+        goSearch();
+    });
+
+    $("form.form-inline").on("submit", function (event) {
+        event.preventDefault();
+        let count = $(this).find("input[name='idx']:checked").length;
+        if (!count) {
+            SGAlert({
+                title: "선택된 항목이 없습니다.",
+                type: SGAlertType.ERROR
+            })
+        } else {
+            SGConfirm({
+                title: `${count}개의 항목을 삭제하시겠습니까?`,
+                type: SGAlertType.WARNING,
+                onsuccess: (res) => {
+                    if (res) {
+                        SGProcess({
+                            title: "관리자 항목을 삭제중입니다..."
+                        });
+                        this.submit();
+                    }
+                }
+            })
+        }
+    });
+</script>
+</body>
+</html>

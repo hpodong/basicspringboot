@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<div id="bodyWrap">
+	<th:block th:insert="~{admin/includes/header.html}"/>
+	<!--start page wrapper -->
+	<div id="sub" class="">
+		<div class="sub_visual">
+			<div class="sub_tit">
+				<h2>
+					<th:block th:text="${cm.title}"></th:block> 상세
+				</h2>
+			</div>
+		</div>
+		<div class="sec_wrap lesssonpro-viewPage">
+			<div class="section section1">
+				<div class="inner">
+					<div class="board">
+						<div class="tbl_area">
+							<div class="tbl_wrap tbl_wrap1">
+								<div class="tit_box">
+									<h3 class="sTit">등록 정보</h3>
+								</div>
+								<div class="tbl_box tbl_box2">
+									<table class="row_line">
+										<caption>등록 정보</caption>
+										<colgroup>
+											<col width="10%">
+											<col width="40%">
+											<col width="10%">
+											<col width="40%">
+										</colgroup>
+										<tbody>
+										<tr>
+											<th>생성일</th>
+											<td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd')}"></td>
+											<th>마지막 수정일</th>
+											<td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd')}"></td>
+										</tr>
+										<tr>
+											<th>종류</th>
+											<td th:text="${data.category}"></td>
+											<th>필수 여부</th>
+											<td th:text="${data.isRequiredToString()}"></td>
+										</tr>
+										<tr>
+											<th>상태</th>
+											<td colspan="3">
+												<select id="status" class="select_drop max200">
+													<option value="active" th:selected="'active' eq ${data.status}">활성화</option>
+													<option value="pause" th:selected="'pause' eq ${data.status}">비활성화</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<th>제목</th>
+											<td colspan="3" th:text="${data.title}"></td>
+										</tr>
+										<tr>
+											<th>내용</th>
+											<td colspan="3" th:utext="${data.desc}"></td>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<form th:action="${cm.link} + '/delete'" method="post" onsubmit="return deleteCheck(this);">
+								<input type="hidden" name="idx" th:value="${data.idx}">
+								<div class="btnSet clear">
+									<div class="left">
+										<button th:href="${cm.link}" class="btn border222 btn-list-delete" type="submit">삭제</button>
+									</div>
+									<div class="right">
+										<a th:href="${cm.link}" class="btn btn-list-delete">목록</a>
+										<a th:href="${cm.link} + '/update?idx=' + ${data.idx}" class="btn primary">수정</a>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<!--end wrapper-->
+<!--start switcher-->
+
+<script th:inline="javascript">
+	const idx = /*[[${data.idx}]]*/ null;
+
+	function deleteCheck (form) {
+		SGConfirm({
+			title: `약관 항목을 삭제하시겠습니까?`,
+			type: SGAlertType.WARNING,
+			onsuccess: function(res) {
+				if(res) form.submit();
+			}
+		});
+		return false;
+	}
+
+	$("#status").on("change", function() {
+		let value = $(this).val().trim();
+		$.ajax({
+			url: "/admin/agreement/update/status",
+			data: {
+				idx,
+				status: value
+			},
+			type: "POST",
+			async: false,
+			success: function(res) {
+				if(res) {
+					SGAlert({
+						title: "상태가 변경되었습니다.",
+						type: SGAlertType.SUCCESS
+					});
+				} else {
+					SGAlert({
+						title: "상태가 변경되지 않았습니다.",
+						type: SGAlertType.SUCCESS,
+						onsuccess: (res) => {
+							if(res) document.location.reload();
+						}
+					});
+				}
+			},
+			error: function(err) {
+				console.error(err);
+			}
+		})
+	});
+</script>
+</body>
+</html>

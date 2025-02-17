@@ -1,0 +1,54 @@
+.file-img-box {
+    display: flex;
+    flex-direction: column-reverse;
+}
+.file-img-box input[type='file'] {
+    position: absolute;
+    width: 0 !important;
+    height: 0;
+    padding: 0 !important;
+    overflow: hidden;
+    border: 0 !important;
+}
+.file-img-box .image-view {
+    width: 250px;
+    height: 250px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 20px;
+    border: 1px #0a53be;
+    background-image: url(/admin/images/no_image.jpg);
+    position: relative;
+    margin-top: 10px;
+    display: none;
+}
+.file-img-box .photo-delete {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #111;
+    align-items: center;
+    justify-content: center;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    display: none;
+}
+.file-img-box label.flex-box, .multiple-file-attach label {
+    padding: 0 10px;
+    box-sizing: border-box;
+    background-color: #0a53be;
+    color: #fff;
+    font-size: 1.3rem;
+    letter-spacing: -0.65px;
+    font-weight: 700;
+    border-radius: 5px;
+    height: 42px;
+    width: fit-content;
+    display: inline-block;
+    line-height: 42px;
+}
+
+.photo-delete img {width: auto !important;}

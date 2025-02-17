@@ -1,0 +1,10 @@
+<div id="left_content">
+    <!-- nav start -->
+    <nav id="main-nav" class="">
+        <div class="gnb">
+            <ul>
+                <th:block th:each="am : ${admin_menus}" th:utext="${am.getSidebarHtml()}">
+            </ul>
+        </div>
+    </nav>
+</div>

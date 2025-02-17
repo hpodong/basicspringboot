@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <th:block th:insert="~{admin/includes/head.html}"/>
+</head>
+<body>
+
+<div id="bodyWrap" class="loginWrap ">
+
+    <!-- 본문 시작 -->
+
+    <style>
+        .wrapper{width: 100%; height: 100%;}
+    </style>
+    <!-- 관리자 로그인 페이지 -->
+    <div class="tb">
+        <div class="tbc">
+            <!--//login_tit-->
+            <div class="login_box">
+                <div class="login_tit">
+                    <div>
+                        <h1>
+                            <th:block th:text="${@environment.getProperty('company.name')}"></th:block>
+                            관리자모드
+                        </h1>
+                        <p>관리자 계정으로 로그인 후 이용하실 수 있습니다.</p>
+                    </div>
+                </div>
+                <form action="/admin/login" class="form-horizontal" method="post">
+                    <fieldset class="login_form">
+                        <legend class="blind">로그인</legend>
+                        <div class="login_top">
+                            <p class="login_id">
+                                <span class="svg">ID</span>
+                                <input type="text" name="id" id="id" class="input" th:value="${save_id}" placeholder="ID">
+                            </p>
+                            <p class="login_pw">
+                                <span class="svg">PASSWORD</span>
+                                <input type="password" class="input" id="password" name="password" placeholder="PASSWORD">
+                            </p>
+                        </div>
+                        <div class="login_btm">
+                             <div class="id_save">
+                                <input type="checkbox" name="save_id" id="save_id" value="1" th:checked="${save_id != null}"/>
+                                <label for="save_id">아이디저장</label>
+                            </div>
+                            <div class="login_btn">
+                                <button type="submit">LOGIN</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <input type="hidden" name="url" id="url" th:value="${url}">
+                </form>
+            </div>
+            <!--//login_box-->
+        </div>
+    </div>
+    <!-- 본문 끝 -->
+</div>
+</body>
+<script src="/admin/plugins/sg-validate/js/sg_validate.js" type="text/javascript"></script>
+<script th:inline="javascript">
+    let sg_form = $("form");
+
+    let id_ele = $("#id");
+    let password_ele = $("#password");
+
+    id_ele.setValidate(sg_form, {
+        minLength: 6,
+        maxLength: 16,
+        type: SGValidateType.ID
+    });
+    password_ele.setValidate(sg_form, {
+        minLength: 8,
+        maxLength: 60,
+        // type: SGValidateType.PASSWORD
+    });
+
+    window.addEventListener('pageshow', function(event) {
+        if (!event.persisted) {
+            let msg = /*[[${msg}]]*/ null;
+            if(msg) SGAlert({
+                title: msg,
+                type: SGAlertType.SUCCESS,
+            });
+            let err = /*[[${err}]]*/ null;
+            if(err) SGAlert({
+                title: err,
+                type: SGAlertType.ERROR,
+            });
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<div id="bodyWrap">
+    <th:block th:insert="~{admin/includes/header.html}"/>
+    <!--start page wrapper -->
+    <div id="sub" class="seo-view-page">
+        <div class="sub_visual">
+            <div class="sub_tit">
+                <h2>
+                    <th:block th:text="${cm.title}"></th:block>
+                </h2>
+            </div>
+        </div>
+        <div class="sec_wrap lesssonpro-viewPage">
+            <div class="section section1">
+                <div class="inner">
+                    <div class="board">
+                        <div class="tbl_area">
+                            <div class="tbl_wrap tbl_wrap1">
+                                <div class="tit_box">
+                                    <h3 class="sTit">등록정보</h3>
+                                </div>
+                                <div class="tbl_box tbl_box2">
+                                    <table class="row_line">
+                                        <caption>등록정보</caption>
+                                        <colgroup>
+                                            <col width="8.4%">
+                                            <col width="40%">
+                                            <col width="8.4%">
+                                            <col width="40%">
+                                        </colgroup>
+                                        <tbody>
+                                        <tr>
+                                            <th>상태</th>
+                                            <td>
+                                                <span th:class="${data.status.toClass()}"
+                                                      th:text="${data.status.toHtml()}"></span>
+                                            </td>
+                                            <th>링크</th>
+                                            <td th:text="${data.url}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>생성일</th>
+                                            <td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd')}"></td>
+                                            <th>수정일</th>
+                                            <td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd')}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>제목</th>
+                                            <td colspan="3" th:text="${data.title}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>키워드</th>
+                                            <td colspan="3" th:text="${data.keyword}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>내용</th>
+                                            <td colspan="3" th:text="${data.desc}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>PC 이미지</th>
+                                            <td colspan="3">
+                                                <img th:if="${pc_image?.file?.url != null}"
+                                                     th:src="${pc_image?.file?.url}" th:alt="${pc_image?.file?.name}"
+                                                     style="max-width: 500px; max-height: 500px;">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>MO 이미지</th>
+                                            <td colspan="3">
+                                                <img th:if="${m_image?.file?.url != null}"
+                                                     th:src="${m_image?.file?.url}" th:alt="${m_image?.file?.name}"
+                                                     style="max-width: 500px; max-height: 500px;">
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <form th:action="${cm.link} + '/delete'" method="post">
+                                <input type="hidden" name="idx" th:value="${data.idx}">
+                                <div class="btnSet flex-box justify-content-between mt30">
+                                    <button th:href="${cm.link}" class="btn-bottom border222 btn-list-delete"
+                                            type="submit">삭제
+                                    </button>
+                                    <a th:href="${cm.link}" class="btn-bottom btn-gray-bottom">목록</a>
+                                    <a th:href="${cm.link} + '/update?idx=' + ${data.idx}"
+                                       class="btn-bottom btn primary">수정</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<script th:inline="javascript">
+    const idx = /*[[${data.idx}]]*/ null;
+
+    $("form").on("submit", function (event) {
+        let _this = this;
+        event.preventDefault();
+        SGConfirm({
+            title: `약관 항목을 삭제하시겠습니까?`,
+            type: SGAlertType.WARNING,
+            onsuccess: function (res) {
+                if (res) {
+                    SGProcess({
+                        title: "약관 항목을 삭제중입니다..."
+                    });
+                    _this.submit();
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

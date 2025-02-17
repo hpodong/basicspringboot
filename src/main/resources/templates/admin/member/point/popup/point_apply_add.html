@@ -1,0 +1,77 @@
+<div id="point_apply_add" class="popup bg" data-open-type="">
+    <div class="popup-body big">
+        <div class="popup-inner lined">
+            <div class="popup-cont">
+                <div class="pop-tit">
+                    <h2>포인트 추가 적용</h2>
+                </div>
+                <form action="/admin/point/member/insert" method="post" autocomplete="off">
+                    <input type="hidden" name="member_idx" th:value="${member.idx}">
+                    <div class="tbl_area mt30">
+                        <div class="tbl_box tbl_box2">
+                            <table>
+                                <caption>목록</caption>
+                                <colgroup>
+                                    <col width="135px">
+                                    <col width="*">
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th>유형</th>
+                                    <td>
+                                        <div class="radio_box">
+                                            <input type="radio" id="point_accumul" name="point_status" value="saved">
+                                            <label for="point_accumul">적립</label>
+                                        </div>
+                                        <div class="radio_box ml17">
+                                            <input type="radio" id="point_deduction" name="point_status" value="minus">
+                                            <label for="point_deduction">차감</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>액수</th>
+                                    <td class="input-td">
+                                        <input type="text" class="wid100_px" name="value" id="value"> 원
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>내용</th>
+                                    <td class="input-td">
+                                        <input type="text" class="wid100" name="description">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="btnBox">
+                        <button type="submit" class="main_bg btn">저장</button>
+                        <button type="button" class="border_bg btn" onclick="closePopup();">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/admin/plugins/sg-validate/js/sg_validate.js"></script>
+<script>
+    const form = $("#point_apply_add form");
+    $("input[name='point_status']").setValidate(form, {
+        label: "유형",
+        required: true
+    });
+    $("#value").setValidate(form, {
+        label: "액수",
+        required: true,
+        minLength: 1,
+        maxLength: 11,
+        type: SGValidateType.PRICE
+    });
+    $("input[name='description']").setValidate(form, {
+        label: "내용",
+        minLength: 1,
+        maxLength: 100,
+        required: true,
+    });
+</script>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+	<th:block th:insert="~{admin/includes/header.html}"/>
+	<div id="sub" class="">
+		<div class="sub_visual">
+			<div class="sub_tit">
+				<h2>
+					<th:block th:text="${cm.title}"></th:block>
+				</h2>
+			</div>
+		</div>
+		<div class="sec_wrap">
+			<div class="section section1">
+				<div class="inner">
+					<div class="board">
+						<form th:action="${cm.link + '/update'}" method="post">
+							<input type="hidden" name="idx" th:value="${data.idx}">
+							<div class="tbl_area">
+								<div class="tbl_wrap tbl_wrap1">
+									<div class="tit_box">
+										<h3 class="sTit">등록정보</h3>
+									</div>
+									<div class="tbl_box tbl_box2">
+										<table class="row_line">
+											<caption>등록정보</caption>
+											<colgroup>
+												<col width="8.4%">
+												<col width="40%">
+												<col width="8.4%">
+												<col width="40%">
+											</colgroup>
+											<tbody>
+											<tr>
+												<th>상태<span class="required">*</span></th>
+												<td>
+													<div class="radio_box">
+														<input type="radio" id="active" name="agreement_status" value="activated" th:checked="${data.status.toString() eq 'ACTIVATED'}">
+														<label for="active">활성화</label>
+													</div>
+													<div class="radio_box ml17">
+														<input type="radio" id="pause" name="agreement_status" value="paused" th:checked="${data.status.toString() eq 'PAUSED'}">
+														<label for="pause">비활성화</label>
+													</div>
+												</td>
+												<th>필수 동의여부<span class="required">*</span></th>
+												<td>
+													<div class="radio_box">
+														<input type="radio" id="agree_type1" name="is_required" value="1">
+														<label for="agree_type1">필수</label>
+													</div>
+													<div class="radio_box ml17">
+														<input type="radio" id="agree_type0" name="is_required" value="0">
+														<label for="agree_type0">선택</label>
+													</div>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="tbl_wrap tbl_wrap1">
+									<div class="tit_box">
+										<h3 class="sTit">약관정보</h3>
+									</div>
+									<div class="tbl_box tbl_box2">
+										<table class="row_line">
+											<caption>약관정보</caption>
+											<colgroup>
+												<col width="8.7%">
+												<col width="*">
+											</colgroup>
+											<tbody>
+											<tr>
+												<th>약관구분<span class="required">*</span></th>
+												<td>
+													<select id="category_idx" name="category_idx" class="select_drop wid20">
+														<option value="">약관구분</option>
+														<option th:each="c : ${categories}" th:value="${c.idx}" th:text="${c.name}"></option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th>제목<span class="required">*</span></th>
+												<td>
+													<input type="text" id="title" name="title">
+												</td>
+											</tr>
+											<tr>
+												<th>내용<span class="required">*</span></th>
+												<td>
+													<textarea data-height="300px" class="editor" rows="10" id="desc" name="desc"></textarea>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="btnSet flex-box gap-10 justify-content-center mt30">
+                                <button type="submit" class="btn main_bg btn-save">저장</button>
+                                <a th:href="${cm.link}" class="btn border_bg btn-cancel">취소</a>
+                            </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<script src="/admin/js/ajax.js" type="text/javascript"></script>
+<script th:inline="javascript">
+
+	const data = /*[[${data}]]*/ null;
+
+	setData(data);
+
+	let form = $("form");
+	$("input[name='agreement_status']").setValidate(form, {
+		label: "상태",
+	});
+	$("input[name='is_required']").setValidate(form, {
+		label: "필수 여부",
+	});
+	$("#category_idx").setValidate(form, {
+		label: "약관 구분",
+		required: true,
+	});
+	$("#title").setValidate(form, {
+		label: "제목",
+		minLength: 1,
+		maxLength: 100
+	});
+	$("#desc").setValidate(form, {
+		label: "내용",
+		minLength: 1,
+		type: SGValidateType.EDITOR
+	});
+
+	form.on("submit", function() {
+		if($(this).isValidate()) {
+			SGConfirm({
+				title: "약관 항목을 저장하시겠습니까?",
+				onsuccess: (res) => {
+					if(res) this.submit();
+				}
+			})
+		}
+		return false;
+	});
+</script>
+</body>
+</html>

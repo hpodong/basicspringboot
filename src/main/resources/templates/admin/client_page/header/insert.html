@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+	<th:block th:insert="~{admin/includes/header.html}"/>
+	<div id="sub" class="">
+		<div class="sub_visual">
+			<div class="sub_tit">
+				<h2>
+					<th:block th:text="${cm.title}"></th:block> 등록
+				</h2>
+			</div>
+		</div>
+		<div class="sec_wrap">
+			<div class="section section1">
+				<div class="inner">
+					<div class="board">
+						<form th:action="${cm.link + '/insert'}" method="post">
+							<div class="tbl_area">
+								<div class="tbl_wrap tbl_wrap1">
+									<div class="tit_box">
+										<h3 class="sTit">등록정보</h3>
+									</div>
+									<div class="tbl_box tbl_box2">
+										<table class="row_line">
+											<caption>등록정보</caption>
+											<colgroup>
+												<col width="10.6%">
+												<col width="39.4%">
+												<col width="10.6%">
+												<col width="39.4%">
+											</colgroup>
+											<tbody>
+											<tr>
+												<th><label for="name">이름</label></th>
+												<td colspan="3">
+													<input type="text" name="name" id="name">
+												</td>
+											</tr>
+											<tr>
+												<th>
+													<label for="html">HTML 코드</label>
+												</th>
+												<td colspan="3">
+													<div id="html" style="height:100vh"></div>
+													<span class="txt_red">* ${pageTitle}이 페이지 제목이 됩니다.</span>
+												</td>
+												<input name="html" id="html_value" type="hidden">
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="btnSet flex-box gap-10 justify-content-center mt30">
+                                <button type="submit" class="btn main_bg btn-save">저장</button>
+                                <a th:href="${cm.link}" class="btn border_bg btn-cancel">취소</a>
+                            </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.16.2/min/vs/loader.js"></script>
+<script>
+
+	let form = $("form");
+	$("#name").setValidate(form, {
+		label: "이름",
+		minLength: 1,
+	});
+
+	$("#html_value").setValidate(form, {
+		label: "HTML 코드",
+		required: true
+	});
+
+	let editor;
+
+	require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.16.2/min/vs' }});
+	require(['vs/editor/editor.main'], function() {
+		editor = monaco.editor.create(document.getElementById('html'), {
+			theme: 'vs-dark',
+			fontFamily: 'Nanum Gothic Coding',
+			automaticLayout: true,
+			language: 'markdown',
+			value: [].join('\n')
+		});
+		editor.onDidChangeModelContent(() => {
+			$("#html_value").val(editor.getValue());
+		});
+	});
+
+</script>
+</body>
+</html>

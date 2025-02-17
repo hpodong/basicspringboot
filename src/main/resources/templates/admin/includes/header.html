@@ -1,0 +1,56 @@
+<div class="header_wrap">
+    <header class="header">
+        <div class="navbar-minimalize mo"><a href="#" class="btn-primary btn-mini"><i class="fa fa-bars"></i></a></div>
+        <h1 class="nav-header">
+            <!-- <a href="/manage" class="svg"><?php echo $this->cbconfig->item('admin_logo'); ?></a> -->
+            <!--            <a href="/admin" style="padding: 0 30px; box-sizing: border-box;" th:text="${@environment.getProperty('company.name')} + ' 관리자 모드'"></a>-->
+            <a href="/admin" class="logo">
+                <img src="/admin/images/logo2.svg" width="94">
+                증모가발 온라인쇼핑몰
+            </a>
+        </h1>
+        <div class="logout">
+            <div class="pc">
+                <!--
+
+                    신규 알람이 있을 경우 alarm a태그에 on 클래스 추가 부탁드립니다
+
+                -->
+                <a th:if="${has_push_log}" href="javascript:;" id="alarm_btn" class="alarm mr15 p-relative">
+                    <img src="/admin/images/ico_alarm.svg" width="21">
+                </a>
+                <a th:unless="${has_push_log}" href="javascript:;" id="alarm_btn" class="mr15 p-relative">
+                    <img src="/admin/images/ico_alarm.svg" width="21">
+                </a>
+                <p><b th:text="${session.admin.name}"></b>님</p>
+                <a href="javascript:" title="로그아웃" class="logout_btn" onclick="logout();">로그아웃</a>
+            </div>
+            <div class="mo">
+                <a href="/admin/logout">
+                    <span class="material-icons">logout</span>
+                </a>
+            </div>
+        </div>
+        <div class="nav-top mo">
+            <a href="javascript:" onclick="logout();">LOGOUT</a>
+        </div>
+
+        <div class="alarm-popup">
+            <a href="javascript:;" class="popup-close"></a>
+            <p class="caution-txt">*최근 30일 동안의 알림만 확인하실 수 있습니다.</p>
+            <div class="tab-box2">
+                <input type="radio" id="order_alarm" name="alarm" class="alarm-dot" value="order" checked>
+                <label for="order_alarm">주문알림</label>
+                <input type="radio" id="return_alarm" name="alarm" class="alarm-dot" value="return">
+                <label for="return_alarm">반품알림</label>
+                <input type="radio" id="consult_alarm" name="alarm" class="alarm-dot" value="consult">
+                <label for="consult_alarm">1:1문의알림</label>
+            </div>
+            <ul class="flex-box gap-10 mt15 flex-column" id="notification_alarm_list">
+            </ul>
+            <button type="button" class="more-btn">더보기<img src="/admin/images/ico_plus.svg"></button>
+        </div>
+    </header>
+</div>
+<div id="wrapper">
+    <th:block th:insert="~{admin/includes/sidebar.html}"/>

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+    <th:block th:insert="~{admin/includes/header.html}"/>
+    <div id="sub" class="">
+        <div class="sub_visual">
+            <div class="sub_tit">
+                <h2>
+                    <th:block th:text="${cm.title}"></th:block>
+                    등록
+                </h2>
+            </div>
+        </div>
+        <div class="sec_wrap">
+            <div class="section section1">
+                <div class="inner">
+                    <div class="board">
+                        <form th:action="${cm.link + '/update'}" class="form-horizontal" method="post"
+                              accept-charset="utf-8">
+                            <input type="hidden" name="idx" th:value="${data.idx}">
+                            <div class="tbl_area">
+                                <div class="tbl_wrap tbl_wrap1">
+                                    <div class="tit_box">
+                                        <h3 class="sTit">회원정보</h3>
+                                    </div>
+                                    <div class="tbl_box tbl_box2">
+                                        <table class="row_line">
+                                            <caption>회원정보</caption>
+                                            <colgroup>
+                                                <col width="8.7%">
+                                                <col width="*">
+                                            </colgroup>
+                                            <tbody>
+                                            <tr>
+                                                <th>가입구분</th>
+                                                <td th:text="${data.socialsToString()}"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>아이디</th>
+                                                <td th:text="${data.id}"></td>
+                                            </tr>
+                                            <tr class="password-btn">
+                                                <th>비밀번호</th>
+                                                <td>
+                                                    <button class="btn btn-primary" type="button">비밀번호 변경</button>
+                                                </td>
+                                            </tr>
+                                            <tr class="password-field">
+                                                <th><label for="password">새 비밀번호</label><span class="required">*</span></th>
+                                                <td>
+                                                    <input class="wid20" type="password" id="password" name="password"
+                                                           autocomplete="new-password" disabled placeholder="특수문자, 영문, 숫자 8~20자 이내">
+                                                </td>
+                                            </tr>
+                                            <tr class="password-field">
+                                                <th><label for="password2">새 비밀번호 확인</label><span class="required">*</span></th>
+                                                <td>
+                                                    <input class="wid20" type="password" id="password2" disabled placeholder="한번 더 입력">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><label for="name">이름</label><span class="required">*</span></th>
+                                                <td>
+                                                    <input class="max200" type="text" name="name" id="name"
+                                                           th:value="${data.name}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><label for="cell">연락처</label><span class="required">*</span></th>
+                                                <td>
+                                                    <input class="max200" type="text" id="cell" name="cell"
+                                                           th:value="${data.cell}">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="btnSet flex-box justify-content-center gap-10 mt30">
+                                <button type="submit" class="btn main_bg btn-save">저장</button>
+                                <a th:href="${cm.link}" class="btn border_bg btn-cancel">취소</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<script src="/admin/js/ajax.js" type="text/javascript"></script>
+<script th:inline="javascript">
+
+    const cell = /*[[${data.cell}]]*/ null;
+
+    const password_fields = $(".password-field");
+    password_fields.hide();
+
+    let sg_form = $("form");
+
+    $(".password-btn button").on("click", function () {
+        $(this).closest(".password-btn").hide();
+        let inputs = $("input[type='password']");
+        inputs.attr("disabled", false);
+        inputs.val("");
+        password_fields.show();
+    });
+
+    $("#password").setValidate(sg_form, {
+        minLength: 8,
+        maxLength: 20,
+        type: "password",
+        required: true,
+        showIcon: true
+    });
+    $("#password2").setValidate(sg_form, {
+        minLength: 8,
+        maxLength: 20,
+        type: "password",
+        required: true,
+        showIcon: true,
+        onchange: function (input, value) {
+            if (value !== $("#password").val()) {
+                setInvalidate(input, "비밀번호가 일치하지 않습니다.");
+            } else {
+                setValidate(input);
+            }
+        }
+    });
+
+    $("#name").setValidate(sg_form, {
+        label: "이름",
+        minLength: 1,
+        maxLength: 50,
+    });
+    $("#cell").setValidate(sg_form, {
+        label: "연락처",
+        minLength: 1,
+        maxLength: 13,
+        type: SGValidateType.CELL,
+        onchange: function (input, value) {
+            cellCheck($("#cell"), true, cell);
+        }
+    });
+
+    sg_form.submit(function(event) {
+        event.preventDefault();
+        cellCheck($("#cell"), true, cell);
+
+        if (sg_form.isValidate()) {
+            SGConfirm({
+                title: "회원을 수정하시겠습니까?",
+                onsuccess: (res) => {
+                    if (res) this.submit();
+                }
+            })
+        }
+    });
+</script>
+</body>
+</html>

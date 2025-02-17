@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}"></head>
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+	<!--sidebar wrapper -->
+	<th:block th:insert="~{admin/includes/header.html}"/>
+	<div id="sub" class="dashboard">
+		<div class="sub_visual">
+			<div class="sub_tit">
+				<h2 th:text="${cm.title}"></h2>
+			</div>
+		</div>
+		<!-- 본문 시작 -->
+		<div class="sec_wrap">
+
+		</div>
+	</div>
+	<th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<!--end wrapper-->
+<!--start switcher-->
+<script>
+	$("#orders_table tbody tr").css("cursor", "pointer").click(function() {
+		const idx = $(this).data("idx");
+		document.location.href = `/admin/order/view?idx=${idx}`;
+	});
+	$("#consults_table tbody tr").css("cursor", "pointer").click(function() {
+		const idx = $(this).data("idx");
+		document.location.href = `/admin/consult/view?idx=${idx}`;
+	});
+	$("#reviews_table tbody tr").css("cursor", "pointer").click(function() {
+		const idx = $(this).data("idx");
+		document.location.href = `/admin/review/product/view?idx=${idx}`;
+	});
+
+	$("input[name='real_time_history']").change(function() {
+		const show_id = $(this).data("show-id");
+		const hide_id = $(this).data("hide-id");
+		$(`#${show_id}`).show();
+		$(`#${hide_id}`).hide();
+	})
+</script>
+</body>
+</html>

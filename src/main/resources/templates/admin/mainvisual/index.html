@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}"></head>
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+    <!--sidebar wrapper -->
+    <th:block th:insert="~{admin/includes/header.html}"/>
+    <div id="sub">
+        <div class="sub_visual">
+            <div class="sub_tit">
+                <h2 th:text="${cm.title}"></h2>
+            </div>
+        </div>
+
+        <!-- 본문 시작 -->
+        <div class="sec_wrap">
+            <div class="section section1">
+                <div class="inner">
+                    <div>
+                        <form id="searchForm" th:action="${cm.link}">
+                            <div class="searchWrap">
+                                <table class="searchTable">
+                                    <caption> 게시글검색 </caption>
+                                    <colgroup>
+                                        <col width="10.3%">
+                                        <col width="40%">
+                                        <col width="10.3%">
+                                        <col width="40%">
+                                    </colgroup>
+                                    <tbody>
+                                    <tr>
+                                        <th>활성화 여부</th>
+                                        <td>
+                                            <select name="st" class="select_drop max200" onchange="goSearch()">
+                                                <option value="">전체</option>
+                                                <option value="activated">활성화</option>
+                                                <option value="paused">비활성화</option>
+                                            </select>
+                                        </td>
+                                        <th>제목</th>
+                                        <td colspan="3">
+                                            <div class="srch_word">
+                                                <div class="wte_word clear">
+                                                    <input type="hidden" name="t" value="title">
+                                                    <input type="text" name="q" th:value="${param.q}">
+                                                </div>
+                                                <div class="btn_box btn_box2 clear">
+                                                    <input type="submit" value="검색" class="btn_search">
+                                                    <input type="reset" value="초기화" class="btn_search">
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <input type="hidden" name="p" id="page" th:value="${data.curPage}">
+                        </form>
+                    </div>
+                    <!-- //search_warp -->
+                    <form th:action="${cm.link + '/delete'}" class="form-inline" method="post" onsubmit="return deleteCheck(this);">
+                        <div class="tbl_area">
+                            <div class="tbl_tit">
+                                전체 <strong th:text="${data.count}"></strong><em>건</em>
+                                <!--<span>(<i th:text="${data.curPage}"></i>/<i th:text="${data.lastPage}"></i> 페이지)</span>-->
+                            </div>
+                            <div class="scroll_list_wrap">
+                                <div class="tbl_box tbl_box5 list-page">
+                                    <table>
+                                        <caption>목록</caption>
+                                        <colgroup>
+                                            <col width="70px" />
+                                            <col width="70px" />
+                                            <col width="*" />
+                                            <col width="300px" />
+                                            <col width="120px" />
+                                            <col width="10%" />
+                                            <col width="7%" />
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th class="chk_th" scope="col">
+                                                <div class="check_box">
+                                                    <input type="checkbox" id="all_chk">
+                                                    <label for="all_chk">전체선택</label>
+                                                </div>
+                                            </th>
+                                            <th scope="col">번호</th>
+                                            <th scope="col">메인타이틀</th>
+                                            <th scope="col">비주얼 이미지</th>
+                                            <th scope="col">노출순서</th>
+                                            <th scope="col">활성화 여부</th>
+                                            <th scope="col">수정</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:if="${data.count == 0}">
+                                            <td colspan="7">메인비주얼 항목이 없습니다.</td>
+                                        </tr>
+                                        <tr th:if="${data.count != 0}" th:each="row: ${data.list}" th:data-idx="${row.idx}">
+                                            <td class="chk_td">
+                                                <div class="check_box">
+                                                    <input type="checkbox" th:id="'chk_'+${row.idx}" name="idx" class="list-chkbox" th:value="${row.idx}">
+                                                    <label th:for="'chk_'+${row.idx}"></label>
+                                                </div>
+                                            </td>
+                                            <td th:text="${row.row_num}"></td>
+                                            <td th:utext="${row.titleToHtml()}" class="txt-l"></td>
+                                            <td>
+                                                <img th:src="${row?.file?.toThumbnail(200, 100)}" th:alt="${row?.file?.name}" style="width: 200px; height: 100px; object-fit: cover; object-position: center;">
+                                            </td>
+                                            <td>
+                                                <input class="sort-input" type="number" maxlength="11" th:value="${row.sort}">
+                                            </td>
+                                            <!--
+                                                활성화 상태에 따라 클래스 변경
+
+                                               활성화 x
+                                               비활성화 txt-red
+
+                                            -->
+                                            <td th:class="${row.status.toClass()}" th:text="${row.status.toHtml()}"></td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary m0auto" th:data-update-idx="${row.idx}">수정하기</button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- //tbl_area -->
+                        <div class="btnSet clear">
+                            <div class="left">
+                                <button type="submit" class="btn border222 btn-list-delete wid70_px">삭제</button>
+                            </div>
+                            <div class="right">
+                                <a href="javascript:;" onclick="updateSort()" class="btn primary">노출순서 일괄저장</a>
+                                <a th:href="${cm.link} + '/insert'" class="btn btn-primary">등록</a>
+                            </div>
+                        </div>
+                    </form>
+                    <th:block th:insert="~{admin/includes/page_nation.html}"></th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<!--end wrapper-->
+<!--start switcher-->
+<script src="/admin/js/index.js" type="text/javascript"></script>
+<script>
+    const deleteCheck = (form) => {
+        let count = $(form).find("input[name='idx']:checked").length;
+        if(!count) {
+            SGAlert({
+                title: "선택된 항목이 없습니다.",
+                type: SGAlertType.ERROR
+            })
+        } else {
+            SGConfirm({
+                title: `${count}개의 항목을 삭제하시겠습니까?`,
+                type: SGAlertType.QUESTION,
+                onsuccess: (res) => {
+                    if(res) form.submit();
+                }
+            })
+        }
+        return false;
+    }
+
+    const number_reg = /^[0-9]+$/;
+
+    $(".sort-input").on("keyup", function() {
+        if(this.value.length && !number_reg.test(this.value)) SGAlert({
+            title: "숫자로만 입력해주세요.",
+            onsuccess: (res) => {
+                if(res) $(this).val("");
+            }
+        });
+    });
+
+    const updateSort = () => {
+        const form = $(".form-inline");
+        const tr_elements = form.find("tr[data-idx]");
+        const data = [];
+
+        if(!tr_elements.length) {
+            SGAlert({
+                title: "메인비주얼 항목이 없습니다."
+            });
+            return;
+        }
+
+        tr_elements.each(function() {
+            data.push({
+                "idx": $(this).data("idx"),
+                "sort": parseInt($(this).find("input.sort-input").val())
+            });
+        });
+
+        $.ajax({
+            url: "/admin/mainvisual/update/sort",
+            type: "POST",
+            contentType: 'application/json', // Content-Type을 JSON으로 설정
+            dataType: "JSON",
+            async: false,
+            data: JSON.stringify(data),
+            success: function(res) {
+                if(res) {
+                    SGAlert({
+                        title: "메인비주얼 순서가 일괄 저장되었습니다.",
+                        type: SGAlertType.SUCCESS,
+                        onsuccess: (res) => {
+                            if(res) location.reload();
+                        }
+                    });
+                } else {
+                    SGAlert({
+                        title: "변경된 순서가 없습니다.",
+                        onsuccess: (res) => {
+                            if (res) location.reload();
+                        }
+                    });
+                }
+            },
+            error: function(err) {
+                console.error(err);
+                SGAlert({
+                    title: "알 수 없는 오류가 발생했습니다.",
+                    type: SGAlertType.ERROR,
+                    onsuccess: (res) => {
+                        if(res) location.reload();
+                    }
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>

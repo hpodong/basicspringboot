@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+    <th:block th:insert="~{admin/includes/header.html}"/>
+    <div id="sub" class="">
+        <div class="sub_visual">
+            <div class="sub_tit">
+                <h2>
+                    <th:block th:text="${cm.title}"></th:block>
+                </h2>
+            </div>
+        </div>
+        <div class="sec_wrap">
+            <div class="section section1">
+                <div class="inner">
+                    <div class="board">
+                        <form th:action="${cm.link + '/update'}" method="post">
+                            <input type="hidden" name="idx" th:value="${data.idx}">
+                            <div class="tbl_area">
+                                <div class="tbl_wrap tbl_wrap1">
+                                    <div class="tit_box">
+                                        <h3 class="sTit">등록정보</h3>
+                                    </div>
+                                    <div class="tbl_box tbl_box2">
+                                        <table class="row_line">
+                                            <caption>등록정보</caption>
+                                            <colgroup>
+                                                <col width="8.4%">
+                                                <col width="40%">
+                                                <col width="8.4%">
+                                                <col width="40%">
+                                            </colgroup>
+                                            <tbody>
+                                            <tr>
+                                                <th>회원권한</th>
+                                                <td th:text="${data.authorization.name}"></td>
+                                                <th><label for="status">상태</label></th>
+                                                <td>
+                                                    <select id="status" name="faq_status" class="max200 select_drop">
+                                                        <option value="activated" th:selected="${'ACTIVATED' eq data.status.toString()}">
+                                                            활성화
+                                                        </option>
+                                                        <option value="paused" th:selected="${'PAUSED' eq data.status.toString()}">
+                                                            비활성화
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tbl_wrap tbl_wrap1">
+                                    <div class="tit_box">
+                                        <h3 class="sTit">게시글 정보</h3>
+                                    </div>
+                                    <div class="tbl_box tbl_box2">
+                                        <table class="row_line">
+                                            <caption>등록정보</caption>
+                                            <colgroup>
+                                                <col width="8.7%">
+                                                <col width="*">
+                                            </colgroup>
+                                            <tbody>
+                                            <tr>
+                                                <th>문의유형</th>
+                                                <td>
+                                                    <th:block th:each="category : ${categories}">
+                                                        <div class="radio_box">
+                                                            <input th:value="${category.idx}"
+                                                                   th:id="'category'+${category.idx}" type="radio"
+                                                                   name="category"
+                                                                   th:checked="${category.idx eq data.category_idx}">
+                                                            <label th:for="'category' + ${category.idx}"
+                                                                   th:text="${category.name}"></label>
+                                                        </div>
+                                                    </th:block>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><label for="question">질문</label></th>
+                                                <td>
+                                                    <input type="text" name="question" id="question"
+                                                           th:value="${data.question}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <label for="asked">답변</label>
+                                                </th>
+                                                <td>
+                                                    <textarea data-height="300px" class="editor" rows="10" id="asked"
+                                                              name="asked" th:utext="${data.asked}"></textarea>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="btnSet flex-box gap-10 justify-content-center mt30">
+                                <button type="submit" class="btn main_bg btn-save">저장</button>
+                                <a th:href="${cm.link}" class="btn border_bg btn-cancel">취소</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<script src="/admin/js/ajax.js" type="text/javascript"></script>
+<script>
+    let form = $("form");
+
+    $("input[name='type']").setValidate(form, {
+        label: "회원권한",
+        required: true,
+    });
+
+    $("input[name='category']").setValidate(form, {
+        label: "상태",
+        minLength: 1
+    });
+
+    $("#question").setValidate(form, {
+        label: "질문",
+        minLength: 1,
+        maxLength: 100,
+        showIcon: true
+    });
+
+    $("#asked").setValidate(form, {
+        label: "답변",
+        minLength: 1,
+        type: SGValidateType.EDITOR
+    });
+
+    form.on("submit", function () {
+        if ($(this).isValidate()) {
+            SGConfirm({
+                title: "FAQ 항목을 저장하시겠습니까?",
+                onsuccess: (res) => {
+                    if (res) this.submit();
+                }
+            })
+        }
+        return false;
+    });
+</script>
+</body>
+</html>

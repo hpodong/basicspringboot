@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<div id="bodyWrap">
+    <th:block th:insert="~{admin/includes/header.html}"/>
+    <!--start page wrapper -->
+    <div id="sub" class="consult-view-page">
+        <div class="sub_visual">
+            <div class="sub_tit">
+                <h2>
+                    <th:block th:text="${cm.title}"></th:block>
+                </h2>
+            </div>
+        </div>
+        <div class="sec_wrap">
+            <div class="section section1">
+                <div class="inner">
+                    <div class="board">
+                        <div class="tbl_area">
+                            <div class="tbl_wrap tbl_wrap1">
+                                <div class="tit_box">
+                                    <h3 class="sTit">등록정보</h3>
+                                </div>
+                                <div class="tbl_box tbl_box2">
+                                    <table class="row_line">
+                                        <caption>등록정보</caption>
+                                        <colgroup>
+                                            <col width="8.7%">
+                                            <col width="*">
+                                        </colgroup>
+                                        <tbody>
+                                        <tr>
+                                            <th>등록일시</th>
+                                            <td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm')}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="tbl_wrap tbl_wrap1">
+                                <div class="tit_box">
+                                    <h3 class="sTit">문의정보</h3>
+                                </div>
+                                <div class="tbl_box tbl_box2">
+                                    <table class="row_line">
+                                        <caption>문의정보</caption>
+                                        <colgroup>
+                                            <col width="8.7%">
+                                            <col width="*">
+                                        </colgroup>
+                                        <tbody>
+                                        <tr>
+                                            <th>문의유형</th>
+                                            <td th:text="${data.category_name}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>이름</th>
+                                            <td th:text="${data.name}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>연락처</th>
+                                            <td th:text="${data.cell}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>문의사항</th>
+                                            <td th:text="${data.desc}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>첨부파일</th>
+                                            <td>
+                                                <a th:each="row: ${files}" th:href="${row.url}" th:download="${row.name}" th:text="${row.name}" target="_blank"></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tbl_wrap tbl_wrap1">
+                                <form th:action="${cm.link + '/update'}" class="form-horizontal" method="post" enctype="multipart/form-data" id="update_form">
+                                    <div class="tbl_wrap tbl_wrap1">
+                                        <div class="tit_box">
+                                            <h3 class="sTit">답변작성</h3>
+                                        </div>
+                                        <div class="tbl_box tbl_box2">
+                                            <table class="row_line">
+                                                <caption>답변작성</caption>
+                                                <colgroup>
+                                                    <col width="8.7%">
+                                                    <col width="*">
+                                                </colgroup>
+                                                <tbody>
+                                                <tr>
+                                                    <th>작성자</th>
+                                                    <td th:text="${session.admin.name}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>내용</th>
+                                                    <td>
+                                                        <textarea data-height="300px" class="editor" rows="10"
+                                                                  name="answer" id="answer"
+                                                                  th:text="${data.answer}"></textarea>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>첨부파일</th>
+                                                    <td>
+                                                        <div class="filebox flex-box gap-5">
+                                                            <label for="input_file" class="btn main_bg">파일 찾기</label>
+                                                            <input class="upload-name img_filename t-rw rw-1" readonly="" placeholder="선택된 파일이 없습니다." th:value="${data.answer_file?.name}">
+                                                            <input class="sg-file" type="file" id="input_file" name="input_file">
+                                                        </div>
+                                                        <p>10Mb (doc, docx, xls, xlsx, ppt, pptx, hwp, txt, pdf, jpg,
+                                                            jpeg, png, gif, bmp, tif 만 파일 등록가능)</p>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="btnSet flex-box justify-content-center mt30 gap-10">
+                                        <button th:if="${data.status != 'completed'}" type="submit" class="btn main_bg btn-save">저장</button>
+                                        <a th:href="${cm.link}" class="btn-bottom btn-gray-bottom">목록</a>
+                                    </div>
+                                    <input type="hidden" name="idx" th:value="${data.idx}">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<!--end wrapper-->
+<!--start switcher-->
+</body>
+</html>

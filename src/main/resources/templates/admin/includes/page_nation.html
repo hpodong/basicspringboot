@@ -1,0 +1,31 @@
+<div class="pagenate" th:if="${data.count != 0}">
+    <nav>
+        <ul class="pagination">
+            <li th:if="${data.curPage}>10">
+                <a class="page-link start mr5" href="javascript:;" data-value="1">
+                    <img src="/admin/images/ico_start.svg">
+                </a>
+            </li>
+            <li th:if="${data.curPage}>10">
+                <a class="page-link prev mr10" href="javascript:;" th:data-value="${data.firstPage}-1">
+                    <img src="/admin/images/ico_prev.svg">
+                </a>
+            </li>
+            <li th:each="page : ${#numbers.sequence(data.firstPage, data.lastPage)}"
+                th:class="${page == data.curPage ? 'active' : ''}">
+                <a class="page-link" href="javascript:;" th:text="${page}" th:data-value="${page}"
+                  ></a>
+            </li>
+            <li th:if="${data.pageCount - data.firstPage}>10">
+                <a class="page-link next ml10" href="javascript:;" th:data-value="${data.lastPage}+1">
+                    <img src="/admin/images/ico_next.svg">
+                </a>
+            </li>
+            <li th:if="${data.pageCount - data.firstPage}>10">
+                <a class="page-link end ml5" href="javascript:;" th:data-value="${data.pageCount}">
+                    <img src="/admin/images/ico_end.svg">
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

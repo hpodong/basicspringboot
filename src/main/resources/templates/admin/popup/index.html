@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}"></head>
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+    <!--sidebar wrapper -->
+    <th:block th:insert="~{admin/includes/header.html}"/>
+    <div id="sub" class="">
+        <div class="sub_visual">
+            <div class="sub_tit">
+                <h2 th:text="${cm.title}"></h2>
+            </div>
+        </div>
+
+        <!-- 본문 시작 -->
+        <div class="sec_wrap">
+            <div class="section section1">
+                <div class="inner">
+                    <div>
+                        <form id="searchForm" th:action="${cm.link}">
+                            <div class="searchWrap">
+                                <table class="searchTable">
+                                    <caption> 게시글검색 </caption>
+                                    <colgroup>
+                                        <col width="10.3%">
+                                        <col width="40%">
+                                        <col width="10.3%">
+                                        <col width="40%">
+                                    </colgroup>
+                                    <tbody>
+                                    <tr>
+                                        <th>검색조건</th>
+                                        <td>
+                                            <div class="flex-row gap-5">
+                                                <select name="dv" class="select_drop max200" onchange="goSearch()">
+                                                    <option value="">노출기기</option>
+                                                    <option value="PC">PC에서만</option>
+                                                    <option value="MO">MO에서만</option>
+                                                    <option value="APP">앱에서만</option>
+                                                </select>
+                                                <select name="st" class="select_drop max200" onchange="goSearch()">
+                                                    <option value="">활성화여부</option>
+                                                    <option value="activated">활성화</option>
+                                                    <option value="paused">비활성화</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <th>제목</th>
+                                        <td>
+                                            <div class="srch_word">
+                                                <div class="wte_word clear">
+                                                    <input type="hidden" name="t" value="title">
+                                                    <input type="text" name="q">
+                                                </div>
+                                                <div class="btn_box btn_box2 clear">
+                                                    <input type="submit" value="검색" class="btn_search">
+                                                    <input type="reset" value="초기화" class="btn_search">
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <input type="hidden" name="p" id="page" th:value="${data.curPage}">
+                        </form>
+                    </div>
+                    <!-- //search_warp -->
+                    <form th:action="${cm.link + '/delete'}" class="form-inline" method="post" onsubmit="return deleteCheck(this);">
+                        <div class="tbl_area">
+                            <div class="tbl_tit">
+                                전체 <strong th:text="${data.count}"></strong><em>건</em>
+                                <!--<span>(<i th:text="${data.curPage}"></i>/<i th:text="${data.lastPage}"></i> 페이지)</span>-->
+                            </div>
+                            <div class="scroll_list_wrap">
+                                <div class="tbl_box tbl_box5 list-page">
+                                    <table>
+                                        <caption>목록</caption>
+                                        <colgroup>
+                                            <col width="70px" />
+                                            <col width="70px" />
+                                            <col width="*" />
+                                            <col width="10%" />
+                                            <col width="10%" />
+                                            <col width="10%" />
+                                            <col width="10%" />
+                                            <col width="7%" />
+                                            <col width="7%" />
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th class="chk_th" scope="col">
+                                                <div class="check_box">
+                                                    <input type="checkbox" id="all_chk">
+                                                    <label for="all_chk">전체선택</label>
+                                                </div>
+                                            </th>
+                                            <th scope="col">번호</th>
+                                            <th scope="col">제목</th>
+                                            <th scope="col">시작일</th>
+                                            <th scope="col">종료일</th>
+                                            <th scope="col">노출기기</th>
+                                            <th scope="col">활성화여부</th>
+                                            <th scope="col">팝업확인</th>
+                                            <th scope="col">수정</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:if="${data.count == 0}">
+                                            <td colspan="9">팝업 항목이 없습니다.</td>
+                                        </tr>
+                                        <tr th:if="${data.count != 0}" th:each="row: ${data.list}">
+                                            <td class="chk_td">
+                                                <div class="check_box">
+                                                    <input type="checkbox" th:id="'chk_'+${row.idx}" name="idx" class="list-chkbox" th:value="${row.idx}">
+                                                    <label th:for="'chk_'+${row.idx}"></label>
+                                                </div>
+                                            </td>
+                                            <td th:text="${row.row_num}"></td>
+                                            <td th:text="${row.title}" class="txt-l"></td>
+                                            <td th:text="${#dates.format(row.started_at, 'yyyy-MM-dd')}"></td>
+                                            <td th:text="${#dates.format(row.ended_at, 'yyyy-MM-dd')}"></td>
+                                            <td th:text="${row.deviceToString()}"></td>
+                                            <td th:class="${row.status.toClass()}" th:text="${row.status.toHtml()}"></td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary popup_btn m0auto"
+                                                        th:data-url="${row.file?.url}"
+                                                        th:data-width="${row.width}"
+                                                        th:data-height="${row.height}"
+                                                        th:data-top="${row.top}"
+                                                        th:data-left="${row.left}"
+                                                        th:data-is_center="${row.is_center}"
+                                                >팝업확인</button>
+                                            </td>
+                                            <td>
+                                                <button type="button" th:data-update-idx="${row.idx}" class="btn btn-primary m0auto">수정하기</button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- //tbl_area -->
+                        <div class="btnSet clear">
+                            <div class="left">
+                                <button type="submit" class="btn border222 btn-list-delete wid70_px">삭제</button>
+                            </div>
+                            <div class="right">
+                                <a th:href="${cm.link} + '/insert'" class="btn primary">등록</a>
+                            </div>
+                        </div>
+                    </form>
+                    <th:block th:insert="~{admin/includes/page_nation.html}"></th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="~{admin/includes/footer.html}"/>
+    <th:block th:insert="~{admin/popup/popup/preview_popup.html}"/>
+
+</div>
+<!--end wrapper-->
+<!--start switcher-->
+<script src="/admin/js/index.js" type="text/javascript"></script>
+<script>
+    const deleteCheck = (form) => {
+        let count = $(form).find("input[name='idx']:checked").length;
+        if(!count) {
+            SGAlert({
+                title: "선택된 항목이 없습니다.",
+                type: SGAlertType.ERROR
+            })
+        } else {
+            SGConfirm({
+                title: `${count}개의 항목을 삭제하시겠습니까?`,
+                type: SGAlertType.QUESTION,
+                onsuccess: (res) => {
+                    if(res) form.submit();
+                }
+            })
+        }
+        return false;
+    }
+
+    $(".popup_btn").click(function() {
+        let popup_tag = $("#preview_popup");
+        let popup_body_tag = popup_tag.find(".popup-cont");
+        let preview_img = popup_body_tag.find("img");
+        let url = $(this).data("url");
+        let width = $(this).data("width");
+        let height = $(this).data("height");
+        let top = $(this).data("top");
+        let left = $(this).data("left");
+        let is_center = $(this).data("is_center");
+
+        if(!is_center) {
+            popup_body_tag
+                .css("transform", "")
+                .css("position", "relative")
+                .css("top", top)
+                .css("left", left);
+        } else {
+            popup_body_tag
+                .css("transform", "translate(-50%, -50%)")
+                .css("position", "absolute")
+                .css("top", "50%")
+                .css("left", "50%");
+        }
+        popup_body_tag
+            .css("width", width)
+            .css("height", height);
+        preview_img
+            .css("width", width)
+            .css("height", height)
+            .attr("src", url);
+
+        openPopup('#preview_popup', 'normal');
+    });
+</script>
+</body>
+</html>

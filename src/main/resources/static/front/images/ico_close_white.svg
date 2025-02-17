@@ -1,0 +1,10 @@
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="btn_close">
+<rect x="0.5" y="0.5" width="35" height="35" rx="4.5" fill="#222222"/>
+<rect x="0.5" y="0.5" width="35" height="35" rx="4.5" stroke="#222222"/>
+<g id="icon">
+<path id="Vector" d="M13 23L23 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M23 23L13 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</svg>

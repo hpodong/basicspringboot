@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<!--wrapper-->
+<div id="bodyWrap">
+	<th:block th:insert="~{admin/includes/header.html}"/>
+	<div id="sub" class="">
+		<div class="sub_visual">
+			<div class="sub_tit">
+				<h2>
+					<th:block th:text="${cm.title}"></th:block>
+				</h2>
+			</div>
+		</div>
+		<div class="sec_wrap">
+			<div class="section section1">
+				<div class="inner">
+					<div class="board">
+						<form th:action="${cm.link + '/insert'}" method="post" enctype="multipart/form-data" autocomplete="off">
+							<div class="tbl_area">
+								<div class="tbl_wrap tbl_wrap1">
+									<div class="tit_box">
+										<h3 class="sTit">등록정보 <span class="txt-red fs14 fw500">*등록하고자 하는 회원권한을 선택해 주세요.</span></h3>
+									</div>
+									<div class="tbl_box tbl_box2">
+										<table class="row_line">
+											<caption>등록정보</caption>
+											<colgroup>
+												<col width="8.4%">
+												<col width="40%">
+												<col width="8.4%">
+												<col width="40%">
+											</colgroup>
+											<tbody>
+											<tr>
+												<th>회원권한<span class="required">*</span></label></th>
+												<td>
+													<div class="radio_box" th:each="row: ${member_authorizations}">
+														<input type="radio" name="authorization_idx" th:id="'type'+${row.idx}" th:value="${row.idx}">
+														<label th:for="'type'+${row.idx}" th:text="${row.name}"></label>
+													</div>
+												</td>
+												<th><label for="sort">노출순서<span class="required">*</span></label></th>
+												<td>
+													<input type="text" name="sort" id="sort" class="max200">
+												</td>
+											</tr>
+											<tr>
+												<th>활성화 여부<span class="required">*</span></label></th>
+												<td colspan="3">
+													<div class="radio_box">
+														<input type="radio" name="mv_status" id="status_activated" value="activated" checked>
+														<label for="status_activated">활성화</label>
+													</div>
+													<div class="radio_box ml17">
+														<input type="radio" name="mv_status" id="status_paused" value="paused">
+														<label for="status_paused">비활성화</label>
+													</div>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="tbl_wrap tbl_wrap1">
+									<div class="tit_box">
+										<h3 class="sTit">배너정보</h3>
+									</div>
+									<div class="tbl_box tbl_box2">
+										<table class="row_line">
+											<caption>배너정보</caption>
+											<colgroup>
+												<col width="8.7%">
+												<col width="*">
+											</colgroup>
+											<tbody>
+											<tr>
+												<th><label for="title">제목<span class="required">*</span></label></th>
+												<td colspan="3">
+													<input type="text" name="title" id="title">
+												</td>
+											</tr>
+											<tr>
+												<th><label for="image_file">배너 이미지<span class="required">*</span></label></th>
+												<td colspan="3">
+													<input type="file" name="image_file" id="image_file">
+													<p class="mt5">(jpg, png, jpeg 만 파일 등록가능) 10Mb (권장사이즈: 390*240px)</p>
+												</td>
+											</tr>
+											<tr>
+												<th>
+													<label for="url">자세히 보기 URL<span class="required">*</span></label>
+												</th>
+												<td colspan="3">
+													<input type="text" name="url" id="url">
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="btnSet flex-box gap-10 justify-content-center mt30">
+                                <button type="submit" class="btn main_bg btn-save">저장</button>
+                                <a th:href="${cm.link}" class="btn border_bg btn-cancel">취소</a>
+                            </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<script>
+
+	let form = $("form");
+
+	$("#image_file").preview({
+		max_size: 500
+	});
+	$("input[name='authorization_idx']").setValidate(form, {
+		label: "회원 권한",
+		required: true,
+	});
+	$("input[name='mv_status']").setValidate(form, {
+		label: "활성화 여부",
+		required: true,
+	});
+	$("#sort").setValidate(form, {
+		label: "순서",
+		maxLength: 11,
+		required: true,
+		type: SGValidateType.NUMBER
+	});
+	$("#title").setValidate(form, {
+		label: "제목",
+		minLength: 1,
+		maxLength: 100
+	});
+	$("#image_file").setValidate(form, {
+		label: "배너 이미지",
+		required: true,
+		type: SGValidateType.FILE
+	})
+	$("#url").setValidate(form, {
+		type: SGValidateType.URL,
+		label: "자세히 보기 URL",
+		minLength: 1,
+	});
+
+	form.submit(function() {
+		if(form.isValidate()) {
+			SGProcess({
+				title: "이벤트배너를 저장중입니다...",
+			});
+			this.submit();
+		}
+	});
+</script>
+</body>
+</html>

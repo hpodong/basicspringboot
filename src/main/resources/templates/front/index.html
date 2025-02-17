@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head th:replace="~{front/includes/head.html}"></head>
+<body>
+<div class="wrapper">
+    <!--헤더 부분-->
+    <th:block th:insert="~{front/includes/header.html}"/>
+
+    <!--콘텐츠 부분-->
+    <div class="container main">
+        <section class="section section1">
+            <div class="section-body">
+                <div class="section-inner">
+                    <div class="section-row column">
+                        <div class="section-column">
+                            <div class="cont-area">
+                                <div class="sub_visual">
+                                    <div class="swiper productSwiper">
+                                        <div class="swiper-wrapper">
+                                            <div class="swiper-slide" th:each="row:${visuals}">
+                                                <a th:href="${row.url}" target="_blank">
+                                                    <div class="img-box">
+                                                        <img th:src="${row.file?.url}" th:alt="${row.file?.name}">
+                                                        <p class="visual-txt" th:utext="${row.titleToHtml()}"></p>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="productSwiper-pagination swiper-pagination-custom">
+                                            <span class="current-pagination"></span>
+                                            <span class="separator-pagination"></span>
+                                            <span class="total-pagination"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- sub_visual 끝   -->
+                                <div class="cont-wrap all-padding">
+                                    <h2 class="main-tit mt40 mb15">상품분류</h2>
+                                    <div class="swiper cateSwiper">
+                                        <div class="swiper-wrapper">
+                                            <div class="swiper-slide" th:each="row: ${classes}">
+                                                <a th:href="'/product/list/category/'+${row.idx}">
+                                                    <div class="img-box">
+                                                        <img th:src="${row.file?.toThumbnail(200, 200)}">
+                                                    </div>
+                                                    <span th:text="${row.name}">볼륨커버가발</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section2" th:unless="${#arrays.isEmpty(best_products)}">
+            <div class="section-body">
+                <div class="section-inner">
+                    <div class="section-row column">
+                        <div class="section-column">
+                            <div class="cont-area">
+                                <div class="cont-wrap all-padding">
+                                    <div class="mt60 mb15 flex-box align-items-center justify-content-between">
+                                        <h2 class="main-tit">실시간 Best 제품</h2>
+                                        <a href="/product/list/state">더보기</a>
+                                    </div>
+                                    <ul class="product-list">
+                                        <li th:each="row:${best_products}">
+                                            <!--
+                                                품절상품일 경우 a태그에 sold-out 클래스 추가 부탁드립니다
+                                            -->
+                                            <a th:href="'/product/view/'+${row.idx}" th:class="${row.status.toString() eq 'SOLD_OUT'} ? 'sold-out' : ''">
+                                                <div class="img-box">
+                                                    <img th:src="${row.file?.toThumbnail(390, 390)}">
+                                                    <div th:data-idx="${row.idx}" th:class="'like-wrap '+${row.isLikeToClass()}">
+                                                        <div class="like-child">
+                                                        </div>
+                                                    </div>
+                                                    <div class="sold-out-txt" th:if="${row.status.toString() eq 'SOLD_OUT'}">Sold Out</div>
+                                                </div>
+                                                <div class="color-list">
+                                                    <div class="img-box" th:each="color:${row.colors}">
+                                                        <img th:src="${color}">
+                                                    </div>
+                                                </div>
+                                                <div class="tag-box">
+                                                    <span th:each="l:${row.labelToArray()}" th:class="${l.class_name}" th:text="${l.name}"></span>
+                                                </div>
+                                                <div class="product-tag" th:text="${row.product_class_item?.name}"></div>
+                                                <p class="t-rw rw-2 product-name" th:text="${row.name}"></p>
+                                                <!--
+                                                    할인 제품일 경우 price-wrap에 on클래스 추가 부탁드립니다
+                                                -->
+                                                <div class="price-wrap on">
+                                                    <p th:if="${row.sale_rate != null}" class="cost"><span th:text="${#numbers.formatInteger(row.sale_price, 1, 'COMMA')}"></span>원</p>
+                                                    <p class="dc-cost"><em th:if="${row.sale_rate != null}" th:text="${row.sale_rate}+'%'"></em><span th:text="${#numbers.formatInteger(row.salePriceFromRate(row.sale_rate), 1, 'COMMA')}"></span>원</p>
+                                                </div>
+                                                <div class="scope-wrap mt7">
+                                                    <img src="/front/images/ico_star_full.svg" th:each="index:${#numbers.sequence(1, 5)}" th:src="${index <= row.review_score ? '/front/images/ico_star_full.svg' : '/front/images/ico_star_empty.svg'}">
+                                                    <span>(<th:block th:text="${#numbers.formatInteger(row.review_count, 1, 'COMMA')}"></th:block>)</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section3 mt60 mb60">
+            <div class="section-body">
+                <div class="section-inner">
+                    <div class="section-row column">
+                        <div class="section-column">
+                            <div class="cont-area">
+                                <div class="cont-wrap">
+                                    <div class="main-banner-area">
+                                        <div class="swiper bannerSwiper">
+                                            <div class="swiper-wrapper">
+                                                <div class="swiper-slide" th:each="row:${event_banners}">
+                                                    <a th:href="${row.url}" target="_blank">
+                                                        <div class="img-box">
+                                                            <img th:src="${row.file?.url}" th:alt="${row.file?.name}">
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="bannerSwiper-pagination swiper-pagination-custom">
+                                                <span class="current-pagination"></span>
+                                                <span class="separator-pagination"></span>
+                                                <span class="total-pagination"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section4" th:unless="${#arrays.isEmpty(sale_products)}">
+            <div class="section-body">
+                <div class="section-inner">
+                    <div class="section-row column">
+                        <div class="section-column">
+                            <div class="cont-area">
+                                <div class="cont-wrap all-padding">
+                                    <div class="mb15 flex-box align-items-center justify-content-between">
+                                        <h2 class="main-tit">추천 Sale 제품</h2>
+                                        <a href="/product/list/state?pl=3">더보기</a>
+                                    </div>
+                                    <ul class="product-list">
+                                        <li th:each="row:${sale_products}">
+                                            <!--
+                                                품절상품일 경우 a태그에 sold-out 클래스 추가 부탁드립니다
+                                            -->
+                                            <a th:href="'/product/view/'+${row.idx}" th:class="${row.status.toString() eq 'SOLD_OUT'} ? 'sold-out' : ''">
+                                                <div class="img-box">
+                                                    <img th:src="${row.file?.toThumbnail(390, 390)}">
+                                                    <div th:data-idx="${row.idx}" th:class="'like-wrap '+${row.isLikeToClass()}">
+                                                        <div class="like-child">
+                                                        </div>
+                                                    </div>
+                                                    <div class="sold-out-txt">
+                                                        Sold Out
+                                                    </div>
+                                                </div>
+                                                <div class="color-list">
+                                                    <div class="img-box" th:each="color:${row.colors}">
+                                                        <img th:src="${color}">
+                                                    </div>
+                                                </div>
+                                                <div class="tag-box">
+                                                    <span th:each="l:${row.labelToArray()}" th:class="${l.class_name}" th:text="${l.name}">BEST</span>
+                                                </div>
+                                                <div class="product-tag" th:text="${row.product_class_item?.name}"></div>
+                                                <p class="t-rw rw-2 product-name" th:text="${row.name}"></p>
+                                                <!--
+                                                    할인 제품일 경우 price-wrap에 on클래스 추가 부탁드립니다
+                                                -->
+                                                <div class="price-wrap on">
+                                                    <p th:if="${row.sale_rate != null}" class="cost"><span th:text="${#numbers.formatInteger(row.sale_price, 1, 'COMMA')}"></span>원</p>
+                                                    <p class="dc-cost"><em th:if="${row.sale_rate != null}" th:text="${row.sale_rate}+'%'"></em><span th:text="${#numbers.formatInteger(row.salePriceFromRate(row.sale_rate), 1, 'COMMA')}">123,000</span>원</p>
+                                                </div>
+                                                <div class="scope-wrap mt7">
+                                                    <img src="/front/images/ico_star_full.svg" th:each="index:${#numbers.sequence(1, 5)}" th:src="${index <= row.review_score ? '/front/images/ico_star_full.svg' : '/front/images/ico_star_empty.svg'}">
+                                                    <span>(<th:block th:text="${#numbers.formatInteger(row.review_count, 1, 'COMMA')}"></th:block>)</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section5">
+            <div class="section-body">
+                <div class="section-inner">
+                    <div class="section-row column">
+                        <div class="section-column">
+                            <div class="cont-area">
+                                <div class="cont-wrap">
+                                    <h2 class="main-tit mt60 mb15 all-padding">이달의 가발</h2>
+                                    <!--
+
+                                        이달의 가발이 있을시 노출 영역
+
+                                    -->
+                                    <div class="month-wig-is" th:if="${cur_month_wig != null && cur_month_wig.cur_wig_join?.isCurrentMonth()}">
+                                        <div class="img-box">
+                                            <img th:src="${cur_month_wig.file?.url}">
+                                            <div class="time-remaining countdown">
+                                                <img src="/front/images/ico_clock.svg" width="11" height="11">
+                                                <div class="flex-box align-items-center gap-3">
+                                                    <span><span class="days">25</span>일</span>
+                                                    <span class="hours">00</span>:
+                                                    <span class="minutes">00</span>:
+                                                    <span class="seconds">11</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cont-box">
+                                            <div class="color-list" th:if="${cur_month_wig.colors != null}" >
+                                                <div class="img-box" th:each="color: ${cur_month_wig.colors}">
+                                                    <img th:src="${color}">
+                                                </div>
+                                            </div>
+                                            <span th:text="${cur_month_wig.product_class_item?.name}">통가발</span>
+                                            <p class="t-rw rw-1" th:text="${cur_month_wig.name}"></p>
+                                            <div class="t-rw rw-3" th:text="${cur_month_wig.cur_wig_join?.intro}"></div>
+                                            <span class="fw400 fs14 fc555" th:text="${cur_month_wig.optionsToString(' / ')}"></span>
+                                            <div class="price-wrap on" th:if="${cur_month_wig.sale_rate != null}">
+                                                <p class="cost"><span th:text="${#numbers.formatInteger(cur_month_wig.sale_price, 1, 'COMMA')}"></span>원</p>
+                                                <p class="dc-cost"><em><th:block th:text="${cur_month_wig.sale_rate}"></th:block>%</em><span th:text="${#numbers.formatInteger(cur_month_wig.salePriceFromRate(), 1, 'COMMA')}"></span>원</p>
+                                            </div>
+                                            <div class="price-wrap" th:unless="${cur_month_wig.sale_rate != null}">
+                                                <p class="cost"><span th:text="${#numbers.formatInteger(cur_month_wig.sale_price, 1, 'COMMA')}"></span>원</p>
+                                            </div>
+                                            <a href="/product/month_wig?pl=4" class="bg222 btn">
+                                                <img src="/front/images/ico_hotdeal.svg" width="12">
+                                                <p>이달의 특가</p>
+                                                <span></span>
+                                                <p>한 달만 이 가격!</p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!--
+
+                                    이달의 가발이 없을시 노출 영역
+
+                                    -->
+
+
+                                    <div class="month-wig-none cont-box" th:if="${cur_month_wig != null && !cur_month_wig.cur_wig_join?.isCurrentMonth()}">
+                                        <img src="/front/images/ico_empty_box.svg" width="62">
+                                        <p>상품이 없습니다.</p>
+                                        <p>현재 등록된 특가 상품이 없습니다.<br>지난달의 상품을 확인해 보세요!</p>
+                                        <a href="/product/month_wig?pl=4" class="btn bg222 mt20">지날달의 가발 보러가기</a>
+                                    </div>
+
+                                    <!--
+
+                                    이달의 가발 데이터가 아예 없을시 노출 영역
+
+                                    -->
+                                    <div class="month-wig-none-data cont-box" th:if="${cur_month_wig == null}">
+                                        <img src="/front/images/ico_empty_box.svg" width="62">
+                                        <p>아쉽게도 이번년도 특가 상품은 없습니다.</p>
+                                        <p>새로운 혜택이 준비되면 바로 안내드리겠습니다!</p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section6 mt60" th:unless="${#arrays.isEmpty(reviews)}">
+            <div class="section-body">
+                <div class="section-inner">
+                    <div class="section-row column">
+                        <div class="section-column">
+                            <div class="cont-area">
+                                <div class="cont-wrap all-padding">
+                                    <div class="mb15 flex-box align-items-center justify-content-between">
+                                        <h2 class="main-tit">실시간 상품후기</h2>
+                                        <a href="/product/review/all">더보기</a>
+                                    </div>
+                                    <ul class="review-list">
+                                        <li th:each="row : ${reviews}">
+                                            <a th:href="'/product/review/view/'+${row.idx}" class="top">
+                                                <div class="img-box">
+                                                    <img th:src="${row.thumbnail_image_url}">
+                                                </div>
+                                                <div class="scope-wrap mt7 mb10" th:utext="${row.scoreToHtml('ico_star')}">
+                                                </div>
+                                                <p class="t-rw rw-2 review-list-txt" th:text="${row.description}"></p>
+                                                <div class="flex-box justify-content-between align-items-center mt10">
+                                                    <span th:text="${row.member?.nameToEncode()}"></span>
+                                                    <span th:text="${#dates.format(row.created_at, 'yyyy.MM.dd')}"></span>
+                                                </div>
+                                            </a>
+                                            <a th:href="'/product/view/'+${row.product_idx}" class="mt5 pt10 bottom">
+                                                <div class="img-box">
+                                                    <img th:src="${row.product?.file?.toThumbnail(100, 100)}">
+                                                </div>
+                                                <p class="t-rw rw-2" th:text="${row.order_product?.product?.name}"></p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section7" th:unless="${#arrays.isEmpty(youtube_videos)}">
+            <div class="section-body">
+                <div class="section-inner">
+                    <div class="section-row column">
+                        <div class="section-column">
+                            <div class="cont-area">
+                                <div class="cont-wrap all-padding">
+                                    <div class="mb15 flex-box align-items-center justify-content-between">
+                                        <h2 class="main-tit">유튜브 영상</h2>
+                                        <a href="/video">더보기</a>
+                                    </div>
+                                    <div class="swiper youtubeSwiper">
+                                        <div class="swiper-wrapper">
+                                            <div class="swiper-slide" th:each="row:${youtube_videos}"
+                                                 th:data-video-id="${row.videoId()}"
+                                                 th:data-created-at="${#dates.format(row.created_at, 'yyyy.MM.dd')}"
+                                                 th:data-hit-count="${row.hit_count}"
+                                                 th:data-title="${row.title}">
+                                                <a href="javascript:;" th:data-idx="${row.idx}" th:data-hit-count="${row.hit_count}" onclick="openYoutubePopup('#youtubePopup', 'fade', event, this)">
+                                                    <div class="img-box">
+                                                        <img th:src="'https://img.youtube.com/vi/'+${row.videoId()}+'/maxresdefault.jpg'" th:data-video-id="${row.videoId()}" onload="setImageFallback(this);">
+                                                    </div>
+                                                    <p class="t-rw rw-2" th:text="${row.title}"></p>
+                                                    <em class="flex-box align-items-center justify-content-between">
+                                                        <span th:text="${#dates.format(row.created_at, 'yyyy.MM.dd')}"></span>
+                                                        <span class="hit-count">조회수 <th:block th:text="${#numbers.formatInteger(row.hit_count, 1, 'COMMA')}"></th:block></span>
+                                                    </em>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section8 mt60 mb60">
+            <div class="section-body">
+                <div class="section-inner">
+                    <div class="section-row column">
+                        <div class="section-column">
+                            <div class="cont-area">
+                                <div class="cont-wrap">
+                                    <div class="mb15 flex-box align-items-center justify-content-between all-padding">
+                                        <h2 class="main-tit">기업의 가치</h2>
+                                    </div>
+                                    <div class="img-box">
+                                        <img src="/front/images/m_sec8_bg.png">
+                                    </div>
+                                    <div class="cont-box">
+                                        <p>
+                                            <span class="fc006BFF">온바이브(ONVIBE)</span>는 뛰어난 품질과 <br>
+                                            자연스러운 디자인으로 고객의 신뢰를 받아온 <br>
+                                            가발 전문 회사입니다.
+                                        </p>
+                                        <div>
+                                            고객의 다양한 스타일과 개성을 존중하며, 가발이라는 <em></em>제품을 통해 자신감을 되찾고 아름다움을 강조할 수 있는 <em></em>솔루션을 제공합니다.<br><br>
+                                            온바이브의 가발은 정교한 제작 과정과 엄격한 품질 관리로 <em></em>유명합니다 인체 공학을 고려한 디자인과 착용감, 그리고 <em></em>섬세한 디테일로 진짜
+                                            머리카락처럼 자연스럽게 연출할 수 <em></em>있습니다. <br><br>고객의 다양한 요구를 충족시키기 위해, 최신 트렌드에 맞는 <em></em>다양한 스타일과 컬러를 지속적으로
+                                            선보이며, 고객의 <em></em>피드백을 반영한 맞춤형 제품 개발에도 힘쓰고 있습니다. <em></em>온바이브는 고객의 만족을 최우선으로 생각하며, 지속적인 <em></em>혁신과
+                                            품질 개선을 통해 글로벌 시장에서도 인정받고 <em></em>있습니다. <br><br>가발의 아름다움을 넘어, 고객이 자신만의 스타일을 창조할 <em></em>수 있는 브랜드로
+                                            자리매김하고자 합니다. <br><br>온바이브와 함께 당신의 특별한 순간을 더욱 빛나게 만들어 보세요
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="header-menu ham-manu">
+            <div class="flex-box align-items-center justify-content-between logo-area">
+                <img src="/front/images/logo2.svg" width="94">
+                <a href="javascript:;" class="ham-close-btn"><img src="/front/images/ico_close.svg" width="15"></a>
+            </div>
+            <div class="ham_bottom">
+                <div class="login-info flex-box align-items-center">
+                    <!--
+                        비로그인시
+                    -->
+                    <div class="login_off wid100" th:if="${session.member == null}">
+                        <a href="/member/login" class="flex-box align-items-center justify-content-between wid100">
+                            <span>로그인 / 회원가입</span>
+                            <img src="/front/images/ico_arrow_right.svg" width="16">
+                        </a>
+                    </div>
+                    <!--
+                        로그인시
+                    -->
+                    <div class="login_on flex-box align-items-center justify-content-between wid100" th:unless="${session.member == null}">
+                        <div class="flex-box flex-column gap-3">
+                            <a href="/mypage/check_password"><b th:text="${session.member?.name}"></b>님</a>
+                            <p>온바이브를 찾아주셔서 감사합니다.</p>
+                        </div>
+                        <a href="/mypage/check_password"><img src="/front/images/ico_arrow_right.svg" width="16"></a>
+                    </div>
+                </div>
+                <div class="link-area flex-box">
+                    <a href="/mypage">
+                        <img src="/front/images/ico_mypage.svg" width="19">
+                        <span>마이페이지</span>
+                    </a>
+                    <a href="/product/review/all">
+                        <img src="/front/images/ico_review.svg" width="24">
+                        <span>상품후기</span>
+                    </a>
+                    <a href="/video">
+                        <img src="/front/images/ico_youtube.svg" width="24">
+                        <span>유튜브</span>
+                    </a>
+                </div>
+                <div class="tab-box">
+                    <a href="javascript:;" class="on" data-idx="1">
+                        카테고리
+                    </a>
+                    <a href="javascript:;"  data-idx="2">
+                        상품분류
+                    </a>
+                </div>
+                <div class="header-product-list">
+                    <a class="fc006BFF" th:each="row: ${labels}" th:text="${row.name}" th:href="${row.has_month_wig ? '/product/month_wig?pl='+row.idx : '/product/list/state?pl='+row.idx}"></a>
+                    <a th:each="row: ${product_options}" th:text="${row.menu_name}" th:href="'/product/list/option?po='+${row.idx}"></a>
+                    <a href="/product/list/inner">내피별가발</a>
+                </div>
+                <div class="header-product-list2">
+                    <a th:each="row:${classes}" th:text="${row.name}" th:href="'/product/list/category/'+${row.idx}"></a>
+                </div>
+                <div class="sub-tit mt40 mb15">
+                    <h2>최근 본 상품</h2>
+                    <!--
+                        비로그인시 더보기 버튼 미노출 부탁드립니다
+                    -->
+                    <a th:if="${session.member != null}" href="/mypage/recently/product">더보기</a>
+                </div>
+                <div class="recently-view-area">
+                    <!--
+                         최근 본 상품 로그인 노출 영역
+                     -->
+                    <div th:if="${session.member != null}" class="login_on">
+                        <div class="swiper recentlyViewSwiper">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide" th:each="row: ${hit_logs}">
+                                    <!--
+                                        품절상품일 경우 a태그에 sold-out 클래스 추가 부탁드립니다
+                                    -->
+                                    <a th:href="'/product/view/'+${row.product_idx}">
+                                        <div class="img-box">
+                                            <img th:src="${row.product?.file?.toThumbnail(390, 390)}" src="/front/images/ex_img1.jpg">
+                                            <div th:data-idx="${row.product_idx}" th:class="'like-wrap '+${row.product?.isLikeToClass()}">
+                                                <div class="like-child">
+                                                </div>
+                                            </div>
+                                            <div class="sold-out-txt">
+                                                Sold Out
+                                            </div>
+                                        </div>
+                                        <p class="t-rw rw-2 product-name" th:text="${row.product?.name}"></p>
+                                    </a>
+                                </div>
+                                <!--<div class="swiper-slide">
+                                    <a href="/product/view">
+                                        <div class="img-box">
+                                            <img src="/front/images/ex_img2.jpg">
+                                            <div class="like-wrap"></div>
+                                            <div class="sold-out-txt">
+                                                Sold Out
+                                            </div>
+                                        </div>
+                                        <p class="t-rw rw-2 product-name">[수제통가발] 마르스 스트레이트 17인치 (모스트사)</p>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="/product/view">
+                                        <div class="img-box">
+                                            <img src="/front/images/ex_img3.jpg">
+                                            <div class="like-wrap"></div>
+                                            <div class="sold-out-txt">
+                                                Sold Out
+                                            </div>
+                                        </div>
+                                        <p class="t-rw rw-2 product-name">마르스 스트레이트 17인치 (모스트사)</p>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="/product/view">
+                                        <div class="img-box">
+                                            <img src="/front/images/ex_img4.jpg">
+                                            <div class="like-wrap"></div>
+                                            <div class="sold-out-txt">
+                                                Sold Out
+                                            </div>
+                                        </div>
+                                        <p class="t-rw rw-2 product-name">[수제통가발] 마르스 스트레이트 17인치 (모스트사)</p>
+                                    </a>
+                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <!--
+                       최근 본 상품 비로그인 노출 영역
+                   -->
+                    <div th:unless="${session.member != null}" class="login_off">
+                        <p>최근 본 상품을 저장하려면,<br>로그인 후 이용 가능합니다.</p>
+                        <a href="/member/login" class="btn bg222">로그인</a>
+                    </div>
+                </div>
+                <div class="sub-tit mt40 mb15 sc-list-btn">
+                    <h2>고객센터</h2>
+                    <a href="javascript:;"><img src="/front/images/ico_arrow_up.svg" width="11"></a>
+                </div>
+                <div class="sc-list">
+                    <a href="/notice">
+                        공지사항
+                    </a>
+                    <a href="/faq">
+                        FAQ
+                    </a>
+                    <a href="/consult">
+                        1:1 문의
+                    </a>
+                    <a href="/terms_policies">
+                        약관 및 정책
+                    </a>
+                    <a href="/mypage/preferences" th:if="${IS_APP}">
+                        앱 버전
+                    </a>
+                    <a href="/data">
+                        자료실
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-popup">
+            <div class="header-tit">
+                <a href="javascript:;" class="close-search-popup back-btn">
+                    <img src="/front/images/ico_back_arrow.svg" width="8">
+                </a>
+                <span>검색</span>
+                <em style="font-size: 0;"></em>
+            </div>
+            <div class="search_popup_bottom">
+                <form action="/search/product" method="get">
+                    <div class="flex-box gap-5">
+                        <input type="text" name="q" placeholder="검색어를 입력해 주세요">
+                        <button type="submit"><img src="/front/images/ico_search_wht.svg" width="18"></button>
+                    </div>
+                </form>
+                <th:block th:if="${member_search_logs != null && !#arrays.isEmpty(member_search_logs)}">
+                    <div class="sub-tit mt40 mb15">
+                        <h2>최근 검색어</h2>
+                        <a href="javascript:;" class="st-all-delete-btn">전체 삭제</a>
+                    </div>
+                    <div class="swiper recentlySearchSwiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide" th:each="row: ${member_search_logs}">
+                                <a href="javascript:;" th:data-idx="${row.idx}" th:data-keyword="${row.keyword}">
+                                    <th:block th:text="${row.keyword}"></th:block>
+                                    <button type="button" class="st-delete-btn"><img src="/front/images/ico_close_gray.svg" width="8"></button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+                <th:block th:if="${!#arrays.isEmpty(favorite_keywords_1_to_5)}">
+                    <div class="sub-tit mt30 mb15">
+                        <h2>인기 검색어</h2>
+                        <span class="fs12 fw500 fc999 lh1 ls024"><th:block th:text="${#dates.format(favorite_keywords_updated_at, 'HH:mm')}"></th:block> 기준</span>
+                    </div>
+                    <div class="flex-box gap-40 popular-search-list">
+                        <div class="left wid100 flex-box gap-10 flex-column">
+                            <a th:each="row:${favorite_keywords_1_to_5}" href="/search/product?q=여성형 가발" th:href="'/search/product?q='+${row.keyword}">
+                                <div>
+                                    <span th:text="${row.current_rank}">1</span>
+                                    <p class="t-rw rw-1" th:text="${row.keyword}">여성형 가발</p>
+                                </div>
+                                <!--
+                                    상태값에 따라 클래스 변경, 텍스트 추가 부탁드립니다
+
+                                    유지 sc-maintain
+                                    하락 sc-decline
+                                    상승 sc-rise
+                                    NEW sc-new 클래스 추가 및 em태그에 NEW 텍스트 추가
+
+                                -->
+                                <em th:class="${row.statusClass()}" th:text="${row.statusText()}"></em>
+                            </a>
+                        </div>
+                        <div class="left wid100 flex-box gap-10 flex-column">
+                            <a th:each="row:${favorite_keywords_5_to_10}" href="/search/product?q=여성형 가발" th:href="'/search/product?q='+${row.keyword}">
+                                <div>
+                                    <span th:text="${row.current_rank}">1</span>
+                                    <p class="t-rw rw-1" th:text="${row.keyword}">여성형 가발</p>
+                                </div>
+                                <!--
+                                    상태값에 따라 클래스 변경, 텍스트 추가 부탁드립니다
+
+                                    유지 sc-maintain
+                                    하락 sc-decline
+                                    상승 sc-rise
+                                    NEW sc-new 클래스 추가 및 em태그에 NEW 텍스트 추가
+
+                                -->
+                                <em th:class="${row.statusClass()}" th:text="${row.statusText()}"></em>
+                            </a>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="~{front/includes/footer.html}"/>
+    <th:block th:insert="~{front/popup/youtubePopup.html}"/>
+</div>
+
+<script th:inline="javascript">
+
+    const notices = /*[[${notices}]]*/ [];
+    const agreements = /*[[${agreements}]]*/ [];
+
+    //메인비주얼 스와이퍼
+    let productSwiper = new Swiper(".productSwiper", {
+        autoplay: {
+            delay: 10000,
+            disableOnInteraction: false
+        },
+        loop: true,
+        on: {
+            init: function () {
+                productSwiperUpdatePagination(this);
+            },
+            slideChange: function () {
+                productSwiperUpdatePagination(this);
+            }
+        }
+    });
+
+    // 페이지네이션 업데이트 함수
+    function productSwiperUpdatePagination(productSwiper) {
+        let currentPagination = productSwiper.realIndex + 1; // 현재 슬라이드 (1부터 시작)
+        let totalPagination = productSwiper.slides.length - productSwiper.loopedSlides * 2;
+        ; // 총 슬라이드 수
+
+        // 페이지네이션 요소에 텍스트 설정
+        $('.productSwiper .swiper-pagination-custom .current-pagination').text(currentPagination);
+        $('.productSwiper .swiper-pagination-custom .total-pagination').text(totalPagination);
+    }
+
+    // 초기 페이지네이션 설정
+    productSwiperUpdatePagination(productSwiper);
+    <!-- 메인 비주얼 스와이퍼 끝 -->
+
+    //메인 배너 스와이퍼
+    function bannerSwiper(){
+        let $slides = $(".bannerSwiper .swiper-slide");
+        let slideCount = $slides.length;
+
+        let bannerSwiper = new Swiper(".bannerSwiper", {
+            autoplay: slideCount > 1 ? {
+                delay: 2500,
+                disableOnInteraction: false
+            } : false,
+            loop: slideCount > 1, // 슬라이드가 1개면 loop 비활성화
+            on: {
+                init: function () {
+                    updateBannerPagination(this);
+                },
+                slideChange: function () {
+                    updateBannerPagination(this);
+                }
+            }
+        });
+
+
+        // 페이지네이션 업데이트 함수
+        function updateBannerPagination(bannerSwiper) {
+            let currentPagination2 = bannerSwiper.realIndex + 1; // 현재 슬라이드 (1부터 시작)
+            let totalPagination2 = slideCount > 1
+                ? bannerSwiper.slides.length - bannerSwiper.loopedSlides * 2
+                : slideCount; // 슬라이드가 1개면 slideCount를 사용
+
+            // 페이지네이션 요소에 텍스트 설정
+            $('.bannerSwiper .swiper-pagination-custom .current-pagination').text(currentPagination2);
+            $('.bannerSwiper .swiper-pagination-custom .total-pagination').text(totalPagination2);
+        }
+
+
+        // 초기 페이지네이션 설정
+        updateBannerPagination(bannerSwiper);
+        <!-- 메인 배너 스와이퍼 끝 -->
+    }
+    bannerSwiper();
+
+    $(".ham-manu .tab-box a").on("click", function (){
+        let tabIdx = $(this).data("idx");
+
+        if(tabIdx === 1){
+            $(".header-product-list").css("display", "flex");
+            $(".header-product-list2").css("display", "none");
+        } else if(tabIdx === 2){
+            $(".header-product-list").css("display", "none");
+            $(".header-product-list2").css("display", "flex");
+        }
+    });
+
+    const notices_tag = $("#notices");
+    notices_tag.empty();
+    notices.forEach(row => {
+        notices_tag.append(`
+        <div class="swiper-slide">
+            <a href="/notice/view/${row.idx}" class="flex-box align-items-center justify-content-between">
+                <div class="flex-box gap-7 align-items-center">
+                    <img src="/front/images/ico_notice_top.svg" width="12">
+                    <p class="t-rw rw-1">${row.title}</p>
+                </div>
+                <span>${timestampToDate(row.created_at, 'yyyy-MM-dd')}</span>
+            </a>
+        </div>
+        `);
+    });
+
+    const agreements_tag = $("#agreements");
+    agreements_tag.empty();
+    agreements.forEach(row => {
+        agreements_tag.append(`
+        <a href="/terms_policies/view/${row.idx}" class="wid100">${row.category.name}</a>
+        `);
+    });
+</script>
+</body>
+</html>
