@@ -55,18 +55,8 @@ public class MemberService extends _BSService<Member> {
 
     @Transactional
     public boolean updateStatusLeavedFromMemberIdx(Long idx) {
-        String sql = """
-SELECT COUNT(*) count FROM order_log
-WHERE o_dldt IS NULL AND m_idx = ? AND o_status NOT IN (?,?)
-""";
-        final int order_count = jt.queryForObject(sql, (rs, rn) -> rs.getInt("count"), idx, OrderStatus.CANCELED.getValue(), OrderStatus.ALL_COMPLETED.getValue());
-
-        if(order_count == 0) {
-            sql = "UPDATE member SET m_status = 'leaved' WHERE m_idx = ?";
-            return jt.update(sql, idx) > 0;
-        } else {
-            return false;
-        }
+        final String sql = "UPDATE member SET m_status = 'leaved' WHERE m_idx = ?";
+        return jt.update(sql, idx) > 0;
     }
 
     public String socialsToSql() {

@@ -49,11 +49,6 @@ public class AdminMainVisualController extends _BSAdminController {
     }
 
     @Override
-    public ModelAndView view(Long idx, ModelAndView mv) {
-        return null;
-    }
-
-    @Override
     public ModelAndView insert(ModelAndView mv) {
         mv.setViewName("admin/mainvisual/insert");
         return mv;

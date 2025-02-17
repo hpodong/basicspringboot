@@ -34,10 +34,18 @@ const SGValidateType = {
  * */
 const FileType = {
     PDF: "application/pdf",
+    DOC: "application/msword",
+    DOCX: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    XLS: "application/vnd.ms-excel",
+    XLSX: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    PPT: "application/vnd.ms-powerpoint",
+    PPTX: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    HWP: "application/x-hwp",
+    TXT: "text/plain",
     PNG: "image/png",
-    JPG: "image/jpg",
+    JPG: "image/jpeg",
     JPEG: "image/jpeg",
-    IMAGES: "image/*",
+    IMAGES: "image/*"
 };
 
 (function($) {
@@ -166,7 +174,7 @@ const FileType = {
                         case "checkbox":
                             if(Array.isArray(defaultvalue)) {
                                 $this.each(function() {
-                                    const $checked =  $(this);
+                                    const $checked = $(this);
                                     if(defaultvalue.includes($checked.val().trim())) $checked.prop("checked", true).change();
                                 });
                             } else {
@@ -236,7 +244,7 @@ const FileType = {
                                             const under_size = minsize && file.size < minsize*1024*1024;
                                             const over_size = maxsize && file.size > maxsize*1024*1024;
                                             if(under_size || over_size) {
-                                                $file_tag.val("");
+                                                $file_tag.val("").change();
                                                 return false;
                                             }
                                         }

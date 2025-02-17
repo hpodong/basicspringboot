@@ -562,6 +562,7 @@ $(document).ready(function () {
 
     let file_idx = $(this).data("file-idx");
     let index = parent.data("index");
+    const delete_form = $(this).closest("form");
 
     if(!Object.is(index, undefined)) {
       let file_input = document.getElementById("fileAttach");
@@ -572,7 +573,7 @@ $(document).ready(function () {
       file_input.files = dataTransfer.files;
     }
 
-    if(file_idx != null) form.append(`<input type='hidden' name='delete_file_idx' value='${file_idx}'>`);
+    if(file_idx != null) delete_form.append(`<input type='hidden' name='delete_file_idx' value='${file_idx}'>`);
     parent.remove();
 
     if (!$('.multiple-file-attach .file-box').length) {

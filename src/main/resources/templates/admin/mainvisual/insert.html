@@ -34,21 +34,8 @@
 											</colgroup>
 											<tbody>
 											<tr>
-												<th>회원권한</th>
-												<td>
-													<div class="radio_box" th:each="row: ${member_authorizations}">
-														<input type="radio" name="authorization_idx" th:id="'type'+${row.idx}" th:value="${row.idx}">
-														<label th:for="'type'+${row.idx}" th:text="${row.name}"></label>
-													</div>
-												</td>
-												<th><label for="sort">노출순서<span class="required">*</span></label></th>
-												<td>
-													<input type="text" name="sort" id="sort" class="max200">
-												</td>
-											</tr>
-											<tr>
 												<th>활성화 여부<span class="required">*</span></th>
-												<td colspan="3">
+												<td>
 													<div class="radio_box">
 														<input type="radio" name="mv_status" id="status_activated" value="activated" checked>
 														<label for="status_activated">활성화</label>
@@ -57,6 +44,10 @@
 														<input type="radio" name="mv_status" id="status_paused" value="paused">
 														<label for="status_paused">비활성화</label>
 													</div>
+												</td>
+												<th><label for="sort">노출순서<span class="required">*</span></label></th>
+												<td>
+													<input type="text" name="sort" id="sort" class="max200">
 												</td>
 											</tr>
 											</tbody>
@@ -120,34 +111,42 @@
 	$("#image_file").preview({
 		max_size: 500
 	});
-	$("input[name='authorization_idx']").setValidate(form, {
-		label: "회원 권한",
-		required: true,
+
+	$("input[name='mv_status']").addValidation({
+		cases: {
+			"활성화 여부를 선택해주세요.": (value) => !value
+		}
 	});
-	$("input[name='mv_status']").setValidate(form, {
-		label: "활성화 여부",
-		required: true,
+	$("#sort").addValidation({
+		regex: SGValidateType.NUMBER,
+		cases: {
+			"노출순서를 입력해주세요.": (value) => !value.length,
+		}
 	});
-	$("#sort").setValidate(form, {
-		label: "순서",
-		maxLength: 11,
-		required: true,
-		type: SGValidateType.NUMBER
+	$("#title").addValidation({
+		cases: {
+			"메인타이틀을 입력해주세요.": (value) => !value.length
+		},
+		maxlength: 100
 	});
-	$("#title").setValidate(form, {
-		label: "메인타이틀",
-		minLength: 1,
-		maxLength: 100
-	});
-	$("#image_file").setValidate(form, {
-		label: "배너 이미지",
-		required: true,
-		type: SGValidateType.FILE
+	$("#image_file").addValidation({
+		regex: SGValidateType.FILE,
+		cases: {
+			"비주얼 이미지를 선택해주세요.": (files) => !files.length,
+			"파일을 10MB 이하로 넣어주세요.": (files) => !fileMaxSizeCheck(10, files)
+		},
+		fileoptions: {
+			types: [FileType.IMAGES],
+			maxsize: 10,
+			autoempty: true
+		}
 	})
-	$("#url").setValidate(form, {
-		type: SGValidateType.URL,
-		label: "자세히 보기 URL",
-		minLength: 1,
+	$("#url").addValidation({
+		regex: SGValidateType.URL,
+		cases: {
+			"자세히 보기 URL을 입력해주세요.": (value) => !value.length,
+			"자세히 보기 URL을 정확히 입력해주세요.": (value, regex) => !regex.test(value)
+		}
 	});
 
 	form.submit(function() {

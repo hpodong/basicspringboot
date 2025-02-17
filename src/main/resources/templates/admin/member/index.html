@@ -115,7 +115,6 @@
                                             <col width="15%">
                                             <col width="15%">
                                             <col width="15%">
-                                            <col width="7%">
                                         </colgroup>
                                         <thead>
                                         <tr>
@@ -132,7 +131,6 @@
                                             <th scope="col">연락처</th>
                                             <th scope="col">최근 로그인일자</th>
                                             <th scope="col">가입일</th>
-                                            <th scope="col">포인트조회</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -156,9 +154,6 @@
                                                 th:text="${#dates.format(row.latest_logged_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
                                             <td th:data-idx="${row.idx}"
                                                 th:text="${#dates.format(row.created_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                                            <td>
-                                                <button type="button" class="btn btn-primary m0auto point-btn" th:data-member-idx="${row.idx}">조회하기</button>
-                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -179,7 +174,6 @@
         </div>
     </div>
     <th:block th:insert="~{admin/includes/footer.html}"/>
-    <th:block th:insert="~{admin/member/popup/send_alarm_pooup.html}"/>
 </div>
 <!--end wrapper-->
 <!--start switcher-->

@@ -5,7 +5,7 @@
 <div id="bodyWrap">
 	<th:block th:insert="~{admin/includes/header.html}"/>
 	<!--start page wrapper -->
-	<div id="sub" class="faq-view-page">
+	<div id="sub">
 		<div class="sub_visual">
 			<div class="sub_tit">
 				<h2>
@@ -35,10 +35,6 @@
 										<tr>
 											<th>등록일</th>
 											<td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd')}"></td>
-											<th>회원권한</th>
-											<td th:text="${data.authorization.name}"></td>
-										</tr>
-										<tr>
 											<th>상태</th>
 											<td colspan="3">
 												<select id="status" class="select_drop max200">
@@ -85,8 +81,8 @@
 							<form th:action="${cm.link} + '/delete'" method="post" onsubmit="return deleteCheck(this);">
 								<input type="hidden" name="idx" th:value="${data.idx}">
 								<div class="btnSet flex-box justify-content-between mt30">
-									<button th:href="${cm.link}" class="btn-bottom border222 btn-list-delete" type="submit">삭제</button>
-									<a th:href="${cm.link}" class="btn-bottom btn-gray-bottom">목록</a>
+									<button th:href="${cm.link}" class="btn btn-bottom border222 btn-list-delete" type="submit">삭제</button>
+									<a th:href="${cm.link}" class="btn btn-bottom btn-gray-bottom">목록</a>
 									<a th:href="${cm.link} + '/update?idx=' + ${data.idx}" class="btn-bottom btn primary">수정</a>
 								</div>
 							</form>

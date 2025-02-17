@@ -77,9 +77,6 @@ public class Member extends _BSModel {
             """, isQuerySelect = true)
     private String[] socials;
 
-    @BSColumn(name = "access_marketing", isInput = false)
-    private boolean access_marketing;
-
     @ToString.Exclude
     private String access_token;
 
@@ -111,14 +108,6 @@ public class Member extends _BSModel {
             case "leaved" -> "탈퇴";
             default -> "";
         };
-    }
-
-    public String accessMarketingToString() {
-        if(access_marketing) {
-            return "동의";
-        } else {
-            return "비동의";
-        }
     }
 
     private SocialType[] socialsToEnums() {

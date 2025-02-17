@@ -127,12 +127,6 @@ public class AdminMemberController extends _BSAdminController {
     private Member getDataFromIdx(Long idx) {
         final BSQuery bsq = new BSQuery(Member.class);
         bsq.addSelect(service.socialsToSql());
-        bsq.addSelect("""
-                (
-                SELECT magm_value FROM member_agreement
-                WHERE m_idx = member.m_idx AND agm_idx = 6
-                ) access_marketing
-                """);
         bsq.setIdx(idx);
         return service.findOne(bsq, Member::new);
     }

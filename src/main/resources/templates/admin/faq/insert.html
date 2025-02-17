@@ -27,20 +27,11 @@
 										<table class="row_line">
 											<caption>등록정보</caption>
 											<colgroup>
-												<col width="8.4%">
-												<col width="40%">
-												<col width="8.4%">
-												<col width="40%">
+												<col width="8.7%">
+												<col width="*">
 											</colgroup>
 											<tbody>
 											<tr>
-												<th>회원권한</th>
-												<td>
-													<div class="radio_box" th:each="row: ${member_authorizations}">
-														<input type="radio" name="authorization_idx" th:id="'type'+${row.idx}" th:value="${row.idx}">
-														<label th:for="'type'+${row.idx}" th:text="${row.name}"></label>
-													</div>
-												</td>
 												<th><label for="status">상태</label></th>
 												<td>
 													<select id="status" name="faq_status" class="max200 select_drop">
@@ -66,7 +57,7 @@
 											</colgroup>
 											<tbody>
 											<tr>
-												<th>문의유형</th>
+												<th>문의유형<span class="required">*</span></th>
 												<td>
 													<th:block th:each="category : ${categories}">
 														<div class="radio_box">
@@ -77,14 +68,14 @@
 												</td>
 											</tr>
 											<tr>
-												<th><label for="question">질문</label></th>
+												<th><label for="question">질문</label><span class="required">*</span></th>
 												<td>
 													<input type="text" name="question" id="question">
 												</td>
 											</tr>
 											<tr>
 												<th>
-													<label for="asked">답변</label>
+													<label for="asked">답변</label><span class="required">*</span>
 												</th>
 												<td>
 													<textarea data-height="300px" class="editor" rows="10" id="asked" name="asked"></textarea>
@@ -108,16 +99,12 @@
 	<th:block th:insert="~{admin/includes/footer.html}"/>
 </div>
 <script>
-	let form = $("form");
 
-	$("input[name='authorization_idx']").setValidate(form, {
-		label: "회원권한",
-		required: true,
-	});
-
-	$("input[name='category']").setValidate(form, {
-		label: "상태",
-		minLength: 1
+	$("input[name='category']").addValidation({
+		cases: {
+			"문의유형을 선택해주세요.": (value) => !value
+		},
+		focusElement: $("input[name='category']").closest("td")
 	});
 
 	/*$("#category").setValidate(form, {
@@ -125,18 +112,20 @@
 		minLength: 1,
 	});*/
 
-	$("#question").setValidate(form, {
-		label: "질문",
-		minLength: 1,
-		maxLength: 100,
-		showIcon: true
+	$("#question").addValidation({
+		cases: {
+			"질문을 입력해주세요.": (value) => !value.length
+		},
+		maxlength: 100,
 	});
 
-	$("#asked").setValidate(form, {
-		type: SGValidateType.EDITOR,
-		label: "답변",
-		minLength: 1,
-		showIcon: true
+	$("#asked").addValidation({
+		regex: SGValidateType.QL_EDITOR,
+		cases: {
+			"답변을 입력해주세요.": (value) => !value.length
+		},
+		maxlength: 2000,
+		focusElement: $("#asked").closest("td")
 	});
 </script>
 </body>

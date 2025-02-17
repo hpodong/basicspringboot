@@ -30,7 +30,6 @@ public abstract class _BSAdminController implements BSAdminControllerI {
 
     @Autowired
     protected FileService fileService;
-
     @Autowired
     protected HttpSession session;
     @Autowired
