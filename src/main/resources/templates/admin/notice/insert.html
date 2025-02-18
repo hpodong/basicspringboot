@@ -27,11 +27,24 @@
 										<table class="row_line">
 											<caption>등록정보</caption>
 											<colgroup>
-												<col width="8.7%">
-												<col width="*">
+												<col width="8.4%">
+												<col width="41.6%">
+												<col width="8.4%">
+												<col width="41.6%">
 											</colgroup>
 											<tbody>
 											<tr>
+												<th>활성화 여부<span class="required">*</span></th>
+												<td>
+													<div class="radio_box">
+														<input type="radio" name="notice_status" id="activate_true" value="activated" checked>
+														<label for="activate_true">활성화</label>
+													</div>
+													<div class="radio_box">
+														<input type="radio" name="notice_status" id="activate_false" value="paused">
+														<label for="activate_false">비활성화</label>
+													</div>
+												</td>
 												<th>노출 설정</th>
 												<td>
 													<div class="check_box on_label">

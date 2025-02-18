@@ -59,20 +59,24 @@
 </div>
 </body>
 <script th:inline="javascript">
-    let sg_form = $("form");
 
-    let id_ele = $("#id");
-    let password_ele = $("#password");
-
-    id_ele.setValidate(sg_form, {
-        minLength: 6,
-        maxLength: 16,
-        type: SGValidateType.ID
+    $("#id").addValidation({
+        maxlength: 16,
+        regex: SGValidateType.ID,
+        cases: {
+            "아이디를 입력해주세요.": (value) => !value.length,
+        },
+        showalert: true,
+        alerttype: AlertType.BASIC
     });
-    password_ele.setValidate(sg_form, {
-        minLength: 8,
-        maxLength: 60,
-        // type: SGValidateType.PASSWORD
+    $("#password").addValidation({
+        maxlength: 60,
+        regex: SGValidateType.PASSWORD,
+        cases: {
+            "비밀번호를 입력해주세요.": (value) => !value.length,
+        },
+        showalert: true,
+        alerttype: AlertType.BASIC
     });
 
     window.addEventListener('pageshow', function(event) {

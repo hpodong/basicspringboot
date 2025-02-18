@@ -26,13 +26,17 @@
                                     <table class="row_line">
                                         <caption>등록정보</caption>
                                         <colgroup>
-                                            <col width="8.7%">
-                                            <col width="*">
+                                            <col width="8.4%">
+                                            <col width="41.6%">
+                                            <col width="8.4%">
+                                            <col width="41.6%">
                                         </colgroup>
                                         <tbody>
                                         <tr>
                                             <th>등록일시</th>
-                                            <td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm')}"></td>
+                                            <td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <th>마지막 수정일</th>
+                                            <td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -137,5 +141,26 @@
 </div>
 <!--end wrapper-->
 <!--start switcher-->
+<script>
+    const $form = $("form");
+
+    $form.submit(function(event) {
+        event.preventDefault();
+
+        if ($form.isValidate()) {
+            SGConfirm({
+                title: "상담 내역을 수정하시겠습니까?",
+                onsuccess: (res) => {
+                    if (res) {
+                        SGProcess({
+                            title: "상담 내역을 저장중입니다...",
+                        });
+                        this.submit();
+                    }
+                }
+            })
+        }
+    });
+</script>
 </body>
 </html>

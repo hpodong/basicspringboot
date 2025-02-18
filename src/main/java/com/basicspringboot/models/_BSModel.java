@@ -255,4 +255,29 @@ public abstract class _BSModel{
         final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.KOREA);
         return numberFormat.format(price);
     }
+
+    public Map<String, Object> toSetData() {
+        final Map<String, Object> data = new LinkedHashMap<>();
+        final Class<?> clazz = this.getClass();
+        if(clazz.isAnnotationPresent(BSTable.class)) {
+            for(Field field : clazz.getDeclaredFields()) {
+                if(field.isAnnotationPresent(BSColumn.class)) {
+                    field.setAccessible(true);
+                    final BSColumn bsc = field.getAnnotation(BSColumn.class);
+                    if(bsc.isShow()) {
+                        String name = field.getName();
+                        if(!bsc.reqName().isEmpty()) name = bsc.reqName();
+                        try {
+                            Object value = field.get(this);
+                            if(value != null && BSEnum.class.isAssignableFrom(value.getClass())) {
+                                value = ((BSEnum<?>) value).getValue();
+                            }
+                            data.put(name, value);
+                        } catch (IllegalAccessException ignore) {}
+                    }
+                }
+            }
+        }
+        return data;
+    }
 }

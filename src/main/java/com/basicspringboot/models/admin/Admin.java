@@ -3,6 +3,7 @@ package com.basicspringboot.models.admin;
 import com.basicspringboot.annotations.BSColumn;
 import com.basicspringboot.annotations.BSTable;
 import com.basicspringboot.annotations.BSValidation;
+import com.basicspringboot.enums.AdminStatus;
 import com.basicspringboot.models._BSModel;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class Admin extends _BSModel {
     @BSColumn(name = "a_idx")
     private Long idx;
 
-    @BSColumn(name = "ar_idx", reqName = "role")
+    @BSColumn(name = "ar_idx")
     private Long role_idx;
 
     @BSColumn(name = "a_name")
@@ -52,13 +53,13 @@ public class Admin extends _BSModel {
     @BSColumn(name = "a_memo")
     private String memo;
 
-    @BSColumn(name = "a_refresh_token", isShow = false)
+    @BSColumn(name = "a_refresh_token")
     private String refresh_token;
 
-    @BSColumn(name = "a_status", isShow = false, reqName = "admin_status")
-    private String status;
+    @BSColumn(name = "a_status", reqName = "admin_status")
+    private AdminStatus status;
 
-    @BSColumn(name = "a_lldt", isShow = false)
+    @BSColumn(name = "a_lldt")
     private Timestamp last_logged_at;
 
     @BSColumn(name = "a_crdt")
@@ -82,14 +83,5 @@ public class Admin extends _BSModel {
 
     public Admin(HttpServletRequest req) {
         super(req);
-    }
-
-    public String statusToString() {
-        return switch (status) {
-            case "waiting" -> "승인대기";
-            case "active" -> "활성화";
-            case "pause" -> "비활성화";
-            default -> "";
-        };
     }
 }

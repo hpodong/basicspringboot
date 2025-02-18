@@ -21,35 +21,63 @@
 									<div class="tbl_area">
 										<div class="tbl_wrap tbl_wrap1">
 											<div class="tit_box">
-												<h3 class="sTit">등록정보</h3>
+												<h3 class="sTit">등록 정보</h3>
 											</div>
 											<div class="tbl_box tbl_box2">
 												<table class="row_line">
 													<caption>등록정보</caption>
 													<colgroup>
-														<col width="8.4%">
-														<col width="40%">
-														<col width="8.4%">
-														<col width="40%">
+														<col width="8.7%">
+														<col width="41.3%">
+														<col width="8.7%">
+														<col width="41.3%">
 													</colgroup>
 													<tbody>
 														<tr>
-															<th><label for="menu_status">상태</label></th>
-															<td>
-																<select id="menu_status" name="menu_status" class="select_drop max200">
-																	<option value="activated">활성화</option>
-																	<option value="paused">비활성화</option>
-																</select>
+															<th>활성화 여부<span class="required">*</span></th>
+															<td colspan="3">
+																<div class="radio_box">
+																	<input type="radio" name="menu_status" id="activate_true" value="activated" checked>
+																	<label for="activate_true">활성화</label>
+																</div>
+																<div class="radio_box">
+																	<input type="radio" name="menu_status" id="activate_false" value="paused">
+																	<label for="activate_false">비활성화</label>
+																</div>
 															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="tbl_wrap tbl_wrap1">
+											<div class="tit_box">
+												<h3 class="sTit">메뉴 정보</h3>
+											</div>
+											<div class="tbl_box tbl_box2">
+												<table class="row_line">
+													<colgroup>
+														<col width="8.4%">
+														<col width="41.6%">
+														<col width="8.4%">
+														<col width="41.6%">
+													</colgroup>
+													<tbody>
+														<tr>
 															<th><label for="sort">순서</label></th>
 															<td>
 																<input class="max200" type="text" name="sort" id="sort">
+															</td>
+															<th><label for="icon_name">아이콘명</label></th>
+															<td>
+																<input class="max200" type="text" name="icon_name" id="icon_name" placeholder="이미지명">
 															</td>
 														</tr>
 														<tr>
 															<th><label for="type">종류</label></th>
 															<td>
 																<select id="type" name="type" class="select_drop max200">
+																	<option value="">선택</option>
 																	<option value="arrow">메뉴 그룹</option>
 																	<option value="page">페이지</option>
 																</select>
@@ -57,7 +85,8 @@
 															<th><label for="parent_fk">상위 메뉴</label></th>
 															<td>
 																<div class="inputs">
-																	<select id="parent_fk" name="parent_fk" class="select_drop max200">
+																	<select id="parent_fk" name="parent_fk"
+																			class="select_drop max200">
 																		<option value="">없음</option>
 																		<option th:each="menu : ${menus}" th:value="${menu.idx}" th:text="${menu.title}"></option>
 																	</select>
@@ -66,18 +95,14 @@
 														</tr>
 														<tr>
 															<th><label for="link">링크</label></th>
-															<td>
-																<input type="text" name="link" id="link">
-															</td>
-															<th><label for="icon_name">아이콘명</label></th>
-															<td>
-																<input class="max200" type="text" name="icon_name" id="icon_name" placeholder="이미지명">
+															<td colspan="3">
+																<input type="text" name="link" id="link" class="wid40">
 															</td>
 														</tr>
 														<tr>
 															<th><label for="title">제목</label></th>
 															<td colspan="3">
-																<input type="text" name="title" id="title">
+																<input type="text" name="title" id="title" class="wid40">
 															</td>
 														</tr>
 														<tr>
@@ -103,36 +128,51 @@
 			</div>
 			<th:block th:insert="~{admin/includes/footer.html}"/>
 		</div>
-		<script src="/admin/js/ajax.js" type="text/javascript"></script>
 		<script>
-			let form = $("form");
-			$("#menu_status").setValidate(form, {
-				label: "상태",
-				minLength: 1,
+			const $form = $("form");
+
+			$("input[name='menu_status']").addValidation({
+				cases: {
+					"활성화 여부를 선택해주세요.": (value) => !value
+				},
+				focusElement: $("input[name='menu_status']").closest("td")
 			});
-			$("#sort").setValidate(form, {
-				label: "순서",
-				maxLength: 11,
-				type: SGValidateType.NUMBER,
-				required: false
+
+			$("#sort").addValidation({
+				regex: SGValidateType.NUMBER,
+				maxlength: 11,
 			});
-			$("#type").setValidate(form, {
-				label: "종류",
-				minLength: 1,
+
+			$("#type").addValidation({
+				cases: {
+					"종류를 선택해주세요.": (value) => !value.length
+				},
+				focusElement: $("#type").closest("td")
 			});
-			$("#title").setValidate(form, {
-				label: "제목",
-				minLength: 1,
-				maxLength: 100
+
+			$("#title").addValidation({
+				maxlength: 100,
+				cases: {
+					"제목을 입력해주세요.": (value) => !value
+				}
 			});
-			$("#parent_fk").setValidate(form, {
-				label: "상위 메뉴",
-				required: false
-			});
-			$("#link").setValidate(form, {
-				label: "링크",
-				required: false,
-				type: SGValidateType.PATH,
+
+			$form.submit(function(event) {
+				event.preventDefault();
+
+				if ($form.isValidate()) {
+					SGConfirm({
+						title: "관리자 메뉴를 저장하시겠습니까?",
+						onsuccess: (res) => {
+							if (res) {
+								SGProcess({
+									title: "관리자 메뉴를 저장중입니다...",
+								});
+								this.submit();
+							}
+						}
+					})
+				}
 			});
 		</script>
 	</body>

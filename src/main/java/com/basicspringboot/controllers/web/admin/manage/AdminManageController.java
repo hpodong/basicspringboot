@@ -2,6 +2,7 @@ package com.basicspringboot.controllers.web.admin.manage;
 
 import com.basicspringboot.controllers.web.admin._BSAdminController;
 import com.basicspringboot.dto.BSQuery;
+import com.basicspringboot.enums.AdminStatus;
 import com.basicspringboot.models.admin.Admin;
 import com.basicspringboot.services.manage.AdminRoleService;
 import com.basicspringboot.services.manage.AdminService;
@@ -66,6 +67,7 @@ public class AdminManageController extends _BSAdminController {
     @Override
     public ModelAndView insert(ModelAndView mv) {
         mv.addObject("roles", adminRoleService.getShownRoles());
+        mv.addObject("statuses", AdminStatus.values());
         mv.setViewName("admin/manage/insert");
 
         return mv;
@@ -79,7 +81,8 @@ public class AdminManageController extends _BSAdminController {
         mv.addObject("roles", adminRoleService.getShownRoles());
 
         final Admin data = service.findOne(bq, Admin::new);
-        mv.addObject("data", data);
+        mv.addObject("data", data.toSetData());
+        mv.addObject("statuses", AdminStatus.values());
         mv.setViewName("admin/manage/update");
         return mv;
     }

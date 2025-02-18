@@ -107,7 +107,7 @@ public class AdminMenu extends _BSModel {
         };
     }
 
-    public String pageToString() {
+    public String typeToString() {
         return switch (type) {
             case "arrow" -> "메뉴그룹";
             case "page" -> "페이지";

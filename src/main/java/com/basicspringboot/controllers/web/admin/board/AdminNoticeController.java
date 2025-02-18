@@ -147,15 +147,6 @@ public class AdminNoticeController extends _BSAdminController {
         return mv;
     }
 
-    @ResponseBody
-    @PostMapping("/update/status")
-    public boolean changeStatus(@RequestParam Long idx, @RequestParam APStatus status) {
-        final Notice notice = new Notice();
-        notice.setIdx(idx);
-        notice.setStatus(status);
-        return service.update(notice);
-    }
-
     private Notice findDataFromIdx(Long idx) {
         final BSQuery bsq = new BSQuery(Notice.class);
         bsq.setSelect("*");

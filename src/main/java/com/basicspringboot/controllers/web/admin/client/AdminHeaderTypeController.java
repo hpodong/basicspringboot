@@ -51,7 +51,7 @@ public class AdminHeaderTypeController extends _BSAdminController {
         final BSQuery bsq = new BSQuery(HeaderType.class);
         bsq.setIdx(idx);
 
-        mv.addObject("data", service.findOne(bsq, HeaderType::new));
+        mv.addObject("data", service.findOne(bsq, HeaderType::new).toSetData());
         mv.setViewName("admin/client_page/header/update");
         return mv;
     }

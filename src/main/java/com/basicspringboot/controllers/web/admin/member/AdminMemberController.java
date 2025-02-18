@@ -2,6 +2,8 @@ package com.basicspringboot.controllers.web.admin.member;
 
 import com.basicspringboot.controllers.web.admin._BSAdminController;
 import com.basicspringboot.dto.BSQuery;
+import com.basicspringboot.enums.AdminStatus;
+import com.basicspringboot.enums.MemberStatus;
 import com.basicspringboot.models.member.Member;
 import com.basicspringboot.services.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -39,15 +41,9 @@ public class AdminMemberController extends _BSAdminController {
     }
 
     @Override
-    public ModelAndView insert(ModelAndView mv) {
-
-        mv.setViewName("admin/member/insert");
-        return mv;
-    }
-
-    @Override
     public ModelAndView update(Long idx, ModelAndView mv) {
-        mv.addObject("data", getDataFromIdx(idx));
+        mv.addObject("data", getDataFromIdx(idx).toSetData());
+        mv.addObject("statuses", MemberStatus.values());
         mv.setViewName("admin/member/update");
         return mv;
     }
@@ -144,7 +140,7 @@ public class AdminMemberController extends _BSAdminController {
         bsq.addType("name", "m_name");
         bsq.addType("cell", "m_cell");
         bsq.setFromParams(request);
-        bsq.addWhere("m_status != 'leaved'");
+        bsq.addWhere("m_dldt IS NULL");
         return bsq;
     }
 }

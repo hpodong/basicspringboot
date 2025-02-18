@@ -22,16 +22,38 @@
 							<div class="tbl_area">
 								<div class="tbl_wrap tbl_wrap1">
 									<div class="tit_box">
-										<h3 class="sTit">등록정보</h3>
+										<h3 class="sTit">등록 정보</h3>
 									</div>
 									<div class="tbl_box tbl_box2">
 										<table class="row_line">
-											<caption>등록정보</caption>
+											<caption>등록 정보</caption>
 											<colgroup>
-												<col width="10.6%">
-												<col width="39.4%">
-												<col width="10.6%">
-												<col width="39.4%">
+												<col width="8.4%">
+												<col width="41.6%">
+												<col width="8.4%">
+												<col width="41.6%">
+											</colgroup>
+											<tbody>
+											<tr>
+												<th>생성일</th>
+												<td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+												<th>마지막 수정일</th>
+												<td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="tbl_wrap tbl_wrap1">
+									<div class="tit_box">
+										<h3 class="sTit">푸터 타입 정보</h3>
+									</div>
+									<div class="tbl_box tbl_box2">
+										<table class="row_line">
+											<caption>푸터 타입 정보</caption>
+											<colgroup>
+												<col width="8.4%">
+												<col width="*">
 											</colgroup>
 											<tbody>
 											<tr>
@@ -72,15 +94,22 @@
 
 	const data = /*[[${data}]]*/ null;
 
-	let form = $("form");
-	$("#name").setValidate(form, {
-		label: "이름",
-		minLength: 1,
+	setData(data);
+
+	const $form = $("form");
+
+	$("#name").addValidation({
+		cases: {
+			"이름을 입력해주세요.": (value) => !value.length
+		},
+		maxlength: 100
 	});
 
-	$("#html_value").setValidate(form, {
-		label: "HTML 코드",
-		required: true
+	$("#html_value").addValidation({
+		cases: {
+			"HTML 코드를 입력해주세요.": (value) => !value.length
+		},
+		focusElement: $("#html").closest("td")
 	});
 
 	let editor;
@@ -92,15 +121,14 @@
 			fontFamily: 'Nanum Gothic Coding',
 			automaticLayout: true,
 			language: 'markdown',
+			fontSize: 20,
 			value: [data.html].join('\n')
 		});
 
 		editor.onDidChangeModelContent(() => {
-			$("#html_value").val(editor.getValue());
+			$("#html_value").val(editor.getValue()).change();
 		});
 	});
-
-	setData(data);
 
 </script>
 </body>

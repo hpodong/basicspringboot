@@ -21,58 +21,62 @@
 							<div class="tbl_area">
 								<div class="tbl_wrap tbl_wrap1">
 									<div class="tit_box">
-										<h3 class="sTit">등록정보</h3>
+										<h3 class="sTit">SEO 정보</h3>
 									</div>
 									<div class="tbl_box tbl_box2">
 										<table class="row_line">
-											<caption>등록정보</caption>
+											<caption>SEO 정보</caption>
 											<colgroup>
 												<col width="8.4%">
-												<col width="40%">
-												<col width="8.4%">
-												<col width="40%">
+												<col width="*">
 											</colgroup>
 											<tbody>
 												<tr>
-													<th><label for="status">상태</label></th>
+													<th>활성화 여부<span class="required">*</span></th>
 													<td>
-														<select id="status" name="seo_status" class="select_drop max200" >
-															<option value="activated" selected>활성화</option>
-															<option value="paused">비활성화</option>
-														</select>
+														<div class="radio_box">
+															<input type="radio" name="seo_status" id="activate_true" value="activated" checked>
+															<label for="activate_true">활성화</label>
+														</div>
+														<div class="radio_box">
+															<input type="radio" name="seo_status" id="activate_false" value="paused">
+															<label for="activate_false">비활성화</label>
+														</div>
 													</td>
-													<th><label for="url">링크</label></th>
+												</tr>
+												<tr>
+													<th>링크<span class="required">*</span></th>
 													<td>
 														<input type="text" name="url" id="url">
 													</td>
 												</tr>
 												<tr>
-													<th><label for="title">제목</label></th>
-													<td colspan="3">
+													<th>제목<span class="required">*</span></th>
+													<td>
 														<input type="text" name="title" id="title">
 													</td>
 												</tr>
 												<tr>
-													<th><label for="keyword">키워드</label></th>
-													<td colspan="3">
+													<th>키워드</th>
+													<td>
 														<input type="text" name="keyword" id="keyword" >
 													</td>
 												</tr>
 												<tr>
-													<th><label for="desc">내용</label></th>
-													<td colspan="3">
+													<th>내용</th>
+													<td>
 														<textarea rows="5" type="text" name="desc" id="desc" ></textarea>
 													</td>
 												</tr>
 												<tr>
 													<th><label for="pc_image">PC 이미지</label></th>
-													<td colspan="3">
+													<td>
 														<input type="file" name="pc_image" id="pc_image">
 													</td>
 												</tr>
 												<tr>
 													<th><label for="mo_image">MO 이미지</label></th>
-													<td colspan="3">
+													<td>
 														<input type="file" name="mo_image" id="mo_image">
 													</td>
 												</tr>
@@ -94,49 +98,56 @@
 	<th:block th:insert="~{admin/includes/footer.html}"/>
 </div>
 <script>
-	$("#pc_image").preview({
-		"onchange": function(img) {
+	$("#seo_status").addValidation({
+		cases: {
+			"활성화 여부를 선택해주세요.": (value) => !value
 		}
 	});
-	$("#mo_image").preview({
-		"onchange": function(img) {
+	$("#url").addValidation({
+		regex: SGValidateType.PATH,
+		cases: {
+			"링크를 입력해주세요.": (value) => !value.length,
+			"링크를 정확히 입력해주세요.": (value, regex) => !regex.test(value),
 		}
 	});
-
-	let sg_form = $("form");
-	$("#status").setValidate(sg_form, {
-		label: "상태",
-		minLength: 1,
+	$("#title").addValidation({
+		cases: {
+			"제목을 입력해주세요.": (value) => !value.length,
+		},
+		maxlength: 100,
 	});
-	$("#url").setValidate(sg_form, {
-		label: "링크",
-		minLength: 1,
-		type: SGValidateType.PATH,
-		showIcon: true
-	});
-	$("#title").setValidate(sg_form, {
-		label: "제목",
-		minLength: 1,
-		maxLength: 100,
-		showIcon: true
-	});
-	$("#pc_image").setValidate(sg_form, {
-		label: "PC 이미지",
-		required: true,
-		type: SGValidateType.FILE
-	});
-	$("#mo_image").setValidate(sg_form, {
-		label: "MO 이미지",
-		required: true,
-		type: SGValidateType.FILE
-	});
-
-	sg_form.on("submit", function() {
-		if(sg_form.isValidate()) {
-			SGProcess({
-				title: "SEO 항목을 등록중입니다..."
+	$("#pc_image")
+			.preview({})
+			.addValidation({
+				regex: SGValidateType.FILE,
+				fileoptions: {
+					types: [FileType.IMAGES]
+				}
 			});
+	$("#mo_image")
+			.preview({})
+			.addValidation({
+				regex: SGValidateType.FILE,
+				fileoptions: {
+					types: [FileType.IMAGES]
+				}
+			});
+
+	$form.on("submit", function() {
+		if($form.isValidate()) {
+			SGConfirm({
+				title: "SEO 항목을 저장하시겠습니까?",
+				onsuccess: (res) => {
+					if(res) {
+						SGProcess({
+							title: "SEO 항목을 저장중입니다..."
+						});
+						this.submit();
+					}
+				}
+			})
 		}
+		return false;
 	});
 </script>
 </body>

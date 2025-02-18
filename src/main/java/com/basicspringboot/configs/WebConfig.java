@@ -1,8 +1,8 @@
 package com.basicspringboot.configs;
 
 import com.basicspringboot.converters.*;
-import com.basicspringboot.interceptors.util.AdminInterceptors;
-import com.basicspringboot.interceptors.util.FrontInterceptors;
+import com.basicspringboot.interceptors.web.AdminInterceptors;
+import com.basicspringboot.interceptors.web.FrontInterceptors;
 import com.basicspringboot.services.client.ClientPageService;
 import com.basicspringboot.services.contents.PopupService;
 import com.basicspringboot.services.manage.AdminMenuService;
@@ -27,14 +27,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${app.useragent}")
     private String APP_USERAGENT;
 
-    private final StringToProductStatusConverter stringToPlanMaterialStatusConverter;
-    private final StringToOrderStatusConverter stringToOrderStatusConverter;
-    private final StringToOrderProductStatusConverter stringToOrderProductStatusConverter;
-    private final StringToProductReviewStatusConverter stringToProductReviewStatusConverter;
-    private final StringToMemberPointStatusConverter stringToMemberPointStatusConverter;
     private final StringToSocialTypeConverter stringToSocialTypeConverter;
     private final StringToAPStatusConverter stringToAPStatusConverter;
-    private final StringToOrderTradingStatusConverter stringToOrderTradingStatusConverter;
 
     private final PopupService popupService;
     private final AdminPushLogService adminPushLogService;
@@ -106,13 +100,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(stringToPlanMaterialStatusConverter);
-        registry.addConverter(stringToOrderStatusConverter);
-        registry.addConverter(stringToOrderProductStatusConverter);
-        registry.addConverter(stringToProductReviewStatusConverter);
-        registry.addConverter(stringToMemberPointStatusConverter);
         registry.addConverter(stringToSocialTypeConverter);
         registry.addConverter(stringToAPStatusConverter);
-        registry.addConverter(stringToOrderTradingStatusConverter);
     }
 }

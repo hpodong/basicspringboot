@@ -1,34 +1,22 @@
 package com.basicspringboot.services.member;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.net.HttpHeaders;
 import com.basicspringboot.dto.BSQuery;
-import com.basicspringboot.enums.MemberPointStatus;
-import com.basicspringboot.enums.OrderStatus;
 import com.basicspringboot.interfaces.SheetSetter;
 import com.basicspringboot.models.member.Member;
 import com.basicspringboot.services._BSService;
-import com.basicspringboot.services.api.EmailService;
 import com.basicspringboot.utils.Utils;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
-import org.springframework.mail.MailSendException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 @Service

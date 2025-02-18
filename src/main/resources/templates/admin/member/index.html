@@ -31,9 +31,9 @@
                                 <caption> 게시글검색</caption>
                                 <colgroup>
                                     <col width="10.3%">
-                                    <col width="40%">
+                                    <col width="41.6%">
                                     <col width="10.3%">
-                                    <col width="40%">
+                                    <col width="41.6%">
                                 </colgroup>
                                 <tbody>
                                 <tr>
@@ -110,6 +110,7 @@
                                             <col width="70px">
                                             <col width="70px">
                                             <col width="7%">
+                                            <col width="7%">
                                             <col width="*">
                                             <col width="15%">
                                             <col width="15%">
@@ -125,6 +126,7 @@
                                                 </div>
                                             </th>
                                             <th scope="col">번호</th>
+                                            <th scope="col">상태</th>
                                             <th scope="col">가입경로</th>
                                             <th scope="col">아이디</th>
                                             <th scope="col">이름</th>
@@ -146,6 +148,7 @@
                                                 </div>
                                             </td>
                                             <td th:data-idx="${row.idx}" th:text="${row.row_num}"></td>
+                                            <td th:data-idx="${row.idx}" th:class="${row.status.toClass()}" th:text="${row.status.toHtml()}"></td>
                                             <td th:data-idx="${row.idx}" th:text="${row.socialsToString()}"></td>
                                             <td th:data-idx="${row.idx}" class="txt_l" th:text="${row.id}"></td>
                                             <td th:data-idx="${row.idx}" th:text="${row.name}"></td>

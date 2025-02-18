@@ -1,4 +1,4 @@
-package com.basicspringboot.interceptors.util;
+package com.basicspringboot.interceptors.web;
 
 import com.basicspringboot.models.member.Member;
 import com.basicspringboot.models.others.ClientPage;

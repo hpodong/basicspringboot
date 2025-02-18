@@ -20,35 +20,55 @@
 						<div class="tbl_area">
 							<div class="tbl_wrap tbl_wrap1">
 								<div class="tit_box">
-									<h3 class="sTit">등록정보</h3>
+									<h3 class="sTit">등록 정보</h3>
 								</div>
 								<div class="tbl_box tbl_box2">
 									<table class="row_line">
-										<caption>등록정보</caption>
+										<caption>등록 정보</caption>
 										<colgroup>
 											<col width="8.4%">
-											<col width="40%">
+											<col width="41.6%">
 											<col width="8.4%">
-											<col width="40%">
+											<col width="41.6%">
 										</colgroup>
 										<tbody>
 										<tr>
-											<th>수정일</th>
-											<td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd')}"></td>
 											<th>생성일</th>
-											<td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd')}"></td>
+											<td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+											<th>마지막 수정일</th>
+											<td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
 										</tr>
 										<tr>
-											<th>상태</th>
-											<td>
+											<th>활성화 여부</th>
+											<td colspan="3">
 												<span th:class="${data.status.toClass()}" th:text="${data.status.toHtml()}"></span>
 											</td>
-											<th>순서</th>
-											<td th:text="${data.sort}"></td>
 										</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="tbl_wrap tbl_wrap1">
+								<div class="tit_box">
+									<h3 class="sTit">권한 정보</h3>
+								</div>
+								<div class="tbl_box tbl_box2">
+									<table class="row_line">
+										<caption>권한 정보</caption>
+										<colgroup>
+											<col width="8.4%">
+											<col width="41.6%">
+											<col width="8.4%">
+											<col width="41.6%">
+										</colgroup>
+										<tbody>
 										<tr>
 											<th>이름</th>
 											<td colspan="3" th:text="${data.name}"></td>
+										</tr>
+										<tr>
+											<th>순서</th>
+											<td colspan="3" th:text="${data.sort}"></td>
 										</tr>
 										<tr>
 											<th>페이지 권한</th>

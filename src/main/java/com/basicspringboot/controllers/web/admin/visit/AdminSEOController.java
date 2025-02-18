@@ -69,6 +69,7 @@ public class AdminSEOController extends _BSAdminController {
     }
 
     @Override
+    @Transactional
     public ModelAndView update(Long idx, ModelAndView mv) {
         final BSQuery bsq = new BSQuery(SEO.class);
         bsq.setIdx(idx);

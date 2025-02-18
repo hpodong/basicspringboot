@@ -28,9 +28,9 @@
                                             <caption>등록정보</caption>
                                             <colgroup>
                                                 <col width="8.4%">
-                                                <col width="40%">
+                                                <col width="41.6%">
                                                 <col width="8.4%">
-                                                <col width="40%">
+                                                <col width="41.6%">
                                             </colgroup>
                                             <tbody>
                                             <tr>
@@ -63,19 +63,19 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th><label for="link">링크</label></th>
+                                                <th>링크<span class="required">*</span></th>
                                                 <td colspan="3">
-                                                    <input type="text" name="link" id="link" class="wid50">
+                                                    <input type="text" name="link" id="link" class="wid40">
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th><label for="title">제목</label></th>
+                                                <th>제목<span class="required">*</span></th>
                                                 <td colspan="3">
                                                     <input type="text" name="title" id="title">
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th><label for="title">부제목</label></th>
+                                                <th>부제목</th>
                                                 <td colspan="3">
                                                     <input type="text" name="subtitle" id="subtitle">
                                                 </td>
@@ -97,32 +97,46 @@
     </div>
     <th:block th:insert="~{admin/includes/footer.html}"/>
 </div>
-<script src="/admin/js/ajax.js" type="text/javascript"></script>
 <script>
-    let form = $("form");
-    $("input[name='menu_status']").setValidate(form, {
-        label: "상태",
-        required: true
+    const $form = $("form");
+    $("input[name='menu_status']").addValidation({
+        cases: {
+            "활성화 상태를 선택해주세요.": (value) => !value
+        }
     });
-    $("input[name='is_login_required']").setValidate(form, {
-        label: "로그인 여부",
-        required: true
+    $("#link").addValidation({
+        regex: SGValidateType.PATH,
+        cases: {
+            "링크를 입력해주세요.": (value) => !value,
+            "링크를 정확히 입력해주세요.": (value, regex) => !regex.test(value),
+        }
     });
-    $("#link").setValidate(form, {
-        label: "링크",
-        required: false,
-        maxLength: 100,
-        type: SGValidateType.PATH,
+    $("#title").addValidation({
+        cases: {
+            "제목을 입력해주세요.": (value) => !value
+        },
+        maxlength: 100
     });
-    $("#title").setValidate(form, {
-        label: "제목",
-        minLength: 1,
-        maxLength: 100
+    $("#subtitle").addValidation({
+        maxlength: 100
     });
-    $("#subtitle").setValidate(form, {
-        label: "부제목",
-        required: false,
-        maxLength: 100
+
+    $form.submit(function(event) {
+        event.preventDefault();
+
+        if ($form.isValidate()) {
+            SGConfirm({
+                title: "페이지를 저장하시겠습니까?",
+                onsuccess: (res) => {
+                    if (res) {
+                        SGProcess({
+                            title: "페이지를 저장중입니다...",
+                        });
+                        this.submit();
+                    }
+                }
+            })
+        }
     });
 </script>
 </body>

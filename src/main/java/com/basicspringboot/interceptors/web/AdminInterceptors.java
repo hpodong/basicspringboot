@@ -1,4 +1,4 @@
-package com.basicspringboot.interceptors.util;
+package com.basicspringboot.interceptors.web;
 
 import com.basicspringboot.models.admin.Admin;
 import com.basicspringboot.services.manage.AdminMenuService;

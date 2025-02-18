@@ -61,14 +61,16 @@ public class AdminRoleController extends _BSAdminController {
     }
 
     @Override
+    @Transactional
     public ModelAndView update(Long idx, ModelAndView mv) {
         final BSQuery bq = new BSQuery(AdminRole.class);
         mv.addObject("menus", adminMenuService.getMenus());
         bq.setIdx(idx);
+
         mv.addObject("items", service.findItemsIdx(idx));
 
         final AdminRole data = service.findOne(bq, AdminRole::new);
-        mv.addObject("data", data);
+        mv.addObject("data", data.toSetData());
         mv.setViewName("admin/role/update");
         return mv;
     }

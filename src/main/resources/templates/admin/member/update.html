@@ -20,8 +20,41 @@
                     <div class="board">
                         <form th:action="${cm.link + '/update'}" class="form-horizontal" method="post"
                               accept-charset="utf-8">
-                            <input type="hidden" name="idx" th:value="${data.idx}">
+                            <input type="hidden" name="idx">
                             <div class="tbl_area">
+                                <div class="tbl_wrap tbl_wrap1">
+                                    <div class="tit_box">
+                                        <h3 class="sTit">등록정보</h3>
+                                    </div>
+                                    <div class="tbl_box tbl_box2">
+                                        <table class="row_line">
+                                            <caption>등록정보</caption>
+                                            <colgroup>
+                                                <col width="8.4%">
+                                                <col width="41.6%">
+                                                <col width="8.4%">
+                                                <col width="41.6%">
+                                            </colgroup>
+                                            <tbody>
+                                            <tr>
+                                                <th>가입일</th>
+                                                <td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                                <th>마지막 수정일</th>
+                                                <td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>상태</th>
+                                                <td colspan="3">
+                                                    <div class="radio_box" th:each="status:${statuses}">
+                                                        <input type="radio" name="member_status" th:id="'status_waiting_'+${status.value}" th:value="${status.value}">
+                                                        <label th:for="'status_waiting_'+${status.value}" th:text="${status.toHtml()}"></label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                                 <div class="tbl_wrap tbl_wrap1">
                                     <div class="tit_box">
                                         <h3 class="sTit">회원정보</h3>
@@ -34,10 +67,6 @@
                                                 <col width="*">
                                             </colgroup>
                                             <tbody>
-                                            <tr>
-                                                <th>가입구분</th>
-                                                <td th:text="${data.socialsToString()}"></td>
-                                            </tr>
                                             <tr>
                                                 <th>아이디</th>
                                                 <td th:text="${data.id}"></td>
@@ -64,15 +93,13 @@
                                             <tr>
                                                 <th><label for="name">이름</label><span class="required">*</span></th>
                                                 <td>
-                                                    <input class="max200" type="text" name="name" id="name"
-                                                           th:value="${data.name}">
+                                                    <input class="max200" type="text" name="name" id="name">
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <th><label for="cell">연락처</label><span class="required">*</span></th>
                                                 <td>
-                                                    <input class="max200" type="text" id="cell" name="cell"
-                                                           th:value="${data.cell}">
+                                                    <input class="max200" type="text" id="cell" name="cell">
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -95,12 +122,13 @@
 <script src="/admin/js/ajax.js" type="text/javascript"></script>
 <script th:inline="javascript">
 
-    const cell = /*[[${data.cell}]]*/ null;
+    const data = /*[[${data}]]*/ null;
+    setData(data);
 
     const password_fields = $(".password-field");
     password_fields.hide();
 
-    let sg_form = $("form");
+    let $form = $("form");
 
     $(".password-btn button").on("click", function () {
         $(this).closest(".password-btn").hide();
@@ -110,56 +138,85 @@
         password_fields.show();
     });
 
-    $("#password").setValidate(sg_form, {
-        minLength: 8,
-        maxLength: 20,
-        type: "password",
-        required: true,
-        showIcon: true
+    $("#password").addValidation({
+        regex: SGValidateType.PASSWORD,
+        maxlength: 20,
+        cases: {
+            "비밀번호를 입력해주세요.": (value) => !value.length,
+            "비밀번호는 영문, 숫자, 특수문자 8자 이상 20자 이하로 입력해주세요.": (value, regex) => !regex.test(value)
+        }
     });
-    $("#password2").setValidate(sg_form, {
-        minLength: 8,
-        maxLength: 20,
-        type: "password",
-        required: true,
-        showIcon: true,
-        onchange: function (input, value) {
-            if (value !== $("#password").val()) {
-                setInvalidate(input, "비밀번호가 일치하지 않습니다.");
-            } else {
-                setValidate(input);
-            }
+    $("#password2").addValidation({
+        regex: SGValidateType.PASSWORD,
+        maxlength: 20,
+        cases: {
+            "비밀번호를 한번 더 입력해주세요.": (value) => !value.length,
+            "비밀번호는 영문, 숫자, 특수문자 8자 이상 20자 이하로 입력해주세요.": (value, regex) => !regex.test(value),
+            "비밀번호가 일치하지 않습니다.": (value) => !Object.is(value, $("#password").val()),
         }
     });
 
-    $("#name").setValidate(sg_form, {
-        label: "이름",
-        minLength: 1,
-        maxLength: 50,
+    $("#name").addValidation({
+        cases: {
+            "이름을 입력해주세요.": (value) => !value.length
+        },
+        maxlength: 50
     });
-    $("#cell").setValidate(sg_form, {
-        label: "연락처",
-        minLength: 1,
-        maxLength: 13,
-        type: SGValidateType.CELL,
-        onchange: function (input, value) {
-            cellCheck($("#cell"), true, cell);
+
+    $("#cell").addValidation({
+        regex: SGValidateType.CELL,
+        cases: {
+            "연락처를 입력해주세요.": (value) => !value.length,
+            "연락처를 정확히 입력해주세요.": (value, regex) => !regex.test(value)
         }
     });
 
-    sg_form.submit(function(event) {
+    $form.submit(function(event) {
         event.preventDefault();
-        cellCheck($("#cell"), true, cell);
+        cellCheck();
 
-        if (sg_form.isValidate()) {
+        if ($form.isValidate()) {
             SGConfirm({
                 title: "회원을 수정하시겠습니까?",
                 onsuccess: (res) => {
-                    if (res) this.submit();
+                    if (res) {
+                        SGProcess({
+                            title: "회원을 저장중입니다...",
+                        });
+                        this.submit();
+                    }
                 }
             })
         }
     });
+
+    const cellCheck = () => {
+        const url = "/admin/member/cell-check";
+        const $cell = $("#cell");
+        const cell = $cell.val();
+        $.ajax({
+            url,
+            data: {
+                cell,
+                exclude: data?.cell
+            },
+            type: "POST",
+            async: false,
+            success: function(res) {
+                if(!res) {
+                    console.log(res);
+                    $cell
+                        .removeValidationText()
+                        .addValidationText("이미 사용중인 연락처입니다.");
+                } else {
+                    $cell.removeValidationText();
+                }
+            },
+            error: function(err) {
+                console.error(err);
+            }
+        });
+    }
 </script>
 </body>
 </html>

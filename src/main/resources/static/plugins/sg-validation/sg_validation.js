@@ -18,6 +18,7 @@ const SGValidateType = {
     PATH: "path",
     EDITOR: "editor",
     QL_EDITOR: "ql_editor",
+    HTML: "html",
     SELECT: "select",
     UPPER: "upper",
     UPPER_OR_NUMBER: "upper_or_number",
@@ -25,7 +26,10 @@ const SGValidateType = {
     KR: "korean",
 };
 
-
+const AlertType = {
+    DEFAULT: "default",
+    BASIC: "basic"
+}
 
 /**
  * @constant SGValidateType
@@ -52,12 +56,12 @@ const FileType = {
 
     const IS_SHOW_ALERT = false;
     const ON_CHANGE_CHECK = false;
-    const FILE_OPTION_AUTO_EMPTY = true;
+    const FILE_OPTION_AUTO_EMPTY = false;
     const EDITOR_PATH = "/smarteditor/SmartEditor2Skin.html";
 
     const price_regex = /\D/g;
     const number_regex = /[^0-9]/g;
-    const id_regex = /^[a-zA-Z0-9]+$/;
+    const id_regex = /^[a-zA-Z0-9]{6,20}$/;
     /*const cell_regex = /^\d{3}-\d{3,4}-\d{4}$/;*/
     const cell_regex = /^(02-\d{3,4}-\d{4}|\d{3}-\d{3,4}-\d{4})$/;
     const email_regex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -71,6 +75,7 @@ const FileType = {
     const timestamp_regex = new RegExp(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[\+\-]\d{2}:\d{2})$/);
     const kr_regex = /^[가-힣]+$/;
     const url_regex = /^(https?|http):\/\/(-\.)?([^\s\/?\.#-]+\.?)+(\/[^\s]*)?$/i;
+    const path_regex = /^\/([\w-]+\/?)*$/;
 
     const regexFromSGType = function(type) {
         if(!type) return null;
@@ -85,6 +90,7 @@ const FileType = {
             case SGValidateType.KR: return kr_regex;
             case SGValidateType.URL:
             case SGValidateType.LINK: return url_regex;
+            case SGValidateType.PATH: return path_regex;
             default: return null;
         }
     }
@@ -95,8 +101,7 @@ const FileType = {
      * @returns {boolean}
      */
     $.fn.isValidate = function () {
-        const $this = $(this);
-        return !$this.find("[data-has_validation=true]:visible").length;
+        return !$(this).find("p.invalidation-txt:visible").length;
     }
 
     /**
@@ -108,16 +113,18 @@ const FileType = {
      * @param {number} options.fileoptions.minsize - 파일 최소 사이즈(MB)
      * @param {number} options.fileoptions.maxsize - 파일 최대 사이즈(MB)
      * @param {boolean} options.fileoptions.autoempty - 유효성 검사 시 파일 자동으로 비움 여부
+     * @param {function} options.fileoptions.onemptyfile - 유효성 검사 시 파일 자동으로 비울 때 함수
      * @param {Object.<string, function(string || number || string[] || FileList[], RegExp)>} options.cases - 유효성 검사 조건 { "메시지": (value, regex) => boolean }
      * @param {any} options.defaultvalue - 초기 밸류값
      * @param {SGValidateType} options.regex - 정규식 패턴
      * @param {number} options.minlength - 최소 길이
      * @param {number} options.maxlength - 최대 길이
      * @param {boolean} options.showalert - 알럿 표시 여부
+     * @param {boolean} options.alerttype - 알럿 종류
      * @param {boolean} options.onchangecheck - onchange 체크 여부
      * @param {jQuery[input]} options.focusElement - 유효성 검사에 걸릴 때 포커싱할 태그
-     * @param {function} options.onvalidate - 유효성 검사에 통과되었을 때 함수
-     * @param {function} options.oninvalidate - 유효성 검사에 걸렸을 때 함수
+     * @param {function()} options.onvalidate - 유효성 검사에 통과되었을 때 함수
+     * @param {function()} options.oninvalidate - 유효성 검사에 걸렸을 때 함수
      * @returns {jQuery}
      */
     $.fn.addValidation = function (options) {
@@ -154,8 +161,9 @@ const FileType = {
         } = options;
         if(cases) {
             $form.submit(function(event) {
-                $this.removeValidationText(focusElement);
-                $this.submitHandler(event, options);
+                $this
+                    .removeValidationText(focusElement)
+                    .submitHandler(event, options);
             });
         }
 
@@ -235,9 +243,11 @@ const FileType = {
                                 const {
                                     minsize,
                                     maxsize,
-                                    autoempty = FILE_OPTION_AUTO_EMPTY
+                                    autoempty = FILE_OPTION_AUTO_EMPTY,
+                                    onemptyfile
                                 } = fileoptions;
                                 if(autoempty) {
+                                    $this.validationHandler(null, options);
                                     if(maxlength && length > maxlength) $file_tag.val("");
                                     $.each(files, (index, file) => {
                                         if(file) {
@@ -245,6 +255,7 @@ const FileType = {
                                             const over_size = maxsize && file.size > maxsize*1024*1024;
                                             if(under_size || over_size) {
                                                 $file_tag.val("").change();
+                                                if(onemptyfile) onemptyfile();
                                                 return false;
                                             }
                                         }
@@ -358,6 +369,7 @@ const FileType = {
             cases,
             regex,
             showalert = IS_SHOW_ALERT,
+            alerttype = AlertType.DEFAULT,
             focusElement,
             onvalidate,
             oninvalidate,
@@ -376,7 +388,14 @@ const FileType = {
             const message = invalid_messages[0];
             if(oninvalidate) oninvalidate(message);
             if(showalert) {
-                alert(message);
+                if(Object.is(alerttype, AlertType.DEFAULT)) {
+                    alert(message);
+                } else {
+                    SGAlert({
+                        title: message,
+                        type: SGAlertType.ERROR
+                    })
+                }
                 if(event) event.stopImmediatePropagation();
             } else {
                 if(!$this.hasValidationText(focusElement)) {
@@ -385,8 +404,8 @@ const FileType = {
             }
             if(event) form.find("[data-has_validation=true]").first().focus();
         } else {
-            if(onvalidate) onvalidate();
             $this.removeValidationText(focusElement);
+            if(onvalidate) onvalidate();
         }
     }
 
@@ -397,7 +416,7 @@ const FileType = {
         } = options;
         const input_type = $this.attr("type");
         const tag_name = $this.prop("tagName")?.toLocaleLowerCase();
-        const include_types = [SGValidateType.FILE, SGValidateType.EDITOR, SGValidateType.QL_EDITOR];
+        const include_types = [SGValidateType.FILE, SGValidateType.EDITOR, SGValidateType.QL_EDITOR, SGValidateType.HTML];
         const has_validation = include_types.some(type => Object.is(type, regex))
             || $this.is(":visible")
             || Object.is(tag_name, "select")
@@ -412,12 +431,14 @@ const FileType = {
             console.error(e);
             alert(e);
         }
+        return $this;
     }
 
     /**
      * @function $.fn.removeValidationText
      * @description 유효성 검사 문구를 지웁니다.
      * @param {jQuery[element]} $focusElement - 유효성 검사에 걸릴 때 포커싱할 태그
+     * @return jQuery
      */
     $.fn.removeValidationText = function($focusElement) {
         const $this = $(this);
@@ -427,6 +448,7 @@ const FileType = {
             $this.next("p.invalidation-txt").remove();
         }
         $this.attr("data-has_validation", false);
+        return $this;
     }
 
     /**
@@ -434,6 +456,7 @@ const FileType = {
      * @description 유효성 검사 문구를 추가합니다.
      * @param {string} message - 추가할 메세지
      * @param {jQuery[element]} $focusElement - 유효성 검사에 걸릴 때 포커싱할 태그
+     * @return jQuery
      */
     $.fn.addValidationText = function(message, $focusElement) {
         const $this = $(this);
@@ -443,6 +466,7 @@ const FileType = {
             $this.after(`<p class='invalidation-txt'>${message}</p>`);
         }
         $this.attr("data-has_validation", true);
+        return $this;
     }
 
     /**

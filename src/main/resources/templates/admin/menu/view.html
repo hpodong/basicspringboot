@@ -1,152 +1,137 @@
 <!doctype html>
 <html lang="kr" class="semi-dark">
-<head th:replace="~{admin/includes/head.html}">
-<body>
-<div id="bodyWrap">
-    <th:block th:insert="~{admin/includes/header.html}"/>
-    <!--start page wrapper -->
-    <div id="sub" class="menu-view-page">
-        <div class="sub_visual">
-            <div class="sub_tit">
-                <h2>
-                    <th:block th:text="${cm.title}"></th:block>
-                </h2>
-            </div>
-        </div>
-        <div class="sec_wrap lesssonpro-viewPage">
-            <div class="section section1">
-                <div class="inner">
-                    <div class="board">
-                        <div class="tbl_area">
-                            <div class="tbl_wrap tbl_wrap1">
-                                <div class="tit_box">
-                                    <h3 class="sTit">등록정보</h3>
-                                </div>
-                                <div class="tbl_box tbl_box2">
-                                    <table class="row_line">
-                                        <caption>등록정보</caption>
-                                        <colgroup>
-                                            <col width="8.4%">
-                                            <col width="40%">
-                                            <col width="8.4%">
-                                            <col width="40%">
-                                        </colgroup>
-                                        <tbody>
-                                        <tr>
-                                            <th>수정일</th>
-                                            <td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd')}"></td>
-                                            <th>생성일</th>
-                                            <td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd')}"></td>
-                                        </tr>
-                                        <tr>
-                                            <th>상태</th>
-                                            <td>
-                                                <select id="status" class="select_drop max200">
-                                                    <option value="activated" th:selected="'ACTIVATED' eq ${data.status.toString()}">
-                                                        활성화
-                                                    </option>
-                                                    <option value="paused" th:selected="'PAUSED' eq ${data.status.toString()}">비활성화
-                                                    </option>
-                                                </select>
-                                            </td>
-                                            <th>순서</th>
-                                            <td th:text="${data.sort}"></td>
-                                        </tr>
-                                        <tr>
-                                            <th>링크</th>
-                                            <td th:text="${data.link}"></td>
-                                            <th>아이콘명</th>
-                                            <td>
-                                                <div class="flex-box align-items-center gap-5">
-                                                    <p th:text="${data.icon_name}"></p>
-                                                    <img th:if="${data.icon_name != null}"
-                                                         th:src="'/admin/images/'+${data.icon_name}" class="max20">
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>제목</th>
-                                            <td colspan="3" th:text="${data.title}"></td>
-                                        </tr>
-                                        <tr>
-                                            <th>설명</th>
-                                            <td colspan="3" th:text="${data.desc}"></td>
-                                        </tr>
-                                        <tr th:if="${data.parent_fk != null}">
-                                            <th>상위메뉴</th>
-                                            <td colspan="3" th:text="${data.parent_name}"></td>
-                                        </tr>
-                                        <tr>
-                                            <th>하위메뉴</th>
-                                            <td colspan="3" th:text="${data.childrenToString()}"></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+    <head th:replace="~{admin/includes/head.html}">
+    <body>
+        <div id="bodyWrap">
+            <th:block th:insert="~{admin/includes/header.html}"/>
+            <!--start page wrapper -->
+            <div id="sub" class="menu-view-page">
+                <div class="sub_visual">
+                    <div class="sub_tit">
+                        <h2>
+                            <th:block th:text="${cm.title}"></th:block>
+                        </h2>
+                    </div>
+                </div>
+                <div class="sec_wrap lesssonpro-viewPage">
+                    <div class="section section1">
+                        <div class="inner">
+                            <div class="board">
+                                <div class="tbl_area">
+                                    <div class="tbl_wrap tbl_wrap1">
+                                        <div class="tit_box">
+                                            <h3 class="sTit">등록 정보</h3>
+                                        </div>
+                                        <div class="tbl_box tbl_box2">
+                                            <table class="row_line">
+                                                <caption>등록정보</caption>
+                                                <colgroup>
+                                                    <col width="8.7%">
+                                                    <col width="41.3%">
+                                                    <col width="8.7%">
+                                                    <col width="41.3%">
+                                                </colgroup>
+                                                <tbody>
+                                                    <tr>
+                                                        <th>등록일시</th>
+                                                        <td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                                        <th>마지막 수정일</th>
+                                                        <td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>활성화 여부</th>
+                                                        <td colspan="3">
+                                                            <span th:class="${data.status.toClass()}" th:text="${data.status.toHtml()}"></span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="tbl_wrap tbl_wrap1">
+                                        <div class="tit_box">
+                                            <h3 class="sTit">메뉴 정보</h3>
+                                        </div>
+                                        <div class="tbl_box tbl_box2">
+                                            <table class="row_line">
+                                                <caption>메뉴 정보</caption>
+                                                <colgroup>
+                                                    <col width="8.4%">
+                                                    <col width="*">
+                                                </colgroup>
+                                                <tbody>
+                                                    <tr>
+                                                        <th>순서</th>
+                                                        <td th:text="${data.sort}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>종류</th>
+                                                        <td th:text="${data.typeToString()}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>링크</th>
+                                                        <td th:text="${data.link}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>아이콘명</th>
+                                                        <td>
+                                                            <div class="flex-box align-items-center gap-5">
+                                                                <p th:text="${data.icon_name}"></p>
+                                                                <img th:if="${data.icon_name != null}"
+                                                                     th:src="'/admin/images/'+${data.icon_name}" class="max20">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>제목</th>
+                                                        <td th:text="${data.title}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>설명</th>
+                                                        <td th:text="${data.desc}"></td>
+                                                    </tr>
+                                                    <tr th:if="${data.parent_fk != null}">
+                                                        <th>상위메뉴</th>
+                                                        <td th:text="${data.parent_name}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>하위메뉴</th>
+                                                        <td th:text="${data.childrenToString()}"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <form th:action="${cm.link} + '/delete'" method="post" onsubmit="return deleteCheck(this);">
+                                        <input type="hidden" name="idx" th:value="${data.idx}">
+                                        <div class="btnSet flex-box justify-content-between mt30">
+                                            <button th:href="${cm.link}" class="btn-bottom border222 btn-list-delete" type="submit">삭제</button>
+                                            <a th:href="${cm.link}" class="btn-bottom btn-gray-bottom">목록</a>
+                                            <a th:href="${cm.link} + '/update?idx=' + ${data.idx}" class="btn-bottom btn primary">수정</a>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-                            <form th:action="${cm.link} + '/delete'" method="post" onsubmit="return deleteCheck(this);">
-                                <input type="hidden" name="idx" th:value="${data.idx}">
-                                <div class="btnSet flex-box justify-content-between mt30">
-                                    <button th:href="${cm.link}" class="btn-bottom border222 btn-list-delete" type="submit">삭제</button>
-                                    <a th:href="${cm.link}" class="btn-bottom btn-gray-bottom">목록</a>
-                                    <a th:href="${cm.link} + '/update?idx=' + ${data.idx}" class="btn-bottom btn primary">수정</a>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 </div>
             </div>
+            <th:block th:insert="~{admin/includes/footer.html}"/>
         </div>
-    </div>
-    <th:block th:insert="~{admin/includes/footer.html}"/>
-</div>
 
-<script th:inline="javascript">
-    const data = /*[[${data}]]*/ null;
+        <script th:inline="javascript">
+            const data = /*[[${data}]]*/ null;
 
-    function deleteCheck(form) {
-        SGConfirm({
-            title: `관리자 메뉴 항목을 삭제하시겠습니까?`,
-            type: SGAlertType.WARNING,
-            onsuccess: function (res) {
-                if (res) form.submit();
-            }
-        });
-        return false;
-    }
-
-    $("#status").on("change", function () {
-        let value = $(this).val().trim();
-        if (!Object.is(value, data.status)) {
-            $.ajax({
-                url: "/admin/menu/update/status",
-                data: {
-                    idx: data.idx,
-                    st: value
-                },
-                type: "POST",
-                async: false,
-                success: function (res) {
-                    if (res) {
-                        SGAlert({
-                            title: "상태가 변경되었습니다.",
-                            type: SGAlertType.SUCCESS,
-                            onsuccess: (res) => document.location.reload()
-                        });
-                    } else {
-                        SGAlert({
-                            title: "상태가 변경되지 않았습니다.",
-                            type: SGAlertType.SUCCESS,
-                            onsuccess: (res) => document.location.reload()
-                        });
+            function deleteCheck(form) {
+                SGConfirm({
+                    title: `관리자 메뉴 항목을 삭제하시겠습니까?`,
+                    type: SGAlertType.WARNING,
+                    onsuccess: function (res) {
+                        if (res) form.submit();
                     }
-                },
-                error: function (err) {
-                    console.error(err);
-                }
-            });
-        }
-    });
-</script>
-</body>
+                });
+                return false;
+            }
+        </script>
+    </body>
 </html>

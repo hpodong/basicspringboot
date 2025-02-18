@@ -29,24 +29,28 @@
                                             <caption>등록정보</caption>
                                             <colgroup>
                                                 <col width="8.4%">
-                                                <col width="40%">
+                                                <col width="41.6%">
                                                 <col width="8.4%">
-                                                <col width="40%">
+                                                <col width="41.6%">
                                             </colgroup>
                                             <tbody>
                                             <tr>
-                                                <th>생성일</th>
-                                                <td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd')}"></td>
-                                                <th><label for="status">상태</label></th>
-                                                <td>
-                                                    <select id="status" name="faq_status" class="max200 select_drop">
-                                                        <option value="activated" th:selected="${'ACTIVATED' eq data.status.toString()}">
-                                                            활성화
-                                                        </option>
-                                                        <option value="paused" th:selected="${'PAUSED' eq data.status.toString()}">
-                                                            비활성화
-                                                        </option>
-                                                    </select>
+                                                <th>등록일시</th>
+                                                <td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                                <th>마지막 수정일</th>
+                                                <td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>활성화 여부<span class="required">*</span></th>
+                                                <td colspan="3">
+                                                    <div class="radio_box">
+                                                        <input type="radio" name="faq_status" id="activate_true" value="activated" th:checked="${'ACTIVATED' eq data.status.toString()}">
+                                                        <label for="activate_true">활성화</label>
+                                                    </div>
+                                                    <div class="radio_box">
+                                                        <input type="radio" name="faq_status" id="activate_false" value="paused" th:checked="${'PAUSED' eq data.status.toString()}">
+                                                        <label for="activate_false">비활성화</label>
+                                                    </div>
                                                 </td>
                                             </tr>
                                             </tbody>

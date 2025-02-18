@@ -238,14 +238,6 @@ const APStatus = {
     PAUSED: 'paused'
 };
 
-const apStatusToString = (value) => {
-    switch (value) {
-        case "ACTIVATED": return "activated";
-        case "PAUSED": return "paused";
-        default: return "";
-    }
-}
-
 const ajaxFromJson = (options) => {
     $.ajax({
         url: options.url,

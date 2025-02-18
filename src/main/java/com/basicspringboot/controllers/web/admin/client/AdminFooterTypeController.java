@@ -51,7 +51,7 @@ public class AdminFooterTypeController extends _BSAdminController {
         final BSQuery bsq = new BSQuery(FooterType.class);
         bsq.setIdx(idx);
 
-        mv.addObject("data", service.findOne(bsq, FooterType::new));
+        mv.addObject("data", service.findOne(bsq, FooterType::new).toSetData());
         mv.setViewName("admin/client_page/footer/update");
         return mv;
     }

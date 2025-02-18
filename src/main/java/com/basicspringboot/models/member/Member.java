@@ -4,6 +4,7 @@ import com.basicspringboot.annotations.BSColumn;
 import com.basicspringboot.annotations.BSTable;
 import com.basicspringboot.annotations.BSValidation;
 import com.basicspringboot.enums.MemberGender;
+import com.basicspringboot.enums.MemberStatus;
 import com.basicspringboot.enums.SocialType;
 import com.basicspringboot.models._BSModel;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,7 +50,7 @@ public class Member extends _BSModel {
     private Date birthday;
 
     @BSColumn(name = "m_status", reqName = "member_status")
-    private String status;
+    private MemberStatus status;
 
     @BSColumn(name = "m_is_sms")
     private Boolean is_sms;
@@ -98,16 +99,6 @@ public class Member extends _BSModel {
         this.cell = info.getCell();
         this.gender = info.getGender();
         this.birthday = info.getBirthday();
-    }
-
-    public String statusToString() {
-        return switch (status) {
-            case "waiting" -> "대기";
-            case "active" -> "완료";
-            case "canceled" -> "반려";
-            case "leaved" -> "탈퇴";
-            default -> "";
-        };
     }
 
     private SocialType[] socialsToEnums() {

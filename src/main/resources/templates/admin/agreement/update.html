@@ -29,11 +29,17 @@
 											<caption>등록정보</caption>
 											<colgroup>
 												<col width="8.4%">
-												<col width="40%">
+												<col width="41.6%">
 												<col width="8.4%">
-												<col width="40%">
+												<col width="41.6%">
 											</colgroup>
 											<tbody>
+											<tr>
+												<th>생성일</th>
+												<td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd')}"></td>
+												<th>마지막 수정일</th>
+												<td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd')}"></td>
+											</tr>
 											<tr>
 												<th>상태<span class="required">*</span></th>
 												<td>

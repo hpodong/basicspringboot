@@ -69,15 +69,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.16.2/min/vs/loader.js"></script>
 <script>
 
-	let form = $("form");
-	$("#name").setValidate(form, {
-		label: "이름",
-		minLength: 1,
+	const $form = $("form");
+
+	$("#name").addValidation({
+		cases: {
+			"이름을 입력해주세요.": (value) => !value.length
+		},
+		maxlength: 100
 	});
 
-	$("#html_value").setValidate(form, {
-		label: "HTML 코드",
-		required: true
+	$("#html_value").addValidation({
+		cases: {
+			"HTML 코드를 입력해주세요.": (value) => !value.length
+		},
+		focusElement: $("#html").closest("td")
 	});
 
 	let editor;
@@ -87,6 +92,7 @@
 		editor = monaco.editor.create(document.getElementById('html'), {
 			theme: 'vs-dark',
 			fontFamily: 'Nanum Gothic Coding',
+			fontSize: 20,
 			automaticLayout: true,
 			language: 'markdown',
 			value: [].join('\n')

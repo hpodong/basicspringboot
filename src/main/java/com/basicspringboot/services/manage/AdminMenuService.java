@@ -122,11 +122,11 @@ public class AdminMenuService extends _BSService<AdminMenu> {
         final BSQuery bsq = new BSQuery(AdminMenu.class);
         bsq.setSelect("admin_menu.*");
         bsq.addJoin("join admin_role_item on admin_menu.am_idx = admin_role_item.am_idx");
-        bsq.addJoin("join admin on admin_role_item.ar_idx = admin.ar_idx and a_dldt is null and a_status = 'active'");
-        bsq.addWhere("admin.a_idx = "+a_idx, "admin_menu.am_dldt IS NULL", "admin_menu.am_status = 'activated'");
+        bsq.addJoin("join admin on admin_role_item.ar_idx = admin.ar_idx and a_dldt is null and a_status = 'active' AND admin.a_idx = ?");
+        bsq.addWhere("admin_menu.am_dldt IS NULL", "admin_menu.am_status = 'activated'");
         bsq.setLimit(null);
         bsq.setOrderBy("am_level", "am_sort", "am_crdt DESC");
-        final List<AdminMenu> menus =  findAll(bsq, AdminMenu::new);
+        final List<AdminMenu> menus =  findAll(bsq, AdminMenu::new, a_idx);
         factoryMenusWithChildren(menus);
         return factoryParentMenus(menus);
     }

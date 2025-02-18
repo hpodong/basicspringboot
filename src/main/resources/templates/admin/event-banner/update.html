@@ -30,23 +30,14 @@
                                             <caption>등록정보</caption>
                                             <colgroup>
                                                 <col width="8.4%">
-                                                <col width="40%">
+                                                <col width="41.6%">
                                                 <col width="8.4%">
-                                                <col width="40%">
+                                                <col width="41.6%">
                                             </colgroup>
                                             <tbody>
                                             <tr>
-                                                <th>회원권한</th>
-                                                <td th:text="${data.authorization?.name}"></td>
-                                                <th><label for="sort">노출순서<span class="required">*</span></label></th>
-                                                <td>
-                                                    <input type="text" name="sort" id="sort" class="max200"
-                                                           th:value="${data.sort}">
-                                                </td>
-                                            </tr>
-                                            <tr>
                                                 <th>활성화 여부<span class="required">*</span></th>
-                                                <td colspan="3">
+                                                <td>
                                                     <div class="radio_box">
                                                         <input type="radio" name="eb_status" id="status_activated"
                                                                value="activated" th:checked="${'ACTIVATED' eq data.status.toString()}">
@@ -57,6 +48,11 @@
                                                                value="paused" th:checked="${'PAUSED' eq data.status.toString()}">
                                                         <label for="status_paused">비활성화</label>
                                                     </div>
+                                                </td>
+                                                <th><label for="sort">노출순서<span class="required">*</span></label></th>
+                                                <td>
+                                                    <input type="text" name="sort" id="sort" class="max200"
+                                                           th:value="${data.sort}">
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -72,9 +68,9 @@
                                             <caption>배너정보</caption>
                                             <colgroup>
                                                 <col width="8.4%">
-                                                <col width="40%">
+                                                <col width="41.6%">
                                                 <col width="8.4%">
-                                                <col width="40%">
+                                                <col width="41.6%">
                                             </colgroup>
                                             <tbody>
                                             <tr>
@@ -120,50 +116,68 @@
 
     const data = /*[[${data}]]*/ null;
 
-    let form = $("form");
+    const $form = $("form");
 
     $("#image_file").preview({
+        max_size: 500,
         default_image: data?.file?.url,
-        label: data?.file?.name,
-        max_size: 500
-    });
-    $("#sort").setValidate(form, {
-        label: "순서",
-        maxLength: 11,
-        required: false,
-        type: SGValidateType.NUMBER
-    });
-    $("#title").setValidate(form, {
-        label: "제목",
-        minLength: 1,
-        maxLength: 100
-    });
-    $("#image_file").setValidate(form, {
-        label: "배너 이미지",
-        required: data?.file?.idx == null,
-        type: SGValidateType.FILE
-    })
-    $("#url").setValidate(form, {
-        type: SGValidateType.URL,
-        label: "자세히 보기 URL",
-        minLength: 1,
+        label: data?.file?.name
     });
 
-    form.on("submit", function(event) {
-        if(form.isValidate()) {
+    $("input[name='mv_status']").addValidation({
+        cases: {
+            "활성화 여부를 선택해주세요.": (value) => !value
+        },
+        defaultvalue: data?.status
+    });
+    $("#sort").addValidation({
+        regex: SGValidateType.NUMBER,
+        cases: {
+            "노출순서를 입력해주세요.": (value) => !value.length,
+        }
+    });
+    $("#title").addValidation({
+        cases: {
+            "메인타이틀을 입력해주세요.": (value) => !value.length
+        },
+        maxlength: 100
+    });
+    /*$("#image_file").addValidation({
+        regex: SGValidateType.FILE,
+        cases: {
+            "비주얼 이미지를 선택해주세요.": (files) => !files.length,
+            "파일을 10MB 이하로 넣어주세요.": (files) => !fileMaxSizeCheck(10, files)
+        },
+        fileoptions: {
+            types: [FileType.IMAGES],
+            maxsize: 10,
+            autoempty: true
+        }
+    });*/
+    $("#url").addValidation({
+        regex: SGValidateType.URL,
+        cases: {
+            "자세히 보기 URL을 입력해주세요.": (value) => !value.length,
+            "자세히 보기 URL을 정확히 입력해주세요.": (value, regex) => !regex.test(value)
+        }
+    });
+
+    $form.submit(function(event) {
+        event.preventDefault();
+
+        if ($form.isValidate()) {
             SGConfirm({
-                title: "이벤트배너 항목을 저장하시겠습니까?",
+                title: "이벤트 배너를 수정하시겠습니까?",
                 onsuccess: (res) => {
-                    if(res) {
+                    if (res) {
                         SGProcess({
-                            title: "이벤트배너를 저장중입니다...",
+                            title: "이벤트 배너를 저장중입니다...",
                         });
                         this.submit();
                     }
                 }
-            });
+            })
         }
-        event.preventDefault();
     });
 </script>
 </body>

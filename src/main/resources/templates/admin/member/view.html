@@ -19,6 +19,34 @@
 					<div class="board">
 						<div class="tbl_area">
 							<div class="tbl_wrap tbl_wrap1">
+								<div class="tit_box">
+									<h3 class="sTit">등록정보</h3>
+								</div>
+								<div class="tbl_box tbl_box2">
+									<table class="row_line">
+										<caption>등록정보</caption>
+										<colgroup>
+											<col width="8.4%">
+											<col width="41.6%">
+											<col width="8.4%">
+											<col width="41.6%">
+										</colgroup>
+										<tbody>
+										<tr>
+											<th>가입일</th>
+											<td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+											<th>마지막 수정일</th>
+											<td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+										</tr>
+										<tr>
+											<th>상태</th>
+											<td colspan="3" th:class="${data.status.toClass()}" th:text="${data.status.toHtml()}"></td>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="tbl_wrap tbl_wrap1">
 								<div class="tit_box flex-box justify-content-between align-items-end">
 									<h3 class="sTit">회원 정보</h3>
 									<div class="btnSet">
@@ -52,10 +80,6 @@
 										<tr>
 											<th>최근 로그인일자</th>
 											<td th:text="${#dates.format(data.latest_logged_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
-										</tr>
-										<tr>
-											<th>가입일</th>
-											<td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
 										</tr>
 										</tbody>
 									</table>

@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -56,7 +58,10 @@ public class SEOService extends _BSService<SEO> {
     @Transactional
     public boolean update(SEO data) {
         final String where = "WHERE seo_idx = "+data.getIdx();
-        return super.update(SEO.class, where, setter -> setter.putAll(data.toInput()));
+        return super.update(SEO.class, where, setter -> {
+            setter.put("seo_updt", Timestamp.valueOf(LocalDateTime.now()));
+            setter.putAll(data.toInput());
+        });
     }
 
     @Transactional

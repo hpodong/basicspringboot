@@ -1,6 +1,5 @@
 package com.basicspringboot.converters;
 
-import com.basicspringboot.enums.MemberPointStatus;
 import com.basicspringboot.enums.SocialType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;

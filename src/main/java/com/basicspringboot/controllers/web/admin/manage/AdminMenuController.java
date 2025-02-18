@@ -64,7 +64,7 @@ public class AdminMenuController extends _BSAdminController {
         bq.setIdx(idx);
 
         mv.addObject("menus", service.getAllMenus());
-        mv.addObject("data", findByIdx(idx));
+        mv.addObject("data", findByIdx(idx).toSetData());
         mv.setViewName("admin/menu/update");
         return mv;
     }

@@ -59,9 +59,11 @@ public class AdminClientPageController extends _BSAdminController {
 
     @Override
     public ModelAndView update(Long idx, ModelAndView mv) {
+        final ClientPage data = findByIdx(idx);
         mv.addObject("header_types",service.getHeaderTypes());
         mv.addObject("footer_types",service.getFooterTypes());
-        mv.addObject("data", findByIdx(idx));
+        mv.addObject("data", data.toSetData());
+        log.info("DATA : {}", data.toSetData());
         mv.setViewName("admin/client_page/update");
         return mv;
     }

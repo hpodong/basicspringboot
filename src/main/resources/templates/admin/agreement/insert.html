@@ -28,16 +28,16 @@
 											<caption>등록정보</caption>
 											<colgroup>
 												<col width="8.4%">
-												<col width="40%">
+												<col width="41.6%">
 												<col width="8.4%">
-												<col width="40%">
+												<col width="41.6%">
 											</colgroup>
 											<tbody>
 												<tr>
-													<th>상태<span class="required">*</span></th>
+													<th>활성화 상태<span class="required">*</span></th>
 													<td>
 														<div class="radio_box">
-															<input type="radio" id="active" name="agreement_status" value="activated">
+															<input type="radio" id="active" name="agreement_status" value="activated" checked>
 															<label for="active">활성화</label>
 														</div>
 														<div class="radio_box ml17">
@@ -114,25 +114,35 @@
 <script src="/admin/js/ajax.js" type="text/javascript"></script>
 <script>
 	let form = $("form");
-	$("input[name='agreement_status']").setValidate(form, {
-		label: "상태",
+	$("input[name='agreement_status']").addValidation({
+		cases: {
+			"활성화 여부를 선택해주세요.": (value) => !value
+		}
 	});
-	$("input[name='is_required']").setValidate(form, {
-		label: "필수 여부",
+	$("input[name='is_required']").addValidation({
+		cases: {
+			"필수 동의 여부를 선택해주세요.": (value) => !value
+		},
+		focusElement: $("input[name='is_required']").closest("td")
 	});
-	$("#category_idx").setValidate(form, {
-		label: "약관 구분",
-		required: true,
+	$("#category_idx").addValidation({
+		cases: {
+			"약관구분을 선택해주세요.": (value) => !value.length
+		},
+		focusElement: $("#category_idx").closest("td")
 	});
-	$("#title").setValidate(form, {
-		label: "제목",
-		minLength: 1,
-		maxLength: 100
+	$("#title").addValidation({
+		cases: {
+			"제목을 입력해주세요.": (value) => !value.length
+		},
+		maxlength: 100
 	});
-	$("#desc").setValidate(form, {
-		label: "내용",
-		minLength: 1,
-		type: SGValidateType.EDITOR
+	$("#desc").addValidation({
+		cases: {
+			"내용을 입력해주세요.": (value) => !value.length
+		},
+		regex: SGValidateType.QL_EDITOR,
+		focusElement: $("#desc").closest("td")
 	});
 </script>
 </body>

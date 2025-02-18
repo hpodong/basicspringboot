@@ -32,11 +32,15 @@
 											</colgroup>
 											<tbody>
 											<tr>
-												<th><label for="title">회원권한<span class="required">*</span></label></th>
+												<th>활성화 여부<span class="required">*</span></th>
 												<td>
-													<div class="radio_box" th:each="row: ${member_authorizations}">
-														<input type="radio" name="authorization_idx" th:id="'type'+${row.idx}" th:value="${row.idx}">
-														<label th:for="'type'+${row.idx}" th:text="${row.name}"></label>
+													<div class="radio_box">
+														<input type="radio" name="popup_status" id="activate_true" value="activated" checked>
+														<label for="activate_true">활성화</label>
+													</div>
+													<div class="radio_box">
+														<input type="radio" name="popup_status" id="activate_false" value="paused">
+														<label for="activate_false">비활성화</label>
 													</div>
 												</td>
 											</tr>
@@ -80,21 +84,6 @@
 															<span class="calendar_ico"><img
 																	src="/admin/images/ico_calendar.svg"></span>
 														</p>
-													</td>
-												</tr>
-												<tr>
-													<th id="popup_activate">
-														활성화<span class="required">*</span>
-													</th>
-													<td>
-														<div class="radio_box">
-															<input type="radio" name="popup_activate" id="activate_true" value="1" checked>
-															<label for="activate_true">활성화</label>
-														</div>
-														<div class="radio_box">
-															<input type="radio" name="popup_activate" id="activate_false" value="0">
-															<label for="activate_false">비활성화</label>
-														</div>
 													</td>
 												</tr>
 												<tr>
@@ -211,78 +200,117 @@
 	<th:block th:insert="~{admin/includes/footer.html}"/>
 </div>
 <script>
+	const $form = $("form");
+
 	$("#image_file").preview({});
 
-	let form = $("form");
-	$("input[name='authorization_idx']").setValidate(form, {
-		label: "회원 권한",
-		required: true
+	$("#title").addValidation({
+		cases: {
+			"제목을 입력해주세요.": (value) => !value.length
+		},
+		maxlength: 100
 	});
-	$("#title").setValidate(form, {
-		label: "제목",
-		minLength: 1,
-		maxLength: 100
+	$("#started_at").addValidation({
+		regex: SGValidateType.DATE,
+		cases: {
+			"시작일을 입력해주세요.": (value) => !value.length,
+		},
+		focusElement: $("#started_at").closest("td")
 	});
-	$("#started_at").setValidate(form, {
-		label: "시작일",
-		required: true,
-		type: SGValidateType.DATE
+	$("#ended_at").addValidation({
+		regex: SGValidateType.DATE,
+		cases: {
+			"종료일을 입력해주세요.": (value) => !value.length,
+		},
+		focusElement: $("#ended_at").closest("td")
 	});
-	$("#ended_at").setValidate(form, {
-		label: "종료일",
-		required: true,
-		type: SGValidateType.DATE
+	$("input[name='is_center']")
+			.addValidation({
+				cases: {
+					"팝업 위치를 선택해주세요.": (value) => value === undefined,
+				},
+				focusElement: $("input[name='is_center']").closest("td")
+			})
+			.change(function() {
+				isCenterHandler(this, this.value);
+			});
+	$("#top").addValidation({
+		regex: SGValidateType.NUMBER,
+		cases: {
+			"상단 px을 지정해주세요.": (value) => !value.length,
+		},
+		maxlength: 4,
+		focusElement: $("#top").closest("td")
+
 	});
-	$("input[name='is_center']").setValidate(form, {
-		label: "팝업위치",
-		required: true,
-		onchange: isCenterHandler
+	$("#left").addValidation({
+		regex: SGValidateType.NUMBER,
+		cases: {
+			"좌측 px을 지정해주세요.": (value) => !value.length,
+		},
+		maxlength: 4,
+		focusElement: $("#left").closest("td")
 	});
-	$("#top").setValidate(form, {
-		label: "상단",
-		type: SGValidateType.NUMBER,
-		required: true,
-		maxLength: 4
+	$("input[name='device']").addValidation({
+		cases: {
+			"노출 기기를 선택해주세요.": (value) => value === undefined,
+		},
+		focusElement: $("input[name='device']").closest("td")
 	});
-	$("#left").setValidate(form, {
-		label: "좌측",
-		type: SGValidateType.NUMBER,
-		required: true,
-		maxLength: 4
+	$("#width").addValidation({
+		regex: SGValidateType.NUMBER,
+		cases: {
+			"가로 px을 지정해주세요.": (value) => !value.length
+		},
+		maxlength: 4,
+		focusElement: $("#width").closest("td")
 	});
-	$("input[name='device']").setValidate(form, {
-		label: "노출기기",
-		required: true
+	$("#height").addValidation({
+		regex: SGValidateType.NUMBER,
+		cases: {
+			"세로 px을 지정해주세요.": (value) => !value.length
+		},
+		maxlength: 4,
+		focusElement: $("#height").closest("td")
 	});
-	$("#width").setValidate(form, {
-		label: "가로 크기",
-		required: true,
-		type: SGValidateType.NUMBER,
-		maxLength: 4,
+	$("input[name='is_main']").addValidation({
+				cases: {
+					"페이지를 선택해주세요.": (value) => value === undefined,
+				},
+				focusElement: $("input[name='is_main']").closest("td")
+			})
+	$("#image_file").addValidation({
+		regex: SGValidateType.FILE,
+		cases: {
+			"이미지를 선택해주세요.": (files) => !files.length,
+			"이미지는 최대 10MB 이하로 선택해주세요.": (files, regex) => !fileMaxSizeCheck(10, files)
+		},
+		focusElement: $("#image_file").closest("td")
 	});
-	$("#height").setValidate(form, {
-		label: "세로 크기",
-		required: true,
-		type: SGValidateType.NUMBER,
-		maxLength: 4,
-	});
-	$("#image_file").setValidate(form, {
-		label: "이미지",
-		required: true,
-		type: SGValidateType.FILE,
-	});
-	$("#url").setValidate(form, {
-		label: "자세히 보기 URL",
-		type: SGValidateType.LINK,
-		maxLength: 100
+	$("#url").addValidation({
+		regex: SGValidateType.URL,
+		maxlength: 100,
+		cases: {
+			"자세히 보기 URL을 입력해주세요.": (value) => !value.length,
+			"자세히 보기 URL을 정확히 입력해주세요.": (value, regex) => !regex.test(value),
+		}
 	});
 
-	form.submit(function() {
-		if(form.isValidate()) {
-			SGProcess({
-				title: "팝업을 저장중입니다...",
-			});
-			this.submit();
+	$form.submit(function(event) {
+		event.preventDefault();
+
+		if ($form.isValidate()) {
+			SGConfirm({
+				title: "팝업을 저장하시겠습니까?",
+				onsuccess: (res) => {
+					if (res) {
+						SGProcess({
+							title: "팝업을 저장중입니다...",
+						});
+						this.submit();
+					}
+				}
+			})
 		}
 	});
 

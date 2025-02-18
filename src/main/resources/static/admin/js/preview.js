@@ -12,6 +12,7 @@
      * @param {string} [options.button_label] - 버튼 라벨 요소
      * @param {number} [options.max_size] - 이미지뷰의 최대 사이즈
      * @param {function} [options.onchange] - 이미지 변경 시 호출
+     * @return jQuery
      */
     $.fn.preview = function(options) {
 
@@ -80,6 +81,7 @@
                 input.setPreview(options);
             }
         }
+        return this;
     }
 
     /**

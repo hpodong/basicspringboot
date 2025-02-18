@@ -29,16 +29,22 @@
                                             <caption>등록정보</caption>
                                             <colgroup>
                                                 <col width="8.4%">
-                                                <col width="40%">
+                                                <col width="41.6%">
                                                 <col width="8.4%">
-                                                <col width="40%">
+                                                <col width="41.6%">
                                             </colgroup>
                                             <tbody>
                                             <tr>
-                                                <th>상태</th>
+                                                <th>생성일</th>
+                                                <td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd')}"></td>
+                                                <th>마지막 수정일</th>
+                                                <td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd')}"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>활성화 상태<span class="required">*</span></th>
                                                 <td colspan="3">
                                                     <div class="radio_box">
-                                                        <input type="radio" name="menu_status" id="menu_status_a" value="activated" checked>
+                                                        <input type="radio" name="menu_status" id="menu_status_a" value="activated">
                                                         <label for="menu_status_a">활성화</label>
                                                     </div>
                                                     <div class="radio_box">
@@ -47,36 +53,54 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tbl_wrap tbl_wrap1">
+                                    <div class="tit_box">
+                                        <h3 class="sTit">페이지 정보</h3>
+                                    </div>
+                                    <div class="tbl_box tbl_box2">
+                                        <table class="row_line">
+                                            <caption>페이지 정보</caption>
+                                            <colgroup>
+                                                <col width="8.4%">
+                                                <col width="41.6%">
+                                                <col width="8.4%">
+                                                <col width="41.6%">
+                                            </colgroup>
+                                            <tbody>
                                             <tr>
                                                 <th>헤더 타입</th>
                                                 <td>
-                                                    <select class="select_drop max200" name="header_fk" id="header_fk">
+                                                    <select class="select_drop wid50" name="header_fk" id="header_fk">
                                                         <option value="">없음</option>
                                                         <option th:each="row:${header_types}" th:value="${row.idx}" th:text="${row.name}"></option>
                                                     </select>
                                                 </td>
                                                 <th>푸터 타입</th>
                                                 <td>
-                                                    <select class="select_drop max200" name="footer_fk" id="footer_fk">
+                                                    <select class="select_drop wid50" name="footer_fk" id="footer_fk">
                                                         <option value="">없음</option>
                                                         <option th:each="row:${footer_types}" th:value="${row.idx}" th:text="${row.name}"></option>
                                                     </select>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th><label for="link">링크</label></th>
+                                                <th>링크<span class="required">*</span></th>
                                                 <td colspan="3">
-                                                    <input type="text" name="link" id="link" class="wid50">
+                                                    <input type="text" name="link" id="link" class="wid40">
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th><label for="title">제목</label></th>
+                                                <th>제목<span class="required">*</span></th>
                                                 <td colspan="3">
                                                     <input type="text" name="title" id="title">
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th><label for="subtitle">부제목</label></th>
+                                                <th>부제목</th>
                                                 <td colspan="3">
                                                     <input type="text" name="subtitle" id="subtitle">
                                                 </td>
@@ -102,33 +126,48 @@
 <script th:inline="javascript">
 
     const data = /*[[${data}]]*/ null;
-
-    let form = $("form");
-    $("input[name='menu_status']").setValidate(form, {
-        label: "상태",
-        required: true
-    });
-    $("input[name='is_login_required']").setValidate(form, {
-        label: "로그인 여부",
-        required: true
-    });
-    $("#link").setValidate(form, {
-        label: "링크",
-        maxLength: 100,
-        type: SGValidateType.PATH,
-        required: false
-    });
-    $("#title").setValidate(form, {
-        label: "제목",
-        minLength: 1,
-        maxLength: 100
-    });
-    $("#subtitle").setValidate(form, {
-        label: "부제목",
-        required: false,
-        maxLength: 100
-    });
     setData(data);
+
+    const $form = $("form");
+    $("input[name='menu_status']").addValidation({
+        cases: {
+            "활성화 상태를 선택해주세요.": (value) => !value
+        }
+    });
+    $("#link").addValidation({
+        regex: SGValidateType.PATH,
+        cases: {
+            "링크를 입력해주세요.": (value) => !value,
+            "링크를 정확히 입력해주세요.": (value, regex) => !regex.test(value),
+        }
+    });
+    $("#title").addValidation({
+        cases: {
+            "제목을 입력해주세요.": (value) => !value
+        },
+        maxlength: 100
+    });
+    $("#subtitle").addValidation({
+        maxlength: 100
+    });
+
+    $form.submit(function(event) {
+        event.preventDefault();
+
+        if ($form.isValidate()) {
+            SGConfirm({
+                title: "페이지를 수정하시겠습니까?",
+                onsuccess: (res) => {
+                    if (res) {
+                        SGProcess({
+                            title: "페이지를 수정중입니다...",
+                        });
+                        this.submit();
+                    }
+                }
+            })
+        }
+    });
 </script>
 </body>
 </html>

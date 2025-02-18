@@ -4813,6 +4813,10 @@ input[type="file"] {
     color: #006BFF !important;
 }
 
+.txt-yellow {
+    color: #ffc400 !important;
+}
+
 #add_option_popup .tbl_box3 {
     max-height: 252px;
     overflow-y: auto;

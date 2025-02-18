@@ -63,7 +63,7 @@ public class AdminController extends _BSAdminController {
                 adminConnectLog.setRemote_ip(request.getRemoteAddr());
                 adminConnectLogService.insert(adminConnectLog);
                 if(!url.isBlank()) return redirect(url);
-                else return redirect("/admin");
+                return redirect("/admin");
             } else {
                 ra.addFlashAttribute("err", "비밀번호가 일치하지 않습니다.");
                 return redirect("/admin/login");
