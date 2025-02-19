@@ -26,31 +26,6 @@
                         <p>관리자 계정으로 로그인 후 이용하실 수 있습니다.</p>
                     </div>
                 </div>
-                <form action="/admin/login" class="form-horizontal" method="post">
-                    <fieldset class="login_form">
-                        <legend class="blind">로그인</legend>
-                        <div class="login_top">
-                            <p class="login_id">
-                                <span class="svg">ID</span>
-                                <input type="text" name="id" id="id" class="input" th:value="${save_id}" placeholder="ID">
-                            </p>
-                            <p class="login_pw">
-                                <span class="svg">PASSWORD</span>
-                                <input type="password" class="input" id="password" name="password" placeholder="PASSWORD">
-                            </p>
-                        </div>
-                        <div class="login_btm">
-                             <div class="id_save">
-                                <input type="checkbox" name="save_id" id="save_id" value="1" th:checked="${save_id != null}"/>
-                                <label for="save_id">아이디저장</label>
-                            </div>
-                            <div class="login_btn">
-                                <button type="submit">LOGIN</button>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <input type="hidden" name="url" id="url" th:value="${url}">
-                </form>
             </div>
             <!--//login_box-->
         </div>
@@ -86,7 +61,7 @@
                 title: msg,
                 type: SGAlertType.SUCCESS,
             });
-            let err = /*[[${session.err}]]*/ null;
+            let err = /*[[${err}]]*/ null;
             if(err) SGAlert({
                 title: err,
                 type: SGAlertType.ERROR,

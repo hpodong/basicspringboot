@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,7 +39,8 @@ public class AdminInterceptors implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws IOException {
         final HttpSession session = request.getSession();
         String uri = request.getRequestURI();
-        final Admin a = getLoggedAdmin(session);
+        final Admin a = getLoggedAdmin();
+        if(a == null) return;
 
         final String method = request.getMethod();
         if(!method.equals("POST")) {
@@ -58,32 +61,17 @@ public class AdminInterceptors implements HandlerInterceptor {
     @Override
     @Transactional
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        final HttpSession session = request.getSession();
         final String uri = request.getRequestURI();
-
-        final Admin a = getLoggedAdmin(session);
-
-        final boolean result = a != null;
-
-        if(!result) {
-            if(isAjaxRequest(request)) {
-                response.setStatus(HttpStatus.FORBIDDEN.value());
-            } else {
-                if(request.getQueryString() != null && !request.getQueryString().isBlank()) {
-                    session.setAttribute(LOGIN_PAGE_BEFORE_PAGE_SESSION_KEY, uri+"?"+request.getQueryString());
-                } else {
-                    session.setAttribute(LOGIN_PAGE_BEFORE_PAGE_SESSION_KEY, uri);
-                }
-                response.sendRedirect("/admin/login");
-            }
-            return false;
-        } else {
-            return adminMenuService.getAdminRoleCheck(a.getIdx(), uri) || isAjaxRequest(request);
-        }
+        final Admin a = getLoggedAdmin();
+        if(a == null) return false;
+        return adminMenuService.getAdminRoleCheck(a.getIdx(), uri) || isAjaxRequest(request);
     }
 
-    private Admin getLoggedAdmin(HttpSession session) {
-        return (Admin) session.getAttribute(ADMIN_LOGGED_SESSION_KEY);
+    private Admin getLoggedAdmin() {
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if(auth == null) return null;
+        return (Admin) auth.getPrincipal();
     }
 
     private boolean isAjaxRequest(HttpServletRequest request) {

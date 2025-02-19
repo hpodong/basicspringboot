@@ -28,8 +28,6 @@ import java.util.List;
 
 @Controller
 public abstract class _BSAdminController implements BSAdminControllerI {
-    protected Logger log = LoggerFactory.getLogger(this.getClass());
-
     @Autowired
     protected FileService fileService;
     @Autowired
@@ -112,16 +110,6 @@ public abstract class _BSAdminController implements BSAdminControllerI {
 
     protected String removeTag(String value) {
         return value.replaceAll("<[^>]*>", "");
-    }
-
-    protected Admin getLoggedAdmin() {
-        return (Admin) session.getAttribute("admin");
-    }
-
-    protected Long getLoggedAdminIdx() {
-        final Admin loggedAdmin = getLoggedAdmin();
-        if(loggedAdmin == null) return null;
-        else return loggedAdmin.getIdx();
     }
 
     @Override

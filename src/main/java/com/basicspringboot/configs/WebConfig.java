@@ -41,7 +41,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry ir) {
 
         ir.addInterceptor(new AdminInterceptors(adminMenuService, adminPushLogService))
-                .addPathPatterns("/admin", "/admin/**")
+                .addPathPatterns("/admin/**")
+                .excludePathPatterns("/admin")
                 .excludePathPatterns("/admin/login")
                 .excludePathPatterns("/admin/logout")
                 .excludePathPatterns("/admin/css/**")

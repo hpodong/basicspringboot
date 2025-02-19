@@ -9,6 +9,7 @@ import com.basicspringboot.services.manage.AdminPushLogService;
 import com.basicspringboot.services.manage.AdminService;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,13 +25,12 @@ import java.util.Map;
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
+@Slf4j
 public class AdminController extends _BSAdminController {
 
     private static final String EDITOR_UPLOAD_DIR = "/editor";
     private static final String ADMIN_LOGGED_SESSION_KEY = "admin";
 
-    private final AdminService service;
-    private final AdminConnectLogService adminConnectLogService;
     private final AdminPushLogService adminPushLogService;
     public final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -42,7 +42,7 @@ public class AdminController extends _BSAdminController {
         return mv;
     }
 
-    @Transactional
+    /*@Transactional
     @PostMapping("/login")
     public String login(RedirectAttributes ra, @RequestParam String id, @RequestParam String password, @RequestParam String url, @RequestParam(required = false) Boolean save_id) {
         final BSQuery bq = new BSQuery(Admin.class);
@@ -73,7 +73,7 @@ public class AdminController extends _BSAdminController {
             ra.addFlashAttribute("err", "존재하지 않는 관리자입니다.");
             return redirect("/admin/login");
         }
-    }
+    }*/
 
     @ResponseBody
     @PostMapping("/logout")
@@ -82,14 +82,9 @@ public class AdminController extends _BSAdminController {
         return true;
     }
 
-    @GetMapping("")
+    @Override
     public ModelAndView index(ModelAndView mv) {
-        final Admin admin = getLoggedAdmin();
-        if(admin == null) {
-            mv.setViewName(redirect("/admin"));
-        } else {
-            mv.setViewName(redirect("/admin/dashboard"));
-        }
+        mv.setViewName(redirect("/admin/dashboard"));
         return mv;
     }
 
@@ -149,5 +144,10 @@ public class AdminController extends _BSAdminController {
         data.setIdx(idx);
         data.setIs_read(true);
         return adminPushLogService.update(data);
+    }
+
+    @GetMapping("/error/{statusCode}")
+    public String errorPage(@PathVariable int statusCode) {
+        return "/admin/error/"+statusCode;
     }
 }

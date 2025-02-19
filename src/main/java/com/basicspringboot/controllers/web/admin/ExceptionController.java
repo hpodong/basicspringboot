@@ -71,7 +71,6 @@ public class ExceptionController {
 
     @ExceptionHandler(RuntimeException.class)
     public String runTimeErrorPage(RuntimeException e, HttpServletRequest request) {
-        e.printStackTrace();
         request.setAttribute("err", e.getMessage());
         return "/error/500";
     }
