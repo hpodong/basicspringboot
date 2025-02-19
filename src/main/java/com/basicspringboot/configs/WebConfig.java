@@ -63,7 +63,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/front/css/**", "/front/js/**", "/front/images/**")
                 .excludePathPatterns("/front/images/**")
                 .excludePathPatterns("/uploads/**", "/js/**", "/css/**", "/images/**", "/.well-known/**")
-                .excludePathPatterns("/error/**")
                 .excludePathPatterns("/favicon.ico")
                 .excludePathPatterns("/add/page-log");
     }

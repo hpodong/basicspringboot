@@ -145,9 +145,4 @@ public class AdminController extends _BSAdminController {
         data.setIs_read(true);
         return adminPushLogService.update(data);
     }
-
-    @GetMapping("/error/{statusCode}")
-    public String errorPage(@PathVariable int statusCode) {
-        return "/admin/error/"+statusCode;
-    }
 }

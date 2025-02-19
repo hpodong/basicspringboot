@@ -37,10 +37,11 @@ public class AdminInterceptors implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws IOException {
-        final HttpSession session = request.getSession();
-        String uri = request.getRequestURI();
         final Admin a = getLoggedAdmin();
         if(a == null) return;
+
+        final HttpSession session = request.getSession();
+        String uri = request.getRequestURI();
 
         final String method = request.getMethod();
         if(!method.equals("POST")) {
@@ -64,12 +65,17 @@ public class AdminInterceptors implements HandlerInterceptor {
         final String uri = request.getRequestURI();
         final Admin a = getLoggedAdmin();
         if(a == null) return false;
-        return adminMenuService.getAdminRoleCheck(a.getIdx(), uri) || isAjaxRequest(request);
+
+        if(!adminMenuService.getAdminRoleCheck(a.getIdx(), uri) || isAjaxRequest(request)) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.sendRedirect("/admin");
+            return false;
+        }
+        return true;
     }
 
     private Admin getLoggedAdmin() {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         if(auth == null) return null;
         return (Admin) auth.getPrincipal();
     }
