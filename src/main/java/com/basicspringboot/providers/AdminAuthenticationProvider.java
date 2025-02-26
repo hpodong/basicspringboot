@@ -3,6 +3,8 @@ package com.basicspringboot.providers;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.enums.AdminStatus;
 import com.basicspringboot.models.admin.Admin;
+import com.basicspringboot.models.admin.AdminMenu;
+import com.basicspringboot.services.manage.AdminMenuService;
 import com.basicspringboot.services.manage.AdminService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +31,7 @@ public class AdminAuthenticationProvider implements AuthenticationProvider {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AdminService service;
+    private final AdminMenuService adminMenuService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -52,7 +55,11 @@ public class AdminAuthenticationProvider implements AuthenticationProvider {
         else if(admin.getStatus().equals(AdminStatus.PAUSE)) throw new BadCredentialsException("활동정지 상태인 관리자입니다.");
 
         final List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + admin.getStatus()));
+        final List<AdminMenu> menus = adminMenuService.getAllPageMenus(admin.getIdx());
+
+        menus.forEach(menu -> {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + menu.linkToRole()));
+        });
 
         return new UsernamePasswordAuthenticationToken(admin, password, authorities);
     }

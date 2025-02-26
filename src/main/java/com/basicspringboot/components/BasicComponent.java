@@ -27,7 +27,7 @@ public class BasicComponent implements ApplicationRunner {
     private final PopupService popupService;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         adminRoleService.refresh();
         adminMenuService.refreshMenus();
         faqService.refreshCategories();

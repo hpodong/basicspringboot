@@ -66,11 +66,11 @@ public class AdminInterceptors implements HandlerInterceptor {
         final Admin a = getLoggedAdmin();
         if(a == null) return false;
 
-        if(!adminMenuService.getAdminRoleCheck(a.getIdx(), uri) || isAjaxRequest(request)) {
+        /*if(!adminMenuService.getAdminRoleCheck(a.getIdx(), uri) || isAjaxRequest(request)) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.sendRedirect("/admin");
             return false;
-        }
+        }*/
         return true;
     }
 

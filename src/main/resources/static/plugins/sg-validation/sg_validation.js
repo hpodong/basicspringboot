@@ -247,19 +247,21 @@ const FileType = {
                                     onemptyfile
                                 } = fileoptions;
                                 if(autoempty) {
-                                    $this.validationHandler(null, options);
-                                    if(maxlength && length > maxlength) $file_tag.val("");
+                                    let is_invalidate = false;
+                                    is_invalidate = maxlength && length > maxlength;
                                     $.each(files, (index, file) => {
+                                        if(is_invalidate) return;
                                         if(file) {
                                             const under_size = minsize && file.size < minsize*1024*1024;
                                             const over_size = maxsize && file.size > maxsize*1024*1024;
-                                            if(under_size || over_size) {
-                                                $file_tag.val("").change();
-                                                if(onemptyfile) onemptyfile();
-                                                return false;
-                                            }
+                                            is_invalidate = under_size || over_size;
                                         }
                                     });
+                                    $this.validationHandler(null, options);
+                                    if(is_invalidate) {
+                                        $file_tag.val("");
+                                        if(onemptyfile) onemptyfile($this);
+                                    }
                                 }
                             }
                         });
@@ -299,10 +301,16 @@ const FileType = {
                         .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, ""));
                 }
                 break;
-            case SGValidateType.NUMBER:
-                if(value.length) $this.val(value.replace(number_regex, ""));
-                else $this.val("");
+            case SGValidateType.UPPER_OR_NUMBER:
+                const uppercaseString = value
+                    .replace(/[a-z]/g, match => match.toUpperCase())
+                    .replace(/[^a-zA-Z0-9]/g, "");
+                $this.val(uppercaseString);
                 break;
+            case SGValidateType.NUMBER:
+                /*if(value.length) $this.val(value.replace(number_regex, ""));
+                else $this.val("");
+                break;*/
             case SGValidateType.PRICE:
                 let price_value = value.replace(price_regex, "");
                 if(price_value) $this.val(parseInt(price_value, 10).toLocaleString());

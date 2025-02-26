@@ -2,9 +2,12 @@ package com.basicspringboot.configs;
 
 import com.basicspringboot.enums.AdminStatus;
 import com.basicspringboot.handlers.BasicAuthenticationFailureHandler;
+import com.basicspringboot.models.admin.AdminMenu;
 import com.basicspringboot.providers.AdminAuthenticationProvider;
+import com.basicspringboot.services.manage.AdminMenuService;
 import com.basicspringboot.services.manage.AdminService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,14 +17,19 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
+import java.util.List;
+
 @Configuration
+@Slf4j
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AdminService adminService;
+    private final AdminMenuService adminMenuService;
 
     private static final String[] ALWAYS_ALLOW_URLS = {
+            "/admin",
             "/admin/css/**",
             "/admin/js/**",
             "/admin/images/**",
@@ -30,15 +38,23 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
-
+        final List<AdminMenu> menus = adminMenuService.getAllPageMenus();
         http
                 .authenticationProvider(adminAuthenticationProvider())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable) // 필요 시 CSRF 활성화 가능
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(ALWAYS_ALLOW_URLS).permitAll()
-                        .requestMatchers("/admin/login").anonymous()
-                        .requestMatchers("/admin/**").hasRole(AdminStatus.ACTIVE.toString()).anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> {
+                            auth
+                                    .requestMatchers(ALWAYS_ALLOW_URLS).permitAll()
+                                    .requestMatchers("/admin/login").anonymous();
+                            menus.forEach(menu -> {
+                                final String link = menu.getLink();
+                                auth
+                                        .requestMatchers(link+"/**")
+                                        .hasRole(menu.linkToRole());
+                            });
+                        }
+                )
                 .formLogin(login -> login
                         .loginPage("/admin/login")
                         .defaultSuccessUrl("/admin")
@@ -59,7 +75,7 @@ public class SecurityConfig {
 
     @Bean
     public AdminAuthenticationProvider adminAuthenticationProvider() {
-        return new AdminAuthenticationProvider(bCryptPasswordEncoder, adminService);
+        return new AdminAuthenticationProvider(bCryptPasswordEncoder, adminService, adminMenuService);
     }
 
     @Bean

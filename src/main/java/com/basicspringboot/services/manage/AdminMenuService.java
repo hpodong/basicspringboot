@@ -1,6 +1,7 @@
 package com.basicspringboot.services.manage;
 
 import com.basicspringboot.dto.BSQuery;
+import com.basicspringboot.enums.APStatus;
 import com.basicspringboot.models.admin.AdminMenu;
 import com.basicspringboot.services._BSService;
 import lombok.Getter;
@@ -68,6 +69,33 @@ public class AdminMenuService extends _BSService<AdminMenu> {
         menus = factoryParentMenus(allMenus);
     }
 
+    public List<AdminMenu> getAllPageMenus() {
+        return getAllPageMenus(null);
+    }
+
+    public List<AdminMenu> getAllPageMenus(Long adminIdx) {
+        final BSQuery bsq = new BSQuery(AdminMenu.class);
+        bsq.setWhere("am_dldt IS NULL", "am_status = ?", "am_type = ?");
+        bsq.addArgs(APStatus.ACTIVATED.getValue(), "page");
+
+        if(adminIdx != null) {
+            bsq.addWhere("""
+                    EXISTS(
+                         SELECT 1 FROM admin_role_item
+                         WHERE admin_role_item.am_idx = admin_menu.am_idx
+                           AND EXISTS(
+                             SELECT 1 FROM admin
+                             WHERE admin.ar_idx = admin_role_item.ar_idx AND a_idx = ?
+                         )
+                     )
+                    """);
+            bsq.addArgs(adminIdx);
+        }
+
+        bsq.setLimit(null);
+
+        return findAll(bsq, AdminMenu::new);
+    }
 
     public AdminMenu getMenuFromUrl(String url) {
         AdminMenu menu = null;

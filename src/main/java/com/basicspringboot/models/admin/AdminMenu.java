@@ -187,4 +187,8 @@ public class AdminMenu extends _BSModel {
         }
         return sb.toString();
     }
+
+    public String linkToRole() {
+        return link.substring(1).replaceAll("/", "_").toUpperCase();
+    }
 }
