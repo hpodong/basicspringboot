@@ -1,6 +1,5 @@
 package com.basicspringboot.configs;
 
-import com.basicspringboot.enums.AdminStatus;
 import com.basicspringboot.handlers.BasicAuthenticationFailureHandler;
 import com.basicspringboot.models.admin.AdminMenu;
 import com.basicspringboot.providers.AdminAuthenticationProvider;
@@ -23,7 +22,7 @@ import java.util.List;
 @Configuration
 @Slf4j
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class AdminSecurityConfig {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AdminService adminService;
@@ -41,7 +40,8 @@ public class SecurityConfig {
     public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
         final List<AdminMenu> menus = adminMenuService.getAllPageMenus();
         http
-                .authenticationProvider(adminAuthenticationProvider())
+                .securityMatcher("/admin/**")
+                .authenticationProvider(authenticationProvider())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable) // 필요 시 CSRF 활성화 가능
                 .exceptionHandling(handler -> {
@@ -79,7 +79,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public AdminAuthenticationProvider adminAuthenticationProvider() {
+    public AdminAuthenticationProvider authenticationProvider() {
         return new AdminAuthenticationProvider(bCryptPasswordEncoder, adminService, adminMenuService);
     }
 
