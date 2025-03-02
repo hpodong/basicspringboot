@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
@@ -43,6 +44,9 @@ public class SecurityConfig {
                 .authenticationProvider(adminAuthenticationProvider())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable) // 필요 시 CSRF 활성화 가능
+                .exceptionHandling(handler -> {
+                    handler.accessDeniedHandler(accessDeniedHandler());
+                })
                 .authorizeHttpRequests(auth -> {
                             auth
                                     .requestMatchers(ALWAYS_ALLOW_URLS).permitAll()
@@ -53,6 +57,7 @@ public class SecurityConfig {
                                         .requestMatchers(link+"/**")
                                         .hasRole(menu.linkToRole());
                             });
+                            auth.requestMatchers("/admin/error/**").authenticated();
                         }
                 )
                 .formLogin(login -> login
@@ -81,6 +86,11 @@ public class SecurityConfig {
     @Bean
     public AuthenticationFailureHandler failureHandler() {
         return new SimpleUrlAuthenticationFailureHandler("/admin/login");
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return (request, response, exception) -> response.sendRedirect("/admin/error/access-denied");
     }
 }
 
