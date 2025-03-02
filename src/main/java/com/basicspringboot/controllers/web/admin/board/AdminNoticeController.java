@@ -8,6 +8,7 @@ import com.basicspringboot.models.board.Notice;
 import com.basicspringboot.models.others.FileModel;
 import com.basicspringboot.services.board.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;

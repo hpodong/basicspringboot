@@ -1,6 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:lang="ko_KR" class="semi-dark">
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 INTERNAL SERVER ERROR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="/admin/css/error.css" rel="stylesheet">
+</head>
 <body>
-<div th:if="${err != null}" th:text="${err}"></div>
+
+<div class="container">
+    <div class="icon">🚫</div>
+    <h1>500</h1>
+    <h2>서버 오류가 발생했습니다.</h2>
+    <p th:text="${err}"></p>
+    <a href="javascript:history.back();" class="btn">뒤로가기</a>
+</div>
+
 </body>
 </html>
