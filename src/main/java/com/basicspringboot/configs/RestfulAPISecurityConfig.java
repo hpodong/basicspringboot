@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class RestfulAPISecurityConfig {
 
     private static final String[] ALWAYS_ALLOW_URLS = {
-            "/api/login"
+            "/api/login",
     };
 
     @Value("${api.key}")
@@ -31,17 +31,12 @@ public class RestfulAPISecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .addFilterBefore(authFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new RestfulAPIAuthenticationFilter(API_KEY), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(ALWAYS_ALLOW_URLS).permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();
-    }
-
-    @Bean
-    public RestfulAPIAuthenticationFilter authFilter() {
-        return new RestfulAPIAuthenticationFilter(API_KEY);
     }
 }
 

@@ -34,6 +34,7 @@ public class AdminSecurityConfig {
             "/admin/js/**",
             "/admin/images/**",
             "/plugins/**",
+            "/favicon.ico",
     };
 
     @Bean
