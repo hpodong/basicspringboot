@@ -232,6 +232,26 @@ public abstract class _BSService<T extends _BSModel>{
         return jt.update(sql, objs);
     }
 
+    protected List<Long> insertManyReturnKeys(Class<? extends _BSModel> clazz, int length, InsertSetter setter) {
+        if(length == 0) return null;
+        final int result = insertMany(clazz, length, setter);
+
+        if(result > 0) {
+            final BSQuery bsq = new BSQuery(clazz);
+            final String primaryKey = getIdx(clazz);
+            bsq.setSelect(primaryKey);
+            bsq.setOrderBy(primaryKey + " DESC");
+            bsq.setLimit(result);
+
+            return jt.query(bsq.toSql(), (rs, rn) -> rs.getLong(primaryKey))
+                    .stream()
+                    .sorted(Comparator.comparingLong(Long::longValue)) // 작은 값부터 정렬
+                    .toList();
+        } else {
+            return null;
+        }
+    }
+
     private List<Map<String, Object>> getPickedData(List<T> list) {
         return list.stream().map(_BSModel::toListData).toList();
     }
