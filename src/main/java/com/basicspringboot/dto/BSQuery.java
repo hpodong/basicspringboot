@@ -308,4 +308,12 @@ public class BSQuery {
     public void addReplace(String key, String value) {
         replaces.put(key, value);
     }
+
+    public void addQueryColumn(HttpServletRequest request, String key, String column) {
+        final String value = request.getParameter(key);
+        if(value != null && !value.isBlank()) {
+            addWhere(column+" = ?");
+            addArgs(value);
+        }
+    }
 }
