@@ -1,21 +1,13 @@
 package com.basicspringboot.controllers.web.admin;
 import com.basicspringboot.dto.BSQuery;
-import com.basicspringboot.models.admin.Admin;
 import com.basicspringboot.models.admin.AdminPushLog;
-import com.basicspringboot.models.logs.AdminConnectLog;
 import com.basicspringboot.models.others.FileModel;
-import com.basicspringboot.services.manage.AdminConnectLogService;
 import com.basicspringboot.services.manage.AdminPushLogService;
-import com.basicspringboot.services.manage.AdminService;
-import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +21,8 @@ import java.util.Map;
 public class AdminController extends _BSAdminController {
 
     private static final String EDITOR_UPLOAD_DIR = "/editor";
-    private static final String ADMIN_LOGGED_SESSION_KEY = "admin";
 
     private final AdminPushLogService adminPushLogService;
-    public final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping("/login")
     public ModelAndView loginView(ModelAndView mv, @CookieValue(value = "save_id", required = false) String save_id) {
@@ -42,44 +32,9 @@ public class AdminController extends _BSAdminController {
         return mv;
     }
 
-    /*@Transactional
-    @PostMapping("/login")
-    public String login(RedirectAttributes ra, @RequestParam String id, @RequestParam String password, @RequestParam String url, @RequestParam(required = false) Boolean save_id) {
-        final BSQuery bq = new BSQuery(Admin.class);
-        bq.addWhere("a_id = '"+id+"'");
-
-        final Cookie cookie = new Cookie("save_id", id);
-
-        if(save_id == null) cookie.setMaxAge(0);
-
-        response.addCookie(cookie);
-
-        final Admin admin = service.findOne(bq, Admin::new);
-        if(admin != null) {
-            if(bCryptPasswordEncoder.matches(password, admin.getPassword())) {
-                session.setAttribute(ADMIN_LOGGED_SESSION_KEY, admin);
-                final AdminConnectLog adminConnectLog = new AdminConnectLog();
-                adminConnectLog.setAdmin_idx(admin.getIdx());
-                adminConnectLog.setRemote_ip(request.getRemoteAddr());
-                adminConnectLogService.insert(adminConnectLog);
-                if(!url.isBlank()) return redirect(url);
-                return redirect("/admin");
-            } else {
-                ra.addFlashAttribute("err", "비밀번호가 일치하지 않습니다.");
-                return redirect("/admin/login");
-            }
-        } else {
-            ra.addFlashAttribute("url", url);
-            ra.addFlashAttribute("err", "존재하지 않는 관리자입니다.");
-            return redirect("/admin/login");
-        }
-    }*/
-
-    @ResponseBody
-    @PostMapping("/logout")
-    public boolean logout() {
-        session.setAttribute(ADMIN_LOGGED_SESSION_KEY, null);
-        return true;
+    @Override
+    public String getPrefixPath() {
+        return "admin";
     }
 
     @Override
@@ -90,8 +45,7 @@ public class AdminController extends _BSAdminController {
 
     @GetMapping("/dashboard")
     public ModelAndView dashboard(ModelAndView mv) {
-        mv.setViewName("admin/index");
-        return mv;
+        return super.index(mv);
     }
 
     @ResponseBody

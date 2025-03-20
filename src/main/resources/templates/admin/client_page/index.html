@@ -14,7 +14,7 @@
         </div>
 
         <!-- 본문 시작 -->
-        <div class="sec_wrap">
+        <div class="sec_wrap common-box">
             <div class="section section1">
                 <div class="inner">
                     <div class="searchWrap">
@@ -23,9 +23,9 @@
                                 <caption> 게시글검색</caption>
                                 <colgroup>
                                     <col width="10.3%">
-                                    <col width="41.6%">
-                                    <col width="10.3%">
-                                    <col width="41.6%">
+                                        <col width="39.7%">
+                                        <col width="10.3%">
+                                        <col width="39.7%">
                                 </colgroup>
                                 <tbody>
                                 <tr>
@@ -46,14 +46,14 @@
                                                     <span class="calendar_ico"><img
                                                             src="/admin/images/ico_calendar.svg"></span>
                                                 </p>
-                                            </div>
-                                            <div class="period">
-                                                <!-- 기간 클릭했을때 class="on" 추가 부탁드립니다. -->
-                                                <input type="button" value="금일" class="month_btn">
-                                                <input type="button" value="1개월" class="month_btn">
-                                                <input type="button" value="3개월" class="month_btn">
-                                                <input type="button" value="6개월" class="month_btn">
-                                                <input type="button" value="1년" class="month_btn">
+                                                <div class="period">
+                                                    <!-- 기간 클릭했을때 class="on" 추가 부탁드립니다. -->
+                                                    <input type="button" value="금일" class="month_btn">
+                                                    <input type="button" value="1개월" class="month_btn">
+                                                    <input type="button" value="3개월" class="month_btn">
+                                                    <input type="button" value="6개월" class="month_btn">
+                                                    <input type="button" value="1년" class="month_btn">
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
@@ -130,7 +130,7 @@
                                             </td>
                                             <td th:data-idx="${row.idx}" th:text="${row.row_num}"></td>
                                             <td th:data-idx="${row.idx}" class="center">
-                                                <span th:class="'status ' + ${row.status.toClass()}" th:text="${row.status.toHtml()}"></span>
+                                                <span th:class="'status ' + ${row.status.getClassName()}" th:text="${row.status.getName()}"></span>
                                             </td>
                                             <td class="txt_l" th:data-idx="${row.idx}" th:text="${row.title}"></td>
                                             <td class="txt_l" th:data-idx="${row.idx}" th:text="${row.link}"></td>
@@ -143,10 +143,10 @@
                         </div><!-- //tbl_area -->
                         <div class="btnSet clear">
                             <div class="left">
-                                <button type="submit" class="btn border222 btn-list-delete wid70_px">삭제</button>
+                                <button type="submit" class="btn border111 btn-list-delete wid70_px">삭제</button>
                             </div>
                             <div class="right">
-                                <a th:href="${cm.link} + '/insert'" class="btn primary">등록</a>
+                                <a th:href="${cm.link} + '/insert'" class="btn bl">등록</a>
                             </div>
                         </div>
                     </form>

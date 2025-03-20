@@ -22,6 +22,11 @@ public class AdminClientPageController extends _BSAdminController {
     private ClientPageService service;
 
     @Override
+    public String getPrefixPath() {
+        return "client_page";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final BSQuery bsq = new BSQuery(ClientPage.class);

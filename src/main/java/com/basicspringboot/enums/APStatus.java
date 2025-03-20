@@ -23,7 +23,12 @@ public enum APStatus implements BSEnum<APStatus> {
     }
 
     @Override
-    public String toClass() {
+    public BSEnum<APStatus> enumFromName(String name) {
+        return null;
+    }
+
+    @Override
+    public String getClassName() {
         return switch (this) {
             case APStatus.ACTIVATED -> "txt-blue";
             case APStatus.PAUSED -> "txt-red";
@@ -40,7 +45,7 @@ public enum APStatus implements BSEnum<APStatus> {
     }
 
     @Override
-    public String toHtml() {
+    public String getName() {
         return switch (this) {
             case APStatus.ACTIVATED -> "활성화";
             case APStatus.PAUSED -> "비활성화";

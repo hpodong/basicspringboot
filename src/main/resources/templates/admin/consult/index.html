@@ -14,33 +14,25 @@
         </div>
 
         <!-- 본문 시작 -->
-        <div class="sec_wrap">
+        <div class="sec_wrap common-box">
             <div class="section section1">
                 <div class="inner">
                     <div>
                         <form id="searchForm" th:action="${cm.link}">
-                            <div class="tab-box mb30">
-                                <input type="radio" name="ct" value="" id="categoryall" th:checked="${param.ct eq null || param.ct?.toString() eq ''}">
-                                <label for="categoryall">전체</label>
-                                <th:block th:each="c : ${categories}">
-                                    <input name="ct" type="radio" th:value="${c.idx}" th:id="'category'+${c.idx}">
-                                    <label th:for="'category'+${c.idx}" th:text="${c.name}"></label>
-                                </th:block>
-                            </div>
                             <div class="searchWrap">
                                 <table class="searchTable">
                                     <caption> 게시글검색 </caption>
                                     <colgroup>
                                         <col width="10.3%">
-                                        <col width="41.6%">
+                                        <col width="39.7%">
                                         <col width="10.3%">
-                                        <col width="41.6%">
+                                        <col width="39.7%">
                                     </colgroup>
                                     <tbody>
                                     <tr>
                                         <th>등록일</th>
                                         <td>
-                                            <div class="regist_date">
+                                            <div class="regist_date gap-5">
                                                 <div class="calendar_wrap clear">
                                                     <p class="calendar">
                                                         <input type="text" class="input datepicker" name="sd"
@@ -55,14 +47,14 @@
                                                         <span class="calendar_ico"><img
                                                                 src="/admin/images/ico_calendar.svg"></span>
                                                     </p>
-                                                </div>
-                                                <div class="period">
-                                                    <!-- 기간 클릭했을때 class="on" 추가 부탁드립니다. -->
-                                                    <input type="button" value="금일" class="month_btn">
-                                                    <input type="button" value="1개월" class="month_btn">
-                                                    <input type="button" value="3개월" class="month_btn">
-                                                    <input type="button" value="6개월" class="month_btn">
-                                                    <input type="button" value="1년" class="month_btn">
+                                                    <div class="period">
+                                                        <!-- 기간 클릭했을때 class="on" 추가 부탁드립니다. -->
+                                                        <input type="button" value="금일" class="month_btn">
+                                                        <input type="button" value="1개월" class="month_btn">
+                                                        <input type="button" value="3개월" class="month_btn">
+                                                        <input type="button" value="6개월" class="month_btn">
+                                                        <input type="button" value="1년" class="month_btn">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>

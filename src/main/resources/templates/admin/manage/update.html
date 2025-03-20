@@ -14,7 +14,7 @@
                 </h2>
             </div>
         </div>
-        <div class="sec_wrap">
+        <div class="sec_wrap common-box">
             <div class="section section1">
                 <div class="inner">
                     <div class="board">
@@ -46,7 +46,7 @@
                                                 <td colspan="3">
                                                     <div class="radio_box" th:each="status:${statuses}">
                                                         <input type="radio" name="admin_status" th:id="'status_waiting_'+${status.value}" th:value="${status.value}">
-                                                        <label th:for="'status_waiting_'+${status.value}" th:text="${status.toHtml()}"></label>
+                                                        <label th:for="'status_waiting_'+${status.value}" th:text="${status.getName()}"></label>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -130,9 +130,9 @@
                                 </div>
                             </div>
                             <div class="btnSet flex-box gap-10 justify-content-center mt30">
-                                <button type="submit" class="btn main_bg btn-save">저장</button>
-                                <a th:href="${cm.link}" class="btn border_bg btn-cancel">취소</a>
-                            </div>
+                                        <button type="submit" class="btn main_bg btn-save">저장</button>
+                                        <a th:href="${cm.link}" class="btn border111 btn-cancel">취소</a>
+                                    </div>
                         </form>
                     </div>
                 </div>

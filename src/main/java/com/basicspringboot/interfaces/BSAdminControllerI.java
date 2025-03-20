@@ -4,12 +4,16 @@ import jakarta.servlet.ServletException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 
 public interface BSAdminControllerI {
+    String getPrefixPath();
+    String getPrefixPath(String suffix);
 
     @GetMapping("")
     ModelAndView index(ModelAndView mv);
@@ -20,7 +24,7 @@ public interface BSAdminControllerI {
     @GetMapping("/update")
     ModelAndView update(@RequestParam Long idx, ModelAndView mv);
     @PostMapping("/insert")
-    ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) throws IOException;
+    ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) ;
     @PostMapping("/update")
     ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) throws IOException, ServletException;
     @PostMapping("/delete")

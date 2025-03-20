@@ -27,6 +27,11 @@ public class AdminConsultController extends _BSAdminController {
     private final ConsultService service;
 
     @Override
+    public String getPrefixPath() {
+        return "consult";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
         final String category = request.getParameter("ct");
         final BSQuery bsq = new BSQuery(Consult.class);

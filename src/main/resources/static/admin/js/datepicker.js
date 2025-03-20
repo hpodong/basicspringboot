@@ -2,6 +2,9 @@ $(function () {
   $(".datepicker").datepicker({
     dateFormat: "yy-mm-dd",
     duration: "fast",
+    onSelect: function() {
+      $(this).keyup().change();
+    }
     // 시간까지 사용할 경우 주석 해제하고 사용하시면 됩니다.
     // onSelect: function(datetext) {
     //     var d = new Date(); // for now

@@ -12,8 +12,12 @@
 					<th:block th:text="${cm.title}"></th:block> 상세
 				</h2>
 			</div>
+			<form th:action="${cm.link} + '/delete'" method="post" onsubmit="return deleteCheck(this);">
+				<input type="hidden" name="idx" th:value="${data.idx}">
+				<button class="btn bl btn-list-delete" type="submit">삭제</button>
+			</form>
 		</div>
-		<div class="sec_wrap lesssonpro-viewPage">
+		<div class="sec_wrap common-box">
 			<div class="section section1">
 				<div class="inner">
 					<div class="board">
@@ -40,7 +44,7 @@
 										</tr>
 										<tr>
 											<th>상태</th>
-											<td colspan="3" th:class="${data.status.toClass()}" th:text="${data.status.toHtml()}"></td>
+											<td colspan="3" th:class="${data.status.getClassName()}" th:text="${data.status.getName()}"></td>
 										</tr>
 										</tbody>
 									</table>
@@ -85,9 +89,14 @@
 									</table>
 								</div>
 							</div>
-							<div class="btnSet flex-box justify-content-between mt30">
-								<a th:href="${cm.link}" class="btn btn-bottom btn-gray-bottom">목록</a>
-								<a th:href="${cm.link} + '/update?idx=' + ${data.idx}" class="btn-bottom btn primary">수정</a>
+							<div class="btnSet flex-box justify-content-between">
+								<input type="hidden" name="idx" th:value="${data.idx}">
+								<div class="left">
+									<a th:href="${cm.link}" class="btn gr wid80px">목록</a>
+								</div>
+								<div class="right">
+									<a th:href="${cm.link} + '/update?idx=' + ${data.idx}" class="btn gr wid80px">수정</a>
+								</div>
 							</div>
 						</div>
 					</div>

@@ -18,7 +18,7 @@ $(function () {
     }
   });
 
-  $(".sg-file").on('change', function () {
+  $(".sg-file").change( function () {
     const parent_ele = $(this).closest("div.flex-box");
     const fileName = $(this).val().split('\\').pop();
     parent_ele.find("input.upload-name").val(fileName);
@@ -34,187 +34,25 @@ $(function () {
     }
   });
 
-  // 좌측 메뉴 슬라이드 업다운
-  // $("#main-nav .gnb > ul > li > a").on("click", function () {
-  //   if ($(this).next().length > 0) {
-  //     if ($(this).hasClass("on")) {
-  //       $(this).removeClass("on");
-  //       $(this).next().stop().slideUp();
-  //     } else {
-  //       $(this).parent().siblings().children("a").removeClass("on");
-  //       $(this).parent().siblings().children("ul").removeClass("in");
-  //       $(this).parent().siblings().children("ul").stop().slideUp();
-  //       $(this).addClass("on");
-  //       $(this).next().stop().slideDown();
-  //     }
-  //   }
-  // });
-
-  $("#main-nav .gnb > ul > li > a").on("click", function () {
-    if ($(this).next().length > 0) {
-      if ($(this).hasClass("on")) {
-        $(this).removeClass("on");
-        $(this).next().stop().slideUp();
+  $("#main-nav .gnb > ul > li > a").click( function () {
+    const $this = $(this);
+    if ($this.next().length > 0) {
+      if ($this.hasClass("on")) {
+        $this.removeClass("on");
+        $this.next().stop().slideUp();
       } else {
         // 다른 메뉴의 'on' 클래스 및 이미지 초기화
-        $("#main-nav .gnb > ul > li > a.on").not(this).removeClass("on").each(function () {
-          if ($(this).text().includes("대시보드")) {
-            $(this).html(`
-              <img src="/admin/images/ico_side_dashboard.svg">대시보드
-              `);
-          } else if ($(this).text().includes("주문 관리")) {
-            $(this).html(`
-              <img src="/admin/images/ico_side_order.svg">주문 관리
-            `);
-          } else if ($(this).text().includes("상품 관리")) {
-            $(this).html(`
-              <img src="/admin/images/ico_side_product.svg">상품 관리
-            `);
-          } else if ($(this).text().includes("회원 관리")) {
-            $(this).html(`
-              <img src="/admin/images/ico_side_user.svg">회원 관리
-            `);
-          } else if ($(this).text().includes("고객지원 관리")) {
-            $(this).html(`
-              <img src="/admin/images/ico_side_support.svg">고객지원 관리
-            `);
-          } else if ($(this).text().includes("게시판 관리")) {
-            $(this).html(`
-              <img src="/admin/images/ico_side_board.svg">게시판 관리
-            `);
-          } else if ($(this).text().includes("컨텐츠 관리")) {
-            $(this).html(`
-              <img src="/admin/images/ico_side_cont.svg">컨텐츠 관리
-            `);
-          } else if ($(this).text().includes("방문자 관리")) {
-            $(this).html(`
-              <img src="/admin/images/ico_side_visit.svg">방문자 관리
-            `);
-          } else if ($(this).text().includes("관리자 관리")) {
-            $(this).html(`
-              <img src="/admin/images/ico_side_admin.svg">관리자 관리
-            `);
-          }
-        });
+        $("#main-nav .gnb > ul > li > a.on").not(this).removeClass("on");
 
-        $("#main-nav .gnb > ul > li > ul").not($(this).next()).stop().slideUp();
+
+        $("#main-nav .gnb > ul > li > ul").not($this.next()).stop().slideUp();
 
         // 클릭한 메뉴에 'on' 클래스 및 이미지 추가
-        $(this).addClass("on");
-        $(this).next().stop().slideDown();
-      }
-    }
-
-    // 클릭된 메뉴 이미지 업데이트
-    if ($(this).text().includes("대시보드")) {
-      if ($(this).hasClass("on")) {
-        $(this).html(`
-            <img src="/admin/images/ico_side_dashboard_on.svg">대시보드
-        `);
-      } else {
-        $(this).html(`
-            <img src="/admin/images/ico_side_dashboard.svg">대시보드
-        `);
-      }
-    }
-
-    if ($(this).text().includes("주문 관리")) {
-      if ($(this).hasClass("on")) {
-        $(this).html(`
-            <img src="/admin/images/ico_side_order_on.svg">주문 관리
-        `);
-      } else {
-        $(this).html(`
-            <img src="/admin/images/ico_side_order.svg">주문 관리
-        `);
-      }
-    }
-
-    if ($(this).text().includes("상품 관리")) {
-      if ($(this).hasClass("on")) {
-        $(this).html(`
-            <img src="/admin/images/ico_side_product_on.svg">상품 관리
-        `);
-      } else {
-        $(this).html(`
-            <img src="/admin/images/ico_side_product.svg">상품 관리
-        `);
-      }
-    }
-
-    if ($(this).text().includes("회원 관리")) {
-      if ($(this).hasClass("on")) {
-        $(this).html(`
-            <img src="/admin/images/ico_side_user_on.svg">회원 관리
-        `);
-      } else {
-        $(this).html(`
-            <img src="/admin/images/ico_side_user.svg">회원 관리
-        `);
-      }
-    }
-
-    if ($(this).text().includes("고객지원 관리")) {
-      if ($(this).hasClass("on")) {
-        $(this).html(`
-            <img src="/admin/images/ico_side_support_on.svg">고객지원 관리
-        `);
-      } else {
-        $(this).html(`
-            <img src="/admin/images/ico_side_support.svg">고객지원 관리
-        `);
-      }
-    }
-
-    if ($(this).text().includes("게시판 관리")) {
-      if ($(this).hasClass("on")) {
-        $(this).html(`
-            <img src="/admin/images/ico_side_board_on.svg">게시판 관리
-        `);
-      } else {
-        $(this).html(`
-            <img src="/admin/images/ico_side_board.svg">게시판 관리
-        `);
-      }
-    }
-
-    if ($(this).text().includes("컨텐츠 관리")) {
-      if ($(this).hasClass("on")) {
-        $(this).html(`
-            <img src="/admin/images/ico_side_cont_on.svg">컨텐츠 관리
-        `);
-      } else {
-        $(this).html(`
-            <img src="/admin/images/ico_side_cont.svg">컨텐츠 관리
-        `);
-      }
-    }
-
-    if ($(this).text().includes("방문자 관리")) {
-      if ($(this).hasClass("on")) {
-        $(this).html(`
-            <img src="/admin/images/ico_side_visit_on.svg">방문자 관리
-        `);
-      } else {
-        $(this).html(`
-            <img src="/admin/images/ico_side_visit.svg">방문자 관리
-        `);
-      }
-    }
-
-    if ($(this).text().includes("관리자 관리")) {
-      if ($(this).hasClass("on")) {
-        $(this).html(`
-            <img src="/admin/images/ico_side_admin_on.svg">관리자 관리
-        `);
-      } else {
-        $(this).html(`
-            <img src="/admin/images/ico_side_admin.svg">관리자 관리
-        `);
+        $this.addClass("on");
+        $this.next().stop().slideDown();
       }
     }
   });
-
 
   $("#main-nav .gnb > ul > li > ul > li > a.on")
       .parent()
@@ -225,6 +63,13 @@ $(function () {
     $("#wrapper").addClass("on");
   }
 
+  $(".topSwiper_wrap .swiper-slide").click(function() {
+    const idx = $(this).data("idx");
+    const suffix = `${currentPath}${queryString}`;
+    const newUrl = `/notice/view?idx=${idx}`;
+    if(!Object.is(suffix, newUrl)) location.href = newUrl;
+  });
+
   $(".select_drop").each(function() {
     $(this).niceSelect();
     const paramValue = urlParams.get(this.name);
@@ -234,82 +79,15 @@ $(function () {
     }
   });
 
-  $("#searchForm input[type='text']").each(function() {
-    if(queryString && urlParams.get(this.name)) {
-      $(this).val(urlParams.get(this.name));
-    }
-  });
-
-  $("#searchForm input[type='radio']").each(function() {
-    if(queryString && urlParams.get(this.name) && Object.is(this.value, urlParams.get(this.name))) {
-      $(this).prop("checked", true);
-    }
-  });
-
-  $(".tab-bar input[type='radio'], #searchForm select").not("#searchForm select[name='t']").on("change", goSearch);
-
-  $("input[type='reset']").on("click", function(event) {
-    event.preventDefault();  // reset의 기본 동작을 막습니다.
-    window.location.replace(window.location.pathname);
-  });
-
   $("textarea.editor").each(function() {
-    $(this).hide();
-    let id = this.id;
-    let height = $(this).data("height");
-    let styles = "";
-    if(height) styles = `style='height: ${height}'`;
-    $(this).after(`<div id="${id}_editor" ${styles}></div>`);
-    let quill = new Quill(`#${id}_editor`, {
-      theme: "snow",
-      modules: {
-        toolbar: [
-          [{header: [1,2,false] }],
-          ['bold', 'italic', 'underline'],
-          ['image', 'code-block'],
-          [{ list: 'ordered' }, { list: 'bullet' }]
-        ]
-      },
-    });
-    quill.root.innerHTML = this.value;
-    quill.on('text-change', function() {
-      document.getElementById(id).value = quill.root.innerHTML;
-    });
-
-    quill.getModule('toolbar').addHandler('image', function () {
-      const fileInput = document.createElement('input');
-      fileInput.setAttribute('type', 'file');
-      fileInput.setAttribute('accept', 'image/*');
-
-      fileInput.click();
-
-      fileInput.addEventListener("change", function () {  // change 이벤트로 input 값이 바뀌면 실행
-        const formData = new FormData();
-        const file = fileInput.files[0];
-        formData.append('file', file);
-
-        $.ajax({
-          type: 'POST',
-          enctype: 'multipart/form-data',
-          url: '/admin/editor/upload',
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function (data) {
-            const range = quill.getSelection(); // 사용자가 선택한 에디터 범위
-            quill.insertEmbed(range.index, 'image', data);
-          },
-          error: function (err) {
-            console.error(err);
-          }
-        });
-
-      });
-    });
+    $(this).setQLEditor();
   });
 });
 
-function openPopup(id, type){
+let currentBtn = null;
+function openPopup(id, type, active){
+  currentBtn = active;
+
   if(type == "normal"){
     $(id).attr('data-open-type', 'normal');
     $(id).show();
@@ -342,6 +120,11 @@ function closePopup(is_clear = true){
       popup_ele.find("input[type='text'], input[type='file'], input[readonly]").not(".notempty").val("");
       popup_ele.find("input[type='radio']").prop('checked', false);
       popup_ele.find("input[type='checkbox']").prop('checked', false);
+
+      if (imgPopupSwiper) {
+        imgPopupSwiper.destroy();
+        imgPopupSwiper = null;
+      }
     }
   })
 }
@@ -365,10 +148,62 @@ function openImgPopup(id, type) {
 
   // 팝업 안에 이미지 추가
   $(id).find('.img-area').html('' +
-      '<div class="img-box"><img src="' + clickedImageSrc + '" alt="popup image" /></div>');
+      '<img src="' + clickedImageSrc + '" alt="popup image" />');
 }
 
+let imgPopupSwiper; // Swiper 인스턴스를 저장할 변수
+
+function viewOpenImgPopup(id, type, clickedImg) {
+  // 팝업 열기
+  if (type == "normal") {
+    $(id).attr("data-open-type", "normal");
+    $(id).show();
+    $(".popup-bg").show();
+  }
+  if (type == "fade") {
+    $(id).attr("data-open-type", "fade");
+    $(id).fadeIn(200);
+    $(".popup-bg").fadeIn(200);
+  }
+  $(id).addClass("active");
+
+  // Swiper가 이미 존재하면 제거 (중복 초기화 방지)
+  if (imgPopupSwiper) {
+    imgPopupSwiper.destroy(); // 기존 Swiper 삭제
+    imgPopupSwiper = null;
+  }
+
+  // 이미지 리스트 가져오기
+  let clickedIndex = 0; // 클릭한 이미지의 인덱스
+  let imgList = $(".imgList img").map(function (index) {
+    let imgSrc = $(this).attr("src");
+    if ($(this).is(clickedImg)) {
+      clickedIndex = index; // 클릭한 이미지의 인덱스 저장
+    }
+    return '<div class="swiper-slide"><img src="' + imgSrc + '" alt="popup image" /></div>';
+  }).get();
+
+  // 생성된 HTML을 swiper-wrapper에 삽입
+  $(id).find(".swiper-wrapper.img-area").html(imgList.join(""));
+
+  // Swiper 새로 초기화 (클릭한 이미지부터 시작)
+  imgPopupSwiper = new Swiper(".imgPopupSwiper", {
+    slidesPerView: 1,
+    loop: true,
+    initialSlide: clickedIndex, // 클릭한 이미지부터 시작
+    navigation: {
+      nextEl: ".imgPopupSwiper-button-next",
+      prevEl: ".imgPopupSwiper-button-prev",
+    },
+  });
+}
+
+
 $(document).ready(function () {
+  $('.calendar').on('click', function(){
+    $(this).find("input").datepicker("show");
+  });
+
   $("#img_filename").on('change', function () {
     let fileName = $(this).val().split('\\').pop();
     $(".img_filename").val(fileName);
@@ -393,12 +228,8 @@ $(document).ready(function () {
   //알람 팝업 노출, 미노출 이벤트
   $("#alarm_btn").on("click", function(){
     $(".alarm-popup").fadeIn(300);
-    get_order_list(true);
+    get_push_list(true);
   });
-
-  $(".alarm-popup input[name='alarm']").change(function() {
-    get_order_list(true);
-  })
 
   $(".alarm-popup .popup-close").on("click", function(){
     $(".alarm-popup").fadeOut(300);
@@ -407,9 +238,8 @@ $(document).ready(function () {
   let alarm_order_page = 1;
   let can_request_alarm_order = true;
 
-  const get_order_list = (is_refresh) => {
+  const get_push_list = (is_refresh) => {
     const list_tag = $("#notification_alarm_list");
-    const type_value = $(".alarm-popup input[name='alarm']:checked").val();
     if(is_refresh) {
       alarm_order_page = 1;
       can_request_alarm_order = true;
@@ -417,12 +247,12 @@ $(document).ready(function () {
     }
     if(can_request_alarm_order) {
       ajaxRequest({
-        url: "/admin/recent/push-logs",
+        url: "/recent/push-logs",
         data: {
           p: alarm_order_page,
-          type: type_value
         },
         onsuccess: (res) => {
+          console.log(res);
           if(res.count){
             const addAlarm = (id, count) => {
               const element = document.getElementById(id);
@@ -441,31 +271,29 @@ $(document).ready(function () {
 
           res.list.forEach(row => {
             list_tag.append(`
-            <li class="${!row.is_read ? 'on' : ''}">
-                <a href="javascript:" class="alarm-box" data-idx="${row.idx}" data-url="${row.url}">
-                    <p class="t-rw rw-1 tit">${row.title}</p>
-                    <div class="cont-txt"><p class="t-rw rw-1">${row.description}</div>
-                    <div class="flex-box justify-content-between align-items-center">
-                        <p class="date">${timestampToTime(row.created_at)}</p>
-                        ${row.status_text ? `<span class="${row.status_class}">${row.status_text}</span>` : ""}
-                    </div>
-                </a>
+            <li ${row.is_read ? "" : "class='on'"} data-idx="${row.idx}" data-url="${row.url}">
+                <p class="t-rw rw-1 lh1 fs16 fw600 ls-032">${row.title}</p>
+                <span class="fs14 fw500 ls-042 lh1 fc666 flex-box gap-20"><em class="fc111 fw500">이름</em>${row.name}</span>
+                <div class="flex-box align-items-center justify-content-between mt10">
+                    <span class="fs14 fw500 ls-042 lh1 fc666 flex-box gap-20"><em class="fc111 fw500">문의유형</em>${row.category}</span>
+                    <span class="fs12 fw400 ls-024 fc999">${timestampToDate(row.created_at, 'yyyy.MM.dd')}</span>
+                </div>
             </li>
             `);
           });
           alarm_order_page++;
-          can_request_alarm_order = res.length === 10;
+          can_request_alarm_order = res.list.length === 10;
         },
       });
     }
   }
 
-  $(document).on("click", "#notification_alarm_list a.alarm-box", function() {
+  $(document).on("click", "#notification_alarm_list li", function() {
     const $this = $(this);
     const idx = $this.data("idx");
     const url = $this.data("url");
     ajaxRequest({
-      url: "/admin/recent/push-logs/read",
+      url: "/recent/push-logs/read",
       data: {
         idx
       },
@@ -474,13 +302,20 @@ $(document).ready(function () {
         location.href = url;
       }
     })
+  });
+
+  $("#notification_alarm_list").sgScroll({
+    onbottom: () => {
+      get_push_list();
+    },
   })
+
 
   //헤더 알람 팝업 더보기 클릭 이벤트
   $(".alarm-popup .more-btn").on("click", function(){
-    get_order_list();
+    get_push_list();
   });
-  
+
   //데이트타임피커
   $(".datetimepicker").datetimepicker({
     format: "Y-m-d H:i:s",
@@ -528,44 +363,47 @@ $(document).ready(function () {
 
   //멀티업로드
   $(".multiple-file-attach input[type='file']").change(function(event) {
+    const $this = $(this);
     const files = event.target.files;
-    const max_count = $(this).data("max-count");
-    let file_area_tag = $(this).closest(".multiple-file-attach").find(".file-upload-area");
-    if(!file_area_tag.length) {
+    const length = files.length;
+    const max_count = $this.data("max-count");
+    let $file_area_tag = $this.closest(".multiple-file-attach").find(".file-upload-area");
+    if(!$file_area_tag.length) {
       SGAlert({
         title: "파일 영역을 생성해주세요. (ex. file-upload-area)"
       });
-    } else if(file_area_tag.find("div.file-box").length + files.length > max_count){
+    } else if($file_area_tag.find("div.file-box").length + length > max_count){
       SGAlert({
         title: `파일은 최대 ${max_count}개만 업로드 가능합니다.`
       });
+      $this.val("");
     } else {
       for (let i = 0; i < files.length; i++) {
         const fileBox = `
-          <div class="file-box flex-box align-items-center justify-content-between gap-5 wid-fit" data-index="${i}">
+          <div class="file-box flex-box align-items-center justify-content-between gap-5 wid-fit mt5" data-index="${i}">
             <div class="flex-box align-items-center gap-5">
               <p class="file-name t-rw rw-1">${files[i].name}</p>
             </div>
-            <a href="javascript:;" class="delete-btn"><img src="/admin/images/ico_close_blue.svg" alt="" width="25"></a>
+            <a href="javascript:;" class="delete-btn"><img src="/images/ico_close.svg" alt="" width="10"></a>
           </div>
         `;
 
-        file_area_tag.append(fileBox);
-        $(".file-caution-txt").css("display", "none");
+        $file_area_tag.append(fileBox);
+        $file_area_tag.find(".file-caution-txt").css("display", "none");
       }
     }
   });
 
   // 파일 삭제 기능
   $(document).on("click", ".file-upload-area .delete-btn", function() {
-    let parent = $(this).closest(".file-box");
+    const $parent = $(this).closest(".file-box");
 
-    let file_idx = $(this).data("file-idx");
-    let index = parent.data("index");
+    const file_idx = $(this).data("file-idx");
+    const index = $parent.data("index");
     const delete_form = $(this).closest("form");
 
     if(!Object.is(index, undefined)) {
-      let file_input = document.getElementById("fileAttach");
+      let file_input = $(".multiple-file-attach input[type='file']")[0];
       let dataTransfer = new DataTransfer();
       let files = Array.from(file_input.files);
       files.splice(index, 1);
@@ -574,7 +412,7 @@ $(document).ready(function () {
     }
 
     if(file_idx != null) delete_form.append(`<input type='hidden' name='delete_file_idx' value='${file_idx}'>`);
-    parent.remove();
+    $parent.remove();
 
     if (!$('.multiple-file-attach .file-box').length) {
       $(".file-caution-txt").css("display", "inline-block");
@@ -590,52 +428,11 @@ $(document).ready(function () {
     }
   });
 
-  //사이드바
-  $("#main-nav .gnb > ul > li > a").each(function () {
-    if ($(this).hasClass("on") && $(this).text().includes("대시보드")) {
-      $(this).html(`
-          <img src="/admin/images/ico_side_dashboard_on.svg">대시보드
-      `);
-    } else if($(this).hasClass("on") && $(this).text().includes("주문 관리")){
-      $(this).html(`
-          <img src="/admin/images/ico_side_order_on.svg">주문 관리
-      `);
-    } else if($(this).hasClass("on") && $(this).text().includes("상품 관리")){
-      $(this).html(`
-          <img src="/admin/images/ico_side_product_on.svg">상품 관리
-      `);
-    } else if($(this).hasClass("on") && $(this).text().includes("회원 관리")){
-      $(this).html(`
-          <img src="/admin/images/ico_side_user_on.svg">회원 관리
-      `);
-    } else if($(this).hasClass("on") && $(this).text().includes("게시판 관리")){
-      $(this).html(`
-          <img src="/admin/images/ico_side_board_on.svg">게시판 관리
-      `);
-    } else if($(this).hasClass("on") && $(this).text().includes("컨텐츠 관리")){
-      $(this).html(`
-          <img src="/admin/images/ico_side_cont_on.svg">컨텐츠 관리
-      `);
-    } else if($(this).hasClass("on") && $(this).text().includes("방문자 관리")){
-      $(this).html(`
-          <img src="/admin/images/ico_side_visit_on.svg">방문자 관리
-      `);
-    } else if($(this).hasClass("on") && $(this).text().includes("관리자 관리")){
-      $(this).html(`
-          <img src="/admin/images/ico_side_admin_on.svg">관리자 관리
-      `);
-    } else if($(this).hasClass("on") && $(this).text().includes("고객지원 관리")){
-      $(this).html(`
-          <img src="/admin/images/ico_side_support_on.svg">고객지원 관리
-      `);
-    }
-  });
-
-if($(".file-img-box .image-view").is(':visible')){
-  $('.page-footer').css('bottom', 'auto');
-} else {
-  $('.page-footer').css('bottom', '0');
-}
+  if($(".file-img-box .image-view").is(':visible')){
+    $('.page-footer').css('bottom', 'auto');
+  } else {
+    $('.page-footer').css('bottom', '0');
+  }
 
   if($(".footer_").is(':visible')){
     $('.page-footer').css('bottom', 'auto');
@@ -785,3 +582,4 @@ var win_zip = function(frm_name, frm_zipcode, frm_address1, frm_address2, frm_ad
       element_layer.style.display = 'block';
   }
 }
+

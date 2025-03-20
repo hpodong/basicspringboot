@@ -23,7 +23,12 @@ public enum MemberGender implements BSEnum<MemberGender> {
     }
 
     @Override
-    public String toClass() {
+    public BSEnum<MemberGender> enumFromName(String name) {
+        return null;
+    }
+
+    @Override
+    public String getClassName() {
         return "";
     }
 
@@ -37,7 +42,7 @@ public enum MemberGender implements BSEnum<MemberGender> {
     }
 
     @Override
-    public String toHtml() {
+    public String getName() {
         return switch (this) {
             case MemberGender.MAN -> "남자";
             case MemberGender.WOMAN -> "여자";

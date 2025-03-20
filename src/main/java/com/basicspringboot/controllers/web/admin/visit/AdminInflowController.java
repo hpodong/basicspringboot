@@ -17,6 +17,11 @@ public class AdminInflowController extends _BSAdminController {
     private InflowLogService service;
 
     @Override
+    public String getPrefixPath() {
+        return "inflow";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final BSQuery bsq = new BSQuery(InflowLog.class, request);

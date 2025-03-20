@@ -25,7 +25,12 @@ public enum MemberStatus implements BSEnum<MemberStatus> {
     }
 
     @Override
-    public String toClass() {
+    public BSEnum<MemberStatus> enumFromName(String name) {
+        return null;
+    }
+
+    @Override
+    public String getClassName() {
         return switch (this) {
             case MemberStatus.WAITING -> "txt-yellow";
             case MemberStatus.ACTIVE -> "txt-blue";
@@ -43,7 +48,7 @@ public enum MemberStatus implements BSEnum<MemberStatus> {
     }
 
     @Override
-    public String toHtml() {
+    public String getName() {
         return switch (this) {
             case MemberStatus.WAITING-> "대기";
             case MemberStatus.ACTIVE -> "승인";

@@ -18,6 +18,11 @@ public class AdminHeaderTypeController extends _BSAdminController {
     private HeaderTypeService service;
 
     @Override
+    public String getPrefixPath() {
+        return "client_page/header";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final BSQuery bsq = new BSQuery(HeaderType.class, request);

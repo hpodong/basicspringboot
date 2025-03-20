@@ -11,12 +11,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -25,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
+@Slf4j
 @Controller
 public abstract class _BSAdminController implements BSAdminControllerI {
     @Autowired
@@ -36,6 +41,11 @@ public abstract class _BSAdminController implements BSAdminControllerI {
     protected HttpServletRequest request;
     @Autowired
     protected HttpServletResponse response;
+
+    @Override
+    public String getPrefixPath(String filename) {
+        return getPrefixPath() + "/" + filename;
+    }
 
     protected String redirect(String url) {
         return "redirect:" + url;
@@ -88,12 +98,8 @@ public abstract class _BSAdminController implements BSAdminControllerI {
     }
 
     @Transactional
-    protected void insertFiles(List<FileModel> files) {
-        if(files != null) {
-            files.forEach(file -> {
-                fileService.insert(file);
-            });
-        }
+    protected List<FileModel> insertFiles(List<FileModel> files) {
+        return fileService.insertMany(files);
     }
 
     protected boolean deleteFile(FileModel file) {
@@ -113,32 +119,53 @@ public abstract class _BSAdminController implements BSAdminControllerI {
     }
 
     @Override
+    public ModelAndView index(ModelAndView mv) {
+        mv.setViewName(getPrefixPath("index"));
+        return mv;
+    }
+
+    @Override
     public ModelAndView insert(ModelAndView mv) {
-        return null;
+        mv.setViewName(getPrefixPath("insert"));
+        return mv;
     }
 
     @Override
     public ModelAndView update(Long idx, ModelAndView mv) {
-        return null;
+        mv.setViewName(getPrefixPath("update"));
+        return mv;
     }
 
     @Override
     public ModelAndView view(Long idx, ModelAndView mv) {
-        return null;
+        mv.setViewName(getPrefixPath("view"));
+        return mv;
     }
 
     @Override
-    public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) throws IOException {
-        return null;
+    public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) {
+        mv.setViewName(redirect("/"+getPrefixPath()));
+        return mv;
     }
 
     @Override
-    public ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) throws IOException, ServletException {
-        return null;
+    public ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) {
+        mv.setViewName(redirect("/"+getPrefixPath()));
+        return mv;
     }
 
     @Override
     public ModelAndView deleteProcess(ModelAndView mv, RedirectAttributes ra) {
-        return null;
+        mv.setViewName(redirect("/"+getPrefixPath()));
+        return mv;
+    }
+
+    public Admin getLoggedAdmin() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (Admin) authentication.getPrincipal();
+    }
+
+    public Long getLoggedAdminIdx() {
+        return getLoggedAdmin().getIdx();
     }
 }

@@ -18,6 +18,11 @@ public class AdminAppVersionController extends _BSAdminController {
     private AppVersionService service;
 
     @Override
+    public String getPrefixPath() {
+        return "appver";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final String os = request.getParameter("os");

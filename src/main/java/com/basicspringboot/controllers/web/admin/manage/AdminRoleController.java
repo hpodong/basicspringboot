@@ -25,6 +25,11 @@ public class AdminRoleController extends _BSAdminController {
     private AdminMenuService adminMenuService;
 
     @Override
+    public String getPrefixPath() {
+        return "role";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final BSQuery bsq = new BSQuery(AdminRole.class, request);

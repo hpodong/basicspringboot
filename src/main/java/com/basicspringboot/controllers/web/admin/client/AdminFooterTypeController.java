@@ -18,6 +18,11 @@ public class AdminFooterTypeController extends _BSAdminController {
     private FooterTypeService service;
 
     @Override
+    public String getPrefixPath() {
+        return "client_page/footer";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final BSQuery bsq = new BSQuery(FooterType.class, request);

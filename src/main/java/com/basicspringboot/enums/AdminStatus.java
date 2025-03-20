@@ -24,7 +24,12 @@ public enum AdminStatus implements BSEnum<AdminStatus> {
     }
 
     @Override
-    public String toClass() {
+    public BSEnum<AdminStatus> enumFromName(String name) {
+        return null;
+    }
+
+    @Override
+    public String getClassName() {
         return switch (this) {
             case AdminStatus.WAITING -> "txt-yellow";
             case AdminStatus.ACTIVE -> "txt-blue";
@@ -42,7 +47,7 @@ public enum AdminStatus implements BSEnum<AdminStatus> {
     }
 
     @Override
-    public String toHtml() {
+    public String getName() {
         return switch (this) {
             case AdminStatus.WAITING-> "대기";
             case AdminStatus.ACTIVE -> "승인";

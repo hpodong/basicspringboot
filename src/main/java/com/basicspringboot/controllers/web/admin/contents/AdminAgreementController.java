@@ -22,6 +22,11 @@ public class AdminAgreementController extends _BSAdminController {
     private AgreementService service;
 
     @Override
+    public String getPrefixPath() {
+        return "agreement";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final String category_idx = request.getParameter("c");

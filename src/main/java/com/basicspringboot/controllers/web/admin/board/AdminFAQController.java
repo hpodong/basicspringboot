@@ -23,6 +23,11 @@ public class AdminFAQController extends _BSAdminController {
     private FAQService service;
 
     @Override
+    public String getPrefixPath() {
+        return "faq";
+    }
+
+    @Override
     @Transactional
     public ModelAndView index(ModelAndView mv) {
         final String category_idx = request.getParameter("c");

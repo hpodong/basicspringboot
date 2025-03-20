@@ -17,6 +17,11 @@ public class ExampleController extends _BSAdminController {
     private _ExampleService service;
 
     @Override
+    public String getPrefixPath() {
+        return "_example";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final BSQuery bsq = new BSQuery(_Example.class, request);

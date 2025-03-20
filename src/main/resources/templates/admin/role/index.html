@@ -14,7 +14,7 @@
         </div>
 
         <!-- 본문 시작 -->
-        <div class="sec_wrap">
+        <div class="sec_wrap common-box">
             <div class="section section1">
                 <div class="inner">
                     <div class="searchWrap">
@@ -23,9 +23,9 @@
                                 <caption> 게시글검색</caption>
                                 <colgroup>
                                     <col width="10.3%">
-                                    <col width="41.6%">
-                                    <col width="10.3%">
-                                    <col width="41.6%">
+                                        <col width="39.7%">
+                                        <col width="10.3%">
+                                        <col width="39.7%">
                                 </colgroup>
                                 <tbody>
                                 <tr>
@@ -109,7 +109,7 @@
                                             </td>
                                             <td th:text="${row.row_num}" th:data-idx="${row.idx}"></td>
                                             <td th:data-idx="${row.idx}">
-                                            <span th:class="${row.status.toClass()}" th:text="${row.status.toHtml()}"></span>
+                                            <span th:class="${row.status.getClassName()}" th:text="${row.status.getName()}"></span>
                                             </td>
                                             <td th:text="${row.name}" th:data-idx="${row.idx}" class="txt-l"></td>
                                             <td th:text="${#dates.format(row.created_at, 'yyyy-MM-dd')}"
@@ -124,10 +124,10 @@
                         </div><!-- //tbl_area -->
                         <div class="btnSet clear">
                             <div class="left">
-                                <button type="submit" class="btn border222 btn-list-delete wid70_px">삭제</button>
+                                <button type="submit" class="btn border111 btn-list-delete wid70_px">삭제</button>
                             </div>
                             <div class="right">
-                                <a th:href="${cm.link} + '/insert'" class="btn primary">등록</a>
+                                <a th:href="${cm.link} + '/insert'" class="btn bl">등록</a>
                             </div>
                         </div>
                     </form>

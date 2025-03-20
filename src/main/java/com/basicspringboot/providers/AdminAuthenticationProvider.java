@@ -4,6 +4,8 @@ import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.enums.AdminStatus;
 import com.basicspringboot.models.admin.Admin;
 import com.basicspringboot.models.admin.AdminMenu;
+import com.basicspringboot.models.logs.AdminConnectLog;
+import com.basicspringboot.services.manage.AdminConnectLogService;
 import com.basicspringboot.services.manage.AdminMenuService;
 import com.basicspringboot.services.manage.AdminService;
 import jakarta.servlet.http.Cookie;
@@ -32,6 +34,7 @@ public class AdminAuthenticationProvider implements AuthenticationProvider {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AdminService service;
     private final AdminMenuService adminMenuService;
+    private final AdminConnectLogService connectLogService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -57,9 +60,12 @@ public class AdminAuthenticationProvider implements AuthenticationProvider {
         final List<GrantedAuthority> authorities = new ArrayList<>();
         final List<AdminMenu> menus = adminMenuService.getAllPageMenus(admin.getIdx());
 
-        menus.forEach(menu -> {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + menu.linkToRole()));
-        });
+        menus.forEach(menu -> authorities.add(new SimpleGrantedAuthority("ROLE_" + menu.linkToRole())));
+
+        final AdminConnectLog connectLog = new AdminConnectLog();
+        connectLog.setAdmin_idx(admin.getIdx());
+        connectLog.setRemote_ip(request.getRemoteAddr());
+        connectLogService.insert(connectLog);
 
         return new UsernamePasswordAuthenticationToken(admin, password, authorities);
     }

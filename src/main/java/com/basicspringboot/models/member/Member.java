@@ -111,7 +111,7 @@ public class Member extends _BSModel {
             return "직접가입";
         } else {
             final SocialType[] types = Arrays.stream(socials).map(SocialType::fromValue).toArray(SocialType[]::new);
-            return String.join(", ", Arrays.stream(types).map(SocialType::toHtml).toArray(String[]::new));
+            return String.join(", ", Arrays.stream(types).map(SocialType::getName).toArray(String[]::new));
         }
     }
 

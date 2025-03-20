@@ -26,6 +26,11 @@ public class AdminManageController extends _BSAdminController {
     public BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
+    public String getPrefixPath() {
+        return "manage";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final String status = request.getParameter("st");

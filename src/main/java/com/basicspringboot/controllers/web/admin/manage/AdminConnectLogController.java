@@ -18,6 +18,11 @@ public class AdminConnectLogController extends _BSAdminController {
     private AdminConnectLogService service;
 
     @Override
+    public String getPrefixPath() {
+        return "log/connect";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
         final BSQuery bsq = new BSQuery(AdminConnectLog.class);
         bsq.setSelect("*");

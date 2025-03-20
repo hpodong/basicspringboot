@@ -23,6 +23,11 @@ public class AdminPageLogController extends _BSAdminController {
     private final ClientPageInflowLogService clientPageInflowLogService;
 
     @Override
+    public String getPrefixPath() {
+        return "log/page";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
         final BSQuery bsq = getBSQ();
 

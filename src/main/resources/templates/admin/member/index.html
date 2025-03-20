@@ -12,7 +12,7 @@
                 <h2 th:text="${cm.title}"></h2>
             </div>
             <form action="/admin/member/download/excel">
-                <button class="btn border222 excel-btn"><img src="/admin/images/ico_download.svg" width="14">엑셀 다운로드</button>
+                <button class="ex_download_btn"><img src="/admin/images/ico_download.svg" width="14.68">엑셀 다운로드</button>
                 <input type="hidden" name="sd" th:value="${param?.sd}">
                 <input type="hidden" name="ed" th:value="${param?.ed}">
                 <input type="hidden" name="dt" th:value="${param?.dt}">
@@ -22,7 +22,7 @@
         </div>
 
         <!-- 본문 시작 -->
-        <div class="sec_wrap">
+        <div class="sec_wrap common-box">
             <div class="section section1">
                 <div class="inner">
                     <div class="searchWrap">
@@ -31,9 +31,9 @@
                                 <caption> 게시글검색</caption>
                                 <colgroup>
                                     <col width="10.3%">
-                                    <col width="41.6%">
+                                    <col width="39.7%">
                                     <col width="10.3%">
-                                    <col width="41.6%">
+                                    <col width="39.7%">
                                 </colgroup>
                                 <tbody>
                                 <tr>
@@ -59,14 +59,14 @@
                                                     <span class="calendar_ico"><img
                                                             src="/admin/images/ico_calendar.svg"></span>
                                                 </p>
-                                            </div>
-                                            <div class="period">
-                                                <!-- 기간 클릭했을때 class="on" 추가 부탁드립니다. -->
-                                                <input type="button" value="금일" class="month_btn">
-                                                <input type="button" value="1개월" class="month_btn">
-                                                <input type="button" value="3개월" class="month_btn">
-                                                <input type="button" value="6개월" class="month_btn">
-                                                <input type="button" value="1년" class="month_btn">
+                                                <div class="period">
+                                                    <!-- 기간 클릭했을때 class="on" 추가 부탁드립니다. -->
+                                                    <input type="button" value="금일" class="month_btn">
+                                                    <input type="button" value="1개월" class="month_btn">
+                                                    <input type="button" value="3개월" class="month_btn">
+                                                    <input type="button" value="6개월" class="month_btn">
+                                                    <input type="button" value="1년" class="month_btn">
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
@@ -148,7 +148,7 @@
                                                 </div>
                                             </td>
                                             <td th:data-idx="${row.idx}" th:text="${row.row_num}"></td>
-                                            <td th:data-idx="${row.idx}" th:class="${row.status.toClass()}" th:text="${row.status.toHtml()}"></td>
+                                            <td th:data-idx="${row.idx}" th:class="${row.status.getClassName()}" th:text="${row.status.getName()}"></td>
                                             <td th:data-idx="${row.idx}" th:text="${row.socialsToString()}"></td>
                                             <td th:data-idx="${row.idx}" class="txt_l" th:text="${row.id}"></td>
                                             <td th:data-idx="${row.idx}" th:text="${row.name}"></td>

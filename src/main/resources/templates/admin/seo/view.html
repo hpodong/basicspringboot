@@ -13,7 +13,7 @@
                 </h2>
             </div>
         </div>
-        <div class="sec_wrap lesssonpro-viewPage">
+        <div class="sec_wrap common-box">
             <div class="section section1">
                 <div class="inner">
                     <div class="board">
@@ -41,7 +41,7 @@
                                         <tr>
                                             <th>상태</th>
                                             <td colspan="3">
-                                                <span th:class="${data.status.toClass()}" th:text="${data.status.toHtml()}"></span>
+                                                <span th:class="${data.status.getClassName()}" th:text="${data.status.getName()}"></span>
                                             </td>
                                         </tr>
                                         </tbody>

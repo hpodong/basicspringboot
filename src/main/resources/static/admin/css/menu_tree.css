@@ -33,10 +33,10 @@
     justify-content: center;
     font-size: 18px;
     color: #fff;
-    background-color: #2dce89;
-    border-color: #2dce89;
+    background-color: #3DBBC6;
+    border-color: #ddd;
     outline: 1px;
-    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+    box-shadow: 0 0 0 0.5px rgba(25, 135, 84, 0.25);
 }
 
 .tree label {

@@ -18,6 +18,11 @@ public class AdminDeleteMemberController extends _BSAdminController {
     private MemberService service;
 
     @Override
+    public String getPrefixPath() {
+        return "";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
         final BSQuery bsq = new BSQuery(Member.class, request);
 

@@ -31,6 +31,11 @@ public class AdminEventBannerController extends _BSAdminController {
     private EventBannerService service;
 
     @Override
+    public String getPrefixPath() {
+        return "/event-banner";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final BSQuery bsq = new BSQuery(EventBanner.class);
@@ -75,7 +80,7 @@ public class AdminEventBannerController extends _BSAdminController {
 
     @Override
     @Transactional
-    public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) throws IOException {
+    public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) {
         final EventBanner data = new EventBanner(request);
         final FileModel file = getFile(UPLOAD_DIR, "image_file", MAX_SIZE);
 
@@ -96,7 +101,7 @@ public class AdminEventBannerController extends _BSAdminController {
 
     @Override
     @Transactional
-    public ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) throws IOException {
+    public ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) {
         final EventBanner data = new EventBanner(request);
         final FileModel file = getFile(UPLOAD_DIR, "image_file", MAX_SIZE);
         EventBanner beforeData = null;

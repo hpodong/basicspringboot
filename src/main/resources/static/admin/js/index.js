@@ -1,5 +1,8 @@
 $(function() {
 
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+
 	$(".pagenate .pagination a").click(function() {
 		let value = $(this).data("value");
 		$("#page").val(value);
@@ -10,9 +13,30 @@ $(function() {
 		$("#page").val(1);
 	});
 
-	$("#size_select").change(function() {
+	$("#size").change(function() {
 		$("#searchForm input[name='s']").val(this.value);
 		goSearch();
+	});
+
+	$("#searchForm input[type='text']").each(function() {
+		if(queryString && urlParams.get(this.name)) {
+			$(this).val(urlParams.get(this.name));
+		}
+	});
+
+	$("#searchForm input[type='radio']").each(function() {
+		if(queryString && urlParams.get(this.name) && Object.is(this.value, urlParams.get(this.name))) {
+			$(this).prop("checked", true);
+		} else {
+			if(!this.value.length) $(this).prop("checked", true);
+		}
+	});
+
+	/*$("#searchForm select").not("#searchForm select[name='t']").on("change", goSearch);*/
+
+	$("input[type='reset']").on("click", function(event) {
+		event.preventDefault();  // reset의 기본 동작을 막습니다.
+		window.location.replace(window.location.pathname);
 	});
 
 	$("input[name='ma']").change(goSearch);
@@ -56,6 +80,9 @@ $(function() {
 		switch (this.value) {
 			case "금일":
 				break;
+			case "1주일":
+				sd_time.setDate(now.getDate()-7);
+				break;
 			case "1개월":
 				sd_time.setMonth(now.getMonth()-1);
 				break;
@@ -97,23 +124,6 @@ $(function() {
 		autoclose: true,
 		todayHighlight: true,
 	});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 });
 

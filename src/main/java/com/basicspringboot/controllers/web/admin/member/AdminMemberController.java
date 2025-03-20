@@ -24,28 +24,29 @@ public class AdminMemberController extends _BSAdminController {
     public final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
+    public String getPrefixPath() {
+        return "admin/member";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         mv.addObject("data", service.findAllListView(getBSQ(), Member::new));
 
-        mv.setViewName("admin/member/index");
-
-        return mv;
+        return super.index(mv);
     }
 
     @Override
     public ModelAndView view(Long idx, ModelAndView mv) {
         mv.addObject("data", getDataFromIdx(idx));
-        mv.setViewName("admin/member/view");
-        return mv;
+        return super.view(idx, mv);
     }
 
     @Override
     public ModelAndView update(Long idx, ModelAndView mv) {
         mv.addObject("data", getDataFromIdx(idx).toSetData());
         mv.addObject("statuses", MemberStatus.values());
-        mv.setViewName("admin/member/update");
-        return mv;
+        return super.update(idx, mv);
     }
 
     @Override
@@ -54,12 +55,12 @@ public class AdminMemberController extends _BSAdminController {
         if(member.getPassword() != null && !member.getPassword().isBlank()) member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
         if(service.insert(member)) {
             ra.addFlashAttribute("msg", "회원이 입력되었습니다.");
-            mv.setViewName(redirect("/admin/member"));
+            return super.insertProcess(mv, ra);
         } else {
             ra.addFlashAttribute("err", "회원이 입력되지 않았습니다.");
             mv.setViewName(redirect("/admin/member/insert"));
+            return mv;
         }
-        return mv;
     }
 
     @Override
@@ -69,12 +70,12 @@ public class AdminMemberController extends _BSAdminController {
         else member.setPassword(null);
         if(service.update(member)) {
             ra.addFlashAttribute("msg", "회원이 수정되었습니다.");
-            mv.setViewName(redirect("/admin/member"));
+            return super.updateProcess(mv, ra);
         } else {
             ra.addFlashAttribute("err", "회원이 수정되지 않았습니다.");
             mv.setViewName(redirect("/admin/member/update?"+member.getIdx()));
+            return mv;
         }
-        return mv;
     }
 
     @Override
@@ -86,8 +87,7 @@ public class AdminMemberController extends _BSAdminController {
         } else {
             ra.addFlashAttribute("err", "회원이 삭제되지 않았습니다.");
         }
-        mv.setViewName(redirect("/admin/delete/member"));
-        return mv;
+        return super.deleteProcess(mv, ra);
     }
 
     @ResponseBody

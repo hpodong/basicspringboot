@@ -5,31 +5,38 @@
         <div id="bodyWrap">
             <th:block th:insert="~{admin/includes/header.html}"/>
             <!--start page wrapper -->
-            <div id="sub" class="menu-view-page">
+            <div id="sub" class="view menu-view-page">
                 <div class="sub_visual">
                     <div class="sub_tit">
-                        <h2>
-                            <th:block th:text="${cm.title}"></th:block>
-                        </h2>
+                        <div class="flex-box align-items-center gap-10 wid100">
+                            <a th:href="${cm.link}"><img src="/admin/images/back_btn.svg" width="36"></a>
+                            <h2>
+                                <th:block th:text="${cm.title}"></th:block>
+                            </h2>
+                        </div>
+                        <form th:action="${cm.link} + '/delete'" method="post" onsubmit="return deleteCheck(this);">
+                            <input type="hidden" name="idx" th:value="${data.idx}">
+                            <button class="btn bl btn-list-delete" type="submit">삭제</button>
+                        </form>
                     </div>
                 </div>
-                <div class="sec_wrap lesssonpro-viewPage">
+                <div class="sec_wrap common-box">
                     <div class="section section1">
                         <div class="inner">
                             <div class="board">
                                 <div class="tbl_area">
                                     <div class="tbl_wrap tbl_wrap1">
                                         <div class="tit_box">
-                                            <h3 class="sTit">등록 정보</h3>
+                                            <h3 class="sTit">등록정보</h3>
                                         </div>
                                         <div class="tbl_box tbl_box2">
                                             <table class="row_line">
                                                 <caption>등록정보</caption>
                                                 <colgroup>
-                                                    <col width="8.7%">
-                                                    <col width="41.3%">
-                                                    <col width="8.7%">
-                                                    <col width="41.3%">
+                                                    <col width="135px">
+                                                    <col width="*">
+                                                    <col width="135px">
+                                                    <col width="*">
                                                 </colgroup>
                                                 <tbody>
                                                     <tr>
@@ -40,8 +47,12 @@
                                                     </tr>
                                                     <tr>
                                                         <th>활성화 여부</th>
-                                                        <td colspan="3">
-                                                            <span th:class="${data.status.toClass()}" th:text="${data.status.toHtml()}"></span>
+                                                        <td>
+                                                            <span th:class="${data.status.getClassName()}" th:text="${data.status.getName()}"></span>
+                                                        </td>
+                                                        <th>노출 여부</th>
+                                                        <td>
+                                                            <span th:class="${data.isShowToString()}" th:text="${data.isShowToString()}"></span>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -50,13 +61,13 @@
                                     </div>
                                     <div class="tbl_wrap tbl_wrap1">
                                         <div class="tit_box">
-                                            <h3 class="sTit">메뉴 정보</h3>
+                                            <h3 class="sTit">메뉴정보</h3>
                                         </div>
                                         <div class="tbl_box tbl_box2">
                                             <table class="row_line">
-                                                <caption>메뉴 정보</caption>
+                                                <caption>메뉴정보</caption>
                                                 <colgroup>
-                                                    <col width="8.4%">
+                                                    <col width="135px">
                                                     <col width="*">
                                                 </colgroup>
                                                 <tbody>
@@ -73,13 +84,10 @@
                                                         <td th:text="${data.link}"></td>
                                                     </tr>
                                                     <tr>
-                                                        <th>아이콘명</th>
-                                                        <td>
-                                                            <div class="flex-box align-items-center gap-5">
-                                                                <p th:text="${data.icon_name}"></p>
-                                                                <img th:if="${data.icon_name != null}"
-                                                                     th:src="'/admin/images/'+${data.icon_name}" class="max20">
-                                                            </div>
+                                                        <th>아이콘</th>
+                                                        <td th:with="icon=${data.icon}">
+                                                            <img th:if="${icon != null}" th:src="${icon.url}" class="max20">
+                                                            <th:block th:if="${data.icon != null}" th:text="${icon.name}"></th:block>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -102,19 +110,21 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <form th:action="${cm.link} + '/delete'" method="post" onsubmit="return deleteCheck(this);">
+                                    <div class="btnSet flex-box justify-content-between">
                                         <input type="hidden" name="idx" th:value="${data.idx}">
-                                        <div class="btnSet flex-box justify-content-between mt30">
-                                            <button th:href="${cm.link}" class="btn-bottom border222 btn-list-delete" type="submit">삭제</button>
-                                            <a th:href="${cm.link}" class="btn-bottom btn-gray-bottom">목록</a>
-                                            <a th:href="${cm.link} + '/update?idx=' + ${data.idx}" class="btn-bottom btn primary">수정</a>
+                                        <div class="left">
+                                            <a th:href="${cm.link}" class="btn gr wid80px">목록</a>
                                         </div>
-                                    </form>
+                                        <div class="right">
+                                            <a th:href="${cm.link} + '/update?idx=' + ${data.idx}" class="btn gr wid80px">수정</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <a th:href="${cm.link}" class="btn btn2 bl mt20 wid120px m0auto">목록</a>
             </div>
             <th:block th:insert="~{admin/includes/footer.html}"/>
         </div>

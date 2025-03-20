@@ -38,11 +38,11 @@ table {
 	font-family: 'Roboto', 'Noto Sans KR', sans-serif;
 }
 .ui-datepicker-calendar tbody td a:hover {	
-	background-color: rgba(0, 107, 255, 0.10);
+	background-color: #EEFEFF;
 }
 .ui-datepicker-calendar tbody td a.ui-state-active {
-	background: rgba(0, 107, 255, 0.10) !important;
-	color: #004CB5 !important;
+	background: #EEFEFF !important;
+	color: #3DBBC6 !important;
 }
 .ui-datepicker-header a.ui-corner-all {
 	cursor: pointer;
@@ -91,5 +91,5 @@ table {
 .ui-datepicker .ui-datepicker-prev span {transform: rotate(180deg);}
 .ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {height: 35px; font-size: 1.3rem !important;}
 .ui-datepicker select.ui-datepicker-year {margin-right: 5px !important;}
-.ui-widget-header {border: 1px solid rgba(0, 107, 255, 0.10) !important; background: none !important; background-color: rgba(0, 107, 255, 0.10) !important;}
+.ui-widget-header {border: 1px solid #EEE !important; background: none !important; background-color: #EEFEFF !important;}
 .ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {background-color: #fff !important;}

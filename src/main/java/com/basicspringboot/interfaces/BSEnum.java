@@ -5,7 +5,9 @@ public interface BSEnum<T extends Enum<T>> {
 
     BSEnum<T> enumFromString(String value);
 
-    String toClass();
+    BSEnum<T> enumFromName(String name);
 
-    String toHtml();
+    String getClassName();
+
+    String getName();
 }

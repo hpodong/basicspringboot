@@ -8,12 +8,19 @@
 	<div id="sub" class="role-view-page">
 		<div class="sub_visual">
 			<div class="sub_tit">
-				<h2>
-					<th:block th:text="${cm.title}"></th:block>
-				</h2>
+				<div class="flex-box align-items-center gap-10 wid100">
+					<a th:href="${cm.link}"><img src="/admin/images/back_btn.svg" width="36"></a>
+					<h2>
+						<th:block th:text="${cm.title}"></th:block>
+					</h2>
+				</div>
+				<form th:action="${cm.link} + '/delete'" method="post" onsubmit="return deleteCheck(this);">
+					<input type="hidden" name="idx" th:value="${data.idx}">
+					<button class="btn bl btn-list-delete" type="submit">삭제</button>
+				</form>
 			</div>
 		</div>
-		<div class="sec_wrap lesssonpro-viewPage">
+		<div class="sec_wrap common-box">
 			<div class="section section1">
 				<div class="inner">
 					<div class="board">
@@ -41,7 +48,7 @@
 										<tr>
 											<th>활성화 여부</th>
 											<td colspan="3">
-												<span th:class="${data.status.toClass()}" th:text="${data.status.toHtml()}"></span>
+												<span th:class="${data.status.getClassName()}" th:text="${data.status.getName()}"></span>
 											</td>
 										</tr>
 										</tbody>
@@ -84,14 +91,15 @@
 									</table>
 								</div>
 							</div>
-							<form th:action="${cm.link} + '/delete'" method="post">
+							<div class="btnSet flex-box justify-content-between">
 								<input type="hidden" name="idx" th:value="${data.idx}">
-								<div class="btnSet flex-box justify-content-between mt30">
-									<button th:href="${cm.link}" class="btn-bottom border222 btn-list-delete" type="submit">삭제</button>
-									<a th:href="${cm.link}" class="btn-bottom btn-gray-bottom">목록</a>
-									<a th:href="${cm.link} + '/update?idx=' + ${data.idx}" class="btn-bottom btn primary">수정</a>
+								<div class="left">
+									<a th:href="${cm.link}" class="btn gr wid80px">목록</a>
 								</div>
-							</form>
+								<div class="right">
+									<a th:href="${cm.link} + '/update?idx=' + ${data.idx}" class="btn gr wid80px">수정</a>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

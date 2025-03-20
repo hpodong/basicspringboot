@@ -14,7 +14,7 @@
         </div>
 
         <!-- 본문 시작 -->
-        <div class="sec_wrap">
+        <div class="sec_wrap common-box">
             <div class="section section1">
                 <div class="inner">
                     <div class="searchWrap">
@@ -22,10 +22,10 @@
                             <table class="searchTable">
                                 <caption> 게시글검색</caption>
                                 <colgroup>
-                                    <col width="10.3%">
-                                    <col width="41.6%">
-                                    <col width="10.3%">
-                                    <col width="41.6%">
+                                    <col width="7.4735%">
+                                    <col width="42.5365%">
+                                    <col width="7.4735%">
+                                    <col width="42.5365%">
                                 </colgroup>
                                 <tbody>
                                 <tr>
@@ -34,26 +34,24 @@
                                         <div class="regist_date">
                                             <div class="calendar_wrap clear">
                                                 <p class="calendar">
-                                                    <input type="text" class="input datepicker" name="sd"
-                                                           readonly="readonly" th:value="${param.sd}">
+                                                    <input type="text" class="input datepicker" name="sd" readonly="readonly" th:value="${param.sd}">
                                                     <span class="calendar_ico"><img
                                                             src="/admin/images/ico_calendar.svg"></span>
                                                 </p>
                                                 <span>~</span>
                                                 <p class="calendar">
-                                                    <input type="text" class="input datepicker" name="ed"
-                                                           readonly="readonly" th:value="${param.ed}">
+                                                    <input type="text" class="input datepicker" name="ed" readonly="readonly" th:value="${param.ed}">
                                                     <span class="calendar_ico"><img
                                                             src="/admin/images/ico_calendar.svg"></span>
                                                 </p>
-                                            </div>
-                                            <div class="period">
-                                                <!-- 기간 클릭했을때 class="on" 추가 부탁드립니다. -->
-                                                <input type="button" value="금일" class="month_btn">
-                                                <input type="button" value="1개월" class="month_btn">
-                                                <input type="button" value="3개월" class="month_btn">
-                                                <input type="button" value="6개월" class="month_btn">
-                                                <input type="button" value="1년" class="month_btn">
+                                                <div class="period">
+                                                    <!-- 기간 클릭했을때 class="on" 추가 부탁드립니다. -->
+                                                    <input type="button" value="금일" class="month_btn">
+                                                    <input type="button" value="1주일" class="month_btn">
+                                                    <input type="button" value="1개월" class="month_btn">
+                                                    <input type="button" value="6개월" class="month_btn">
+                                                    <input type="button" value="1년" class="month_btn">
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
@@ -65,6 +63,7 @@
                                                     <option value="">전체</option>
                                                     <option value="title">제목</option>
                                                     <option value="desc">내용</option>
+                                                    <option value="link">링크</option>
                                                 </select>
                                                 <input type="text" name="q" class="search_val1" th:value="${param.q}">
                                             </div>
@@ -75,6 +74,23 @@
                                         </div>
                                     </td>
                                 </tr>
+                                    <tr>
+                                        <th>상태</th>
+                                        <td>
+                                            <select name="st" class="select_drop wid200">
+                                                <option value="">전체</option>
+                                                <option th:each="status:${statuses}" th:text="${status.getName()}" th:value="${status.getValue()}"></option>
+                                            </select>
+                                        </td>
+                                        <th>종류</th>
+                                        <td>
+                                            <select name="tp" class="select_drop wid200">
+                                                <option value="">전체</option>
+                                                <option value="arrow">메뉴</option>
+                                                <option value="page">페이지</option>
+                                            </select>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                             <input type="hidden" name="p" id="page" th:value="${data.curPage}">
@@ -94,8 +110,9 @@
                                     <table>
                                         <caption>목록</caption>
                                         <colgroup>
-                                            <col width="70px"/>
-                                            <col width="70px"/>
+                                            <col width="66px"/>
+                                            <col width="66px"/>
+                                            <col width="10%"/>
                                             <col width="10%"/>
                                             <col width="10%"/>
                                             <col width="20%"/>
@@ -112,6 +129,7 @@
                                             </th>
                                             <th scope="col">번호</th>
                                             <th scope="col">상태</th>
+                                            <th scope="col">노출여부</th>
                                             <th scope="col">종류</th>
                                             <th scope="col">이름</th>
                                             <th scope="col">링크</th>
@@ -125,15 +143,15 @@
                                         <tr th:if="${data.count != 0}" th:each="row: ${data.list}">
                                             <td class="chk_td">
                                                 <div class="check_box">
-                                                    <input type="checkbox" th:id="'chk_'+${row.idx}" name="idx"
-                                                           class="list-chkbox" th:value="${row.idx}">
+                                                    <input type="checkbox" th:id="'chk_'+${row.idx}" name="idx" class="list-chkbox" th:value="${row.idx}">
                                                     <label th:for="'chk_'+${row.idx}"></label>
                                                 </div>
                                             </td>
                                             <td th:data-idx="${row.idx}" th:text="${row.row_num}"></td>
                                             <td th:data-idx="${row.idx}" class="center">
-                                            <span th:class="${row.status.toClass()}" th:text="${row.status.toHtml()}"></span>
+                                                <span th:class="${row.status.getClassName()}" th:text="${row.status.getName()}"></span>
                                             </td>
+                                            <td th:data-idx="${row.idx}" th:text="${row.isShowToString()}"></td>
                                             <td th:data-idx="${row.idx}" th:text="${row.typeToString()}"></td>
                                             <td class="txt_l" th:data-idx="${row.idx}" th:text="${row.title}"></td>
                                             <td class="txt_l" th:data-idx="${row.idx}" th:text="${row.link}"></td>
@@ -147,10 +165,10 @@
                         </div><!-- //tbl_area -->
                         <div class="btnSet clear">
                             <div class="left">
-                                <button type="submit" class="btn border222 btn-list-delete wid70_px">삭제</button>
+                                <button type="submit" class="btn border111 btn-list-delete wid70_px">삭제</button>
                             </div>
                             <div class="right">
-                                <a th:href="${cm.link} + '/insert'" class="btn primary">등록</a>
+                                <a th:href="${cm.link} + '/insert'" class="btn bl">등록</a>
                             </div>
                         </div>
                     </form>

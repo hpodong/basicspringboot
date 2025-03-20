@@ -32,6 +32,11 @@ public class AdminNoticeController extends _BSAdminController {
     private NoticeService service;
 
     @Override
+    public String getPrefixPath() {
+        return "notice";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final BSQuery bsq = new BSQuery(Notice.class);

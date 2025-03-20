@@ -1,16 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" viewBox="0 0 61.9 70.9" style="enable-background:new 0 0 61.9 70.9;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#3E3A39;}
-</style>
-<title>ico_id</title>
-<g id="레이어_2_1_">
-	<g id="title">
-		<circle class="st0" cx="30.9" cy="21.4" r="21.3"/>
-		<path class="st0" d="M49.5,41.7c-10.5,9.6-26.6,9.6-37.2,0C4.6,47.5,0,56.6,0,66.4c0,2.5,2,4.5,4.5,4.5h52.9c2.5,0,4.5-2,4.5-4.5
-			C61.9,56.6,57.3,47.5,49.5,41.7z"/>
-	</g>
-</g>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15.8895 6.39026C15.8895 8.26292 14.3714 9.78052 12.4997 9.78052C10.6271 9.78052 9.10852 8.26292 9.10852 6.39026C9.10852 4.51807 10.6266 3 12.4997 3C14.3714 3 15.8895 4.51807 15.8895 6.39026Z" fill="#666666" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M15.8472 11.7839H9.15136C7.4099 11.7839 6 13.1948 6 14.9344V21.0142H19V14.9344C19 13.1948 17.5887 11.7839 15.8472 11.7839Z" fill="#666666" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

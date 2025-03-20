@@ -28,6 +28,11 @@ public class AdminMainVisualController extends _BSAdminController {
     private MainVisualService service;
 
     @Override
+    public String getPrefixPath() {
+        return "/mainvisual";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final BSQuery bsq = new BSQuery(MainVisual.class);
@@ -67,7 +72,7 @@ public class AdminMainVisualController extends _BSAdminController {
 
     @Override
     @Transactional
-    public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) throws IOException {
+    public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) {
         final MainVisual data = new MainVisual(request);
         final FileModel file = getFile(UPLOAD_DIR, "image_file", MAX_SIZE);
 
@@ -88,7 +93,7 @@ public class AdminMainVisualController extends _BSAdminController {
 
     @Override
     @Transactional
-    public ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) throws IOException {
+    public ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) {
         final MainVisual data = new MainVisual(request);
         final FileModel file = getFile(UPLOAD_DIR, "image_file", MAX_SIZE);
         MainVisual beforeData = null;

@@ -51,4 +51,10 @@ public class FileService extends _BSService<FileModel> {
             return null;
         }
     }
+
+    public FileModel findByIdx(Long idx) {
+        final BSQuery bsq = new BSQuery(FileModel.class);
+        bsq.setIdx(idx);
+        return findOne(bsq, FileModel::new);
+    }
 }

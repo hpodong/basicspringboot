@@ -30,6 +30,11 @@ public class AdminSEOController extends _BSAdminController {
     private SEOService service;
 
     @Override
+    public String getPrefixPath() {
+        return "admin/seo";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
         final BSQuery bsq = new BSQuery(SEO.class, request);
         bsq.addSelect("pf.f_url pc_image, mf.f_url m_image");
@@ -39,8 +44,7 @@ public class AdminSEOController extends _BSAdminController {
         bsq.addJoin("LEFT JOIN file mf ON mi.f_idx = mf.f_idx");
 
         mv.addObject("data", service.findAllListView(bsq, SEO::new));
-        mv.setViewName("admin/seo/index");
-        return mv;
+        return super.index(mv);
     }
 
     @Override
@@ -51,21 +55,18 @@ public class AdminSEOController extends _BSAdminController {
         final SEO data = service.findOne(bsq, SEO::new);
 
         if(data == null) {
-            mv.setViewName(redirect("/admin/seo"));
+            return super.index(mv);
         } else {
             mv.addObject("data", data);
             mv.addObject("pc_image", service.findImageFromType(data.getIdx(), "PC"));
             mv.addObject("m_image", service.findImageFromType(data.getIdx(), "MO"));
-            mv.setViewName("admin/seo/view");
+            return super.view(idx, mv);
         }
-
-        return mv;
     }
 
     @Override
     public ModelAndView insert(ModelAndView mv) {
-        mv.setViewName("admin/seo/insert");
-        return mv;
+        return super.insert(mv);
     }
 
     @Override
@@ -76,20 +77,18 @@ public class AdminSEOController extends _BSAdminController {
         final SEO data = service.findOne(bsq, SEO::new);
 
         if(data == null) {
-            mv.setViewName(redirect("/admin/seo"));
+            return super.index(mv);
         } else {
             mv.addObject("data", data);
             mv.addObject("pc_image", service.findImageFromType(data.getIdx(), "PC"));
             mv.addObject("m_image", service.findImageFromType(data.getIdx(), "MO"));
-            mv.setViewName("admin/seo/update");
+            return super.update(idx, mv);
         }
-
-        return mv;
     }
 
     @Transactional
     @Override
-    public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) throws IOException {
+    public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra)  {
         final SEO data = new SEO(request);
 
         final FileModel pc_file = getFile(UPLOAD_DIR+"/PC", "pc_image");
@@ -115,17 +114,16 @@ public class AdminSEOController extends _BSAdminController {
                 }
             }
             ra.addFlashAttribute("msg", "SEO가 등록되었습니다.");
-            mv.setViewName(redirect("/admin/seo"));
+            return insertProcess(mv, ra);
         } else {
             ra.addFlashAttribute("err", "SEO가 등록되지 않았습니다.");
-            mv.setViewName(redirect("/admin/seo/insert"));
+            return insert(mv);
         }
-        return mv;
     }
 
     @Override
     @Transactional
-    public ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) throws IOException {
+    public ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) {
         final SEO data = new SEO(request);
 
         final Long idx = data.getIdx();
@@ -168,12 +166,11 @@ public class AdminSEOController extends _BSAdminController {
         }
         if(!service.update(data)) {
             ra.addFlashAttribute("msg", "SEO가 수정되지 않았습니다.");
-            mv.setViewName(redirect("/admin/seo/update?idx="+data.getIdx()));
+            return super.update(idx, mv);
         } else {
             ra.addFlashAttribute("msg", "SEO가 수정되었습니다.");
-            mv.setViewName(redirect("/admin/seo"));
+            return super.updateProcess(mv, ra);
         }
-        return mv;
     }
 
     @Override
@@ -185,7 +182,6 @@ public class AdminSEOController extends _BSAdminController {
         } else {
             ra.addFlashAttribute("err", "SEO가 삭제되지 않았습니다.");
         }
-        mv.setViewName(redirect("/admin/seo"));
-        return mv;
+        return super.deleteProcess(mv, ra);
     }
 }

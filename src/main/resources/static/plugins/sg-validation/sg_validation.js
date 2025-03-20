@@ -46,6 +46,7 @@ const FileType = {
     PPTX: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     HWP: "application/x-hwp",
     TXT: "text/plain",
+    SVG: "image/svg+xml",
     PNG: "image/png",
     JPG: "image/jpeg",
     JPEG: "image/jpeg",
@@ -122,7 +123,7 @@ const FileType = {
      * @param {boolean} options.showalert - 알럿 표시 여부
      * @param {boolean} options.alerttype - 알럿 종류
      * @param {boolean} options.onchangecheck - onchange 체크 여부
-     * @param {jQuery[input]} options.focusElement - 유효성 검사에 걸릴 때 포커싱할 태그
+     * @param {jQuery} options.focusElement - 유효성 검사에 걸릴 때 포커싱할 태그
      * @param {function()} options.onvalidate - 유효성 검사에 통과되었을 때 함수
      * @param {function()} options.oninvalidate - 유효성 검사에 걸렸을 때 함수
      * @returns {jQuery}
@@ -136,7 +137,6 @@ const FileType = {
             defaultvalue,
             regex,
             fileoptions,
-            focusElement,
         } = options;
         const input_type = $this.attr("type");
         const tag_name = $this.prop("tagName")?.toLocaleLowerCase();
@@ -147,9 +147,7 @@ const FileType = {
             const {
                 types
             } = fileoptions;
-            if(types && types.length) {
-                $this.attr("accept", types.join(", "))
-            }
+            if(types && types.length) $this.attr("accept", types.join(", "))
         }
 
         if(Object.is(SGValidateType.EDITOR, regex) && Object.is(tag_name, "textarea")) $this.setEditor();
@@ -161,9 +159,7 @@ const FileType = {
         } = options;
         if(cases) {
             $form.submit(function(event) {
-                $this
-                    .removeValidationText(focusElement)
-                    .submitHandler(event, options);
+                $this.submitHandler(event, options);
             });
         }
 
@@ -390,7 +386,7 @@ const FileType = {
                 break;
             }
         }
-        let is_validated = !invalid_messages.length;
+        const is_validated = !invalid_messages.length && true;
         if(!is_validated) {
             if(event) event.preventDefault();
             const message = invalid_messages[0];
@@ -405,12 +401,10 @@ const FileType = {
                     })
                 }
                 if(event) event.stopImmediatePropagation();
-            } else {
-                if(!$this.hasValidationText(focusElement)) {
-                    $this.addValidationText(message, focusElement);
-                }
+            } else if(!$this.hasValidationText(focusElement)){
+                $this.addValidationText(message, focusElement);
             }
-            if(event) form.find("[data-has_validation=true]").first().focus();
+            if(event) form.find("[data-has_validation=true]:visible").first().focus();
         } else {
             $this.removeValidationText(focusElement);
             if(onvalidate) onvalidate();
@@ -421,6 +415,7 @@ const FileType = {
         const $this = this;
         const {
             regex,
+            focusElement
         } = options;
         const input_type = $this.attr("type");
         const tag_name = $this.prop("tagName")?.toLocaleLowerCase();
@@ -430,7 +425,7 @@ const FileType = {
             || Object.is(tag_name, "select")
             || Object.is(input_type, "hidden");
         try {
-            if(has_validation) {
+            if(has_validation && !$this.hasValidationText(focusElement)) {
                 $this.validationHandler(event, options);
             }
         } catch (e) {
@@ -484,7 +479,7 @@ const FileType = {
      */
     $.fn.hasValidationText = function($focusElement) {
         if($focusElement) {
-            return $focusElement.find("p.invalidation-txt").length > 0;
+            return $focusElement.find("p.invalidation-txt:visible").length > 0;
         } else {
             return $(this).data("has_validation");
         }

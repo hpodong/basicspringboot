@@ -2,6 +2,7 @@
 /* CSS Document */
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 @import url('https://fonts.googleapis.com/earlyaccess/notosanskr.css');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 
 * {
@@ -12,19 +13,19 @@
 }
 
 ::-webkit-input-placeholder {
-    color: #575757;
+    color: #999;
 }
 
 :-moz-placeholder {
-    color: #575757;
+    color: #999;
 }
 
 ::-moz-placeholder {
-    color: #575757;
+    color: #999;
 }
 
 :-ms-input-placeholder {
-    color: #575757;
+    color: #999;
 }
 
 caption {
@@ -42,14 +43,14 @@ html, body {
 
 html {
     font-size: 62.5%;
-    font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Noto Sans KR', sans-serif;
+    font-family: 'Pretendard', sans-serif;
 }
 
 /*기본폰트 10px*/
 body, th, td, input, select, textarea, button {
-    font-size: 1.5rem;
-    line-height: 1.5;
-    font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Noto Sans KR', sans-serif;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    font-family: 'Pretendard', sans-serif;
     word-break: keep-all;
     word-wrap: break-word;
     color: #222;

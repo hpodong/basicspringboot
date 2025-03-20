@@ -26,7 +26,12 @@ public enum SocialType implements BSEnum<SocialType> {
     }
 
     @Override
-    public String toClass() {
+    public BSEnum<SocialType> enumFromName(String name) {
+        return null;
+    }
+
+    @Override
+    public String getClassName() {
         return switch (this) {
             case SocialType.KAKAO -> "sign-kakao";
             case SocialType.NAVER -> "sign-naver";
@@ -46,7 +51,7 @@ public enum SocialType implements BSEnum<SocialType> {
     }
 
     @Override
-    public String toHtml() {
+    public String getName() {
         return switch (this) {
             case SocialType.KAKAO -> "카카오";
             case SocialType.NAVER -> "네이버";

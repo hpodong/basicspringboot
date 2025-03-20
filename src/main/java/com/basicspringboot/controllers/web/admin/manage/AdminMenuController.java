@@ -4,41 +4,59 @@ import com.basicspringboot.controllers.web.admin._BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.enums.APStatus;
 import com.basicspringboot.models.admin.AdminMenu;
+import com.basicspringboot.models.others.FileModel;
 import com.basicspringboot.services.manage.AdminMenuService;
 import com.basicspringboot.services.manage.AdminRoleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.basicspringboot.services.others.FileService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@Slf4j
+@RequiredArgsConstructor
 @RequestMapping("/admin/menu")
 public class AdminMenuController extends _BSAdminController {
 
-    @Autowired
-    private AdminMenuService service;
+    private static final String UPLOAD_DIR = "/admin/menu";
+    private static final int MAX_SIZE = 1024 * 1024;
 
-    @Autowired
-    private AdminRoleService adminRoleService;
+    private final AdminMenuService service;
+    private final AdminRoleService adminRoleService;
+    private final FileService fileService;
+
+    @Override
+    public String getPrefixPath() {
+        return "admin/menu";
+    }
 
     @Override
     public ModelAndView index(ModelAndView mv) {
 
+        final String tp = request.getParameter("tp");
+
         final BSQuery bsq = new BSQuery(AdminMenu.class);
+
         bsq.addType("title", "am_title");
-        bsq.setOrderBy("am_sort", "am_crdt DESC");
+        bsq.addType("desc", "am_desc");
+        bsq.addType("link", "am_link");
 
         bsq.setFromParams(request);
 
-        mv.setViewName("admin/menu/index");
+        bsq.setOrderBy("am_type", "am_sort", "am_crdt DESC");
 
+        if(hasParameter(tp)) {
+            bsq.addWhere("am_type = ?");
+            bsq.addArgs(tp);
+        }
+
+        mv.addObject("statuses", APStatus.values());
         mv.addObject("data", service.findAllListView(bsq, AdminMenu::new));
-        /*mv.addObject("data", service.getMenus());*/
-        return mv;
+        return super.index(mv);
     }
 
     @Override
@@ -48,14 +66,12 @@ public class AdminMenuController extends _BSAdminController {
 
 
         mv.addObject("data", findByIdx(idx));
-        mv.setViewName("admin/menu/view");
-        return mv;
+        return super.view(idx, mv);
     }
     @Override
     public ModelAndView insert(ModelAndView mv) {
-        mv.setViewName("admin/menu/insert");
         mv.addObject("menus", service.getAllMenus());
-        return mv;
+        return super.insert(mv);
     }
 
     @Override
@@ -63,43 +79,60 @@ public class AdminMenuController extends _BSAdminController {
         final BSQuery bq = new BSQuery(AdminMenu.class);
         bq.setIdx(idx);
 
+        final AdminMenu data = findByIdx(idx);
+
         mv.addObject("menus", service.getAllMenus());
-        mv.addObject("data", findByIdx(idx).toSetData());
-        mv.setViewName("admin/menu/update");
-        return mv;
+        mv.addObject("data", data);
+        mv.addObject("set_data", data.toSetData());
+        return super.update(idx, mv);
     }
 
     @Override
     public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) {
         final AdminMenu data = new AdminMenu(request);
+        final FileModel file = getFile(UPLOAD_DIR, "icon_file", MAX_SIZE);
+
+        if(file != null) data.setFile_idx(insertFile(file));
 
         final Long result = service.insert(data);
         if(result != null) {
+            if(file != null) file.create();
             service.refreshMenus();
             adminRoleService.insertItems(1121, result.toString());
             ra.addFlashAttribute("msg", "관리자 메뉴가 입력되었습니다.");
-            mv.setViewName(redirect("/admin/menu"));
+            return super.insertProcess(mv, ra);
         } else {
             ra.addFlashAttribute("err", "관리자 메뉴가 입력되지 않았습니다.");
-            mv.setViewName(redirect("/admin/menu/insert"));
+            return super.insert(mv);
         }
-        return mv;
     }
 
+    @Transactional
     @Override
     public ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) {
         final AdminMenu data = new AdminMenu(request);
+        final FileModel file = getFile(UPLOAD_DIR, "icon_file", MAX_SIZE);
+
+        final String delete_file_idx = request.getParameter("delete_file_idx");
+        final boolean is_delete_icon = delete_file_idx != null;
+        final FileModel before_icon = fileService.findByIdx(data.getFile_idx());
+
+        if(is_delete_icon) data.setFile_idx(null);
+
+        if(file != null) data.setFile_idx(insertFile(file));
 
         final boolean result = service.update(data, true);
         if(result) {
+            if((file != null && file.create() && before_icon != null) || is_delete_icon) {
+                if(before_icon != null) before_icon.remove();
+            }
             service.refreshMenus();
             ra.addFlashAttribute("msg", "관리자 메뉴가 수정되었습니다.");
-            mv.setViewName(redirect("/admin/menu"));
+            return super.updateProcess(mv, ra);
         } else {
             ra.addFlashAttribute("err", "관리자 메뉴가 수정되지 않았습니다.");
-            mv.setViewName(beforePage());
+            return super.update(data.getIdx(), mv);
         }
-        return mv;
     }
 
     @Override
@@ -112,22 +145,13 @@ public class AdminMenuController extends _BSAdminController {
         } else {
             ra.addFlashAttribute("err", "메뉴가 삭제되지 않았습니다.");
         }
-        mv.setViewName(redirect("/admin/menu"));
-        return mv;
-    }
-
-    @ResponseBody
-    @PostMapping("/update/status")
-    public boolean updateStatus(@RequestParam Long idx, @RequestParam(value = "st") APStatus status) {
-        final AdminMenu data = new AdminMenu();
-        data.setIdx(idx);
-        data.setStatus(status);
-        return service.update(data, false);
+        return super.deleteProcess(mv, ra);
     }
 
     private AdminMenu findByIdx(Long idx) {
         final BSQuery bsq = new BSQuery(AdminMenu.class);
-        bsq.setSelect("admin_menu.*", "am.am_title parent_name");
+        bsq.setSelect("admin_menu.*", "am.am_title parent_name", "file.*");
+        bsq.addJoin("LEFT JOIN file ON file.f_idx = admin_menu.f_idx");
         bsq.addJoin("LEFT JOIN admin_menu am ON am.am_idx = admin_menu.am_fk");
         bsq.setIdx(idx);
 

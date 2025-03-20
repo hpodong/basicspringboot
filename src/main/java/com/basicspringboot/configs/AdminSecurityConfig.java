@@ -3,6 +3,7 @@ package com.basicspringboot.configs;
 import com.basicspringboot.handlers.BasicAuthenticationFailureHandler;
 import com.basicspringboot.models.admin.AdminMenu;
 import com.basicspringboot.providers.AdminAuthenticationProvider;
+import com.basicspringboot.services.manage.AdminConnectLogService;
 import com.basicspringboot.services.manage.AdminMenuService;
 import com.basicspringboot.services.manage.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class AdminSecurityConfig {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AdminService adminService;
     private final AdminMenuService adminMenuService;
+    private final AdminConnectLogService connectLogService;
 
     private static final String[] ALWAYS_ALLOW_URLS = {
             "/admin",
@@ -35,31 +37,37 @@ public class AdminSecurityConfig {
             "/admin/images/**",
             "/plugins/**",
             "/uploads/**",
-            "/favicon.ico",
+            "/favicon.png",
+            "/admin/recent/**"
     };
 
     @Bean
     public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
         final List<AdminMenu> menus = adminMenuService.getAllPageMenus();
+        log.info("MENUS : {}", menus);
         http
                 .securityMatcher("/admin/**")
                 .authenticationProvider(authenticationProvider())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable) // 필요 시 CSRF 활성화 가능
-                .exceptionHandling(handler -> {
-                    handler.accessDeniedHandler(accessDeniedHandler());
-                })
+                .exceptionHandling(handler -> handler.accessDeniedHandler(accessDeniedHandler()))
                 .authorizeHttpRequests(auth -> {
                             auth
                                     .requestMatchers(ALWAYS_ALLOW_URLS).permitAll()
                                     .requestMatchers("/admin/login").anonymous();
+
                             menus.forEach(menu -> {
                                 final String link = menu.getLink();
                                 auth
                                         .requestMatchers(link+"/**")
                                         .hasRole(menu.linkToRole());
+                                log.info("LINK : {}, AUTH : {}", link+"/**", menu.linkToRole());
+
                             });
-                            auth.requestMatchers("/admin/error/**").authenticated();
+
+                            auth
+                                    .requestMatchers("/admin/error/**")
+                                    .authenticated();
                         }
                 )
                 .formLogin(login -> login
@@ -82,7 +90,7 @@ public class AdminSecurityConfig {
 
     @Bean
     public AdminAuthenticationProvider authenticationProvider() {
-        return new AdminAuthenticationProvider(bCryptPasswordEncoder, adminService, adminMenuService);
+        return new AdminAuthenticationProvider(bCryptPasswordEncoder, adminService, adminMenuService, connectLogService);
     }
 
     @Bean

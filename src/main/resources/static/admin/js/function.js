@@ -57,7 +57,14 @@ const timestampToTime = (value) => {
         String(date.getHours()).padStart(2, '0') + ':' +
         String(date.getMinutes()).padStart(2, '0') + ':' +
         String(date.getSeconds()).padStart(2, '0');
+}
 
+const timestampToDate = (value, format) => {
+    const date = new Date(value);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+    const day = String(date.getDate()).padStart(2, '0');
+    return format.replace("yyyy", year).replace("MM", month).replace("dd", day);
 }
 
 const goSearch = (is_page_nation) => {
@@ -82,7 +89,7 @@ const logout = () => {
                             title: "로그아웃 되었습니다.",
                             type: SGAlertType.SUCCESS,
                             onsuccess: (res) => {
-                                location.replace("/admin");
+                                location.replace("");
                             }
                         });
                     },
@@ -113,8 +120,8 @@ const getParamValue = (key) => {
     return params.get(key);
 }
 
-const setData = (data) => {
-    for (const key in data) {
+const setData = (data, setinitialvalue = false) => {
+    for (let key in data) {
         if (data.hasOwnProperty(key)) {
             let input_element = $(`[name='${key}']`);
             let value = data[key];
@@ -129,19 +136,33 @@ const setData = (data) => {
                     case "select": {
                         input_element.find(`option[value='${value}']`).prop("selected", true).change();
                         if(input_element.hasClass("select_drop")) input_element.val(value).niceSelect("update");
+                        if(setinitialvalue) {
+                            input_element.attr("data-initial", input_element.find(`option[value='${value}']`).text());
+                        }
                         break;
                     }
                     default: {
                         let type = input_element.attr("type");
                         switch (type) {
                             case "radio":
-                                input_element.filter(`[value='${value}']`).prop("checked", true).change();
+                                const $checkedElement = input_element.filter(`[value='${value}']`);
+                                $checkedElement.prop("checked", true).change();
+
+                                if(setinitialvalue) {
+                                    const id = $checkedElement.attr("id");
+                                    const value = $(`label[for='${id}']`).text();
+                                    input_element.attr("data-initial", value);
+                                }
                                 break;
                             default:
                                 if(typeof value === "number") {
                                     input_element.val(value.toLocaleString());
                                 } else {
                                     input_element.val(value);
+                                }
+
+                                if(setinitialvalue) {
+                                    input_element.attr("data-initial", value);
                                 }
                         }
                     }
@@ -265,7 +286,7 @@ const moveToLoginPage = (msg) => {
         title: msg,
         type: SGAlertType.ERROR,
         onsuccess: (res) => {
-            if(res) location.replace("/admin/login");
+            if(res) location.replace("/login");
         }
     });
 }
@@ -327,4 +348,12 @@ const refreshMonthSelect = (select) => {
         select.append(`<option value="${month}">${month}월</option>`);
     }
     select.niceSelect("update");
+}
+
+const emptyFiles = ($this) => {
+    const files = $this.prop("files");
+    if(files?.length) {
+        const $area = $this.closest(".multiple-file-attach").find(".file-upload-area");
+        $area.find(".delete-btn").click();
+    }
 }

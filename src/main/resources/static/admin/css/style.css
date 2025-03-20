@@ -39,19 +39,19 @@ body {
 }
 
 body, th, td, input, select, textarea, button { /*line-height:1.5; font-family: 'Nanum Gothic',나눔고딕,NanumGothic,돋움,Dotum,Arial,Helvetica,sans-serif;font-size: 13px; */
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 15px;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 1.4rem;
     line-height: 1.6;
-    color: #707070;
+    color: #222;
 }
 
 a {
-    color: #000;
+    color: #222;
     text-decoration: none;
 }
 
 a:active, a:hover {
-    color: #2773ae;
+    color: #222;
     text-decoration: none
 }
 
@@ -245,6 +245,10 @@ small {
 
 .mb10 {
     margin-bottom: 10px !important;
+}
+
+.mb15 {
+    margin-bottom: 15px !important;
 }
 
 .mb20 {
@@ -662,6 +666,10 @@ small {
 
 .min100 {
     min-width: 100px;
+}
+
+.min200 {
+    min-width: 200px;
 }
 
 .btn-secondary {
@@ -1097,13 +1105,39 @@ fieldset[disabled] .btn-black.active {
 }
 
 .btn {
-    display: block;
     font-size: 1.3rem;
-    font-weight: 700;
-    padding: 10px;
     box-sizing: border-box;
+    height: 36px;
+    line-height: 36px;
+    color: #fff !important;
+    text-align: center;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
     border-radius: 5px;
+    outline: none;
+    border: none;
+    width: fit-content;
+    padding: 0 15px;
+    letter-spacing: -0.65px;
 }
+
+.btn.btn2 {
+    font-size: 1.4rem;
+    letter-spacing: -0.7px;
+    height: 46px;
+    line-height: 46px;
+}
+
+.btn.btn3 {
+    height: 40px;
+    line-height: 40px;
+}
+
 
 .btn:active,
 .btn.active {
@@ -1706,20 +1740,21 @@ button.btn span.icons {
 }
 
 .check_box label:before {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 24px;
     position: absolute;
     left: 0;
     top: 50%;
-    width: 24px;
-    height: 24px;
+    margin-top: -10px;
+    border-radius: 5px;
     box-sizing: border-box;
-    margin-top: -12px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12px 8px;
+    background-color: #fff;
     border: 1px solid #ddd;
-    line-height: 20px;
-    text-align: center;
-    clear: both;
-    content: '';
-    display: block;
-    background: #fff;
 }
 
 .check_box input[type="checkbox"]:disabled + label:before {
@@ -1892,28 +1927,6 @@ button.btn span.icons {
 .table-bottom {
     overflow: hidden;
 }
-
-.pagination {
-    text-align: center;
-    margin: 15px auto;
-}
-
-.pagination .active { /*border: 1px solid #ddd;box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset; line-height: 20px;background: #428bca; padding: 0 7px;margin: 0 2px;display: inline-block;*/
-}
-
-.pagination li {
-    display: inline-block; /*font-size: 12px;line-height: 20px;background-image: -moz-linear-gradient(center top , #fff, #E0E0E0);border: 1px solid #ddd;box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;padding: 0 7px;margin: 0 2px;*/
-}
-
-.pagination li + li {
-    margin-left: 5px
-}
-
-.pagination li:hover { /*background: #428bca;*/
-}
-
-/* .pagination li:hover a:not(.pagination li.active a) {color: #fff;  color: #000 !important;  background: #f6f6f6; text-decoration: none !important;} */
-
 
 .table-answer {
     padding: 20px;
@@ -2415,6 +2428,14 @@ p.id span.icons, p.pass span.icons, p.email span.icons {
 
 .navbar-toggle .icon-bar {
     background-color: #888;
+}
+
+#main-nav a img.icon {
+    filter: invert(0%) brightness(0%);
+}
+
+#main-nav a.on img.icon {
+    filter: invert(100%) brightness(200%);
 }
 
 /* .nice-select {

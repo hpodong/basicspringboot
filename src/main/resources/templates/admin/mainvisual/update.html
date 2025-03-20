@@ -13,7 +13,7 @@
 				</h2>
 			</div>
 		</div>
-		<div class="sec_wrap">
+		<div class="sec_wrap common-box">
 			<div class="section section1">
 				<div class="inner">
 					<div class="board">
@@ -94,9 +94,9 @@
 								</div>
 							</div>
 							<div class="btnSet flex-box gap-10 justify-content-center mt30">
-                                <button type="submit" class="btn main_bg btn-save">저장</button>
-                                <a th:href="${cm.link}" class="btn border_bg btn-cancel">취소</a>
-                            </div>
+                                        <button type="submit" class="btn main_bg btn-save">저장</button>
+                                        <a th:href="${cm.link}" class="btn border111 btn-cancel">취소</a>
+                                    </div>
 						</form>
 					</div>
 				</div>
@@ -108,6 +108,8 @@
 <script th:inline="javascript">
 
 	const data = /*[[${data}]]*/ null;
+
+	console.log(data);
 
 	const $form = $("form");
 
@@ -135,18 +137,7 @@
 		},
 		maxlength: 100
 	});
-	/*$("#image_file").addValidation({
-		regex: SGValidateType.FILE,
-		cases: {
-			"비주얼 이미지를 선택해주세요.": (files) => !files.length,
-			"파일을 10MB 이하로 넣어주세요.": (files) => !fileMaxSizeCheck(10, files)
-		},
-		fileoptions: {
-			types: [FileType.IMAGES],
-			maxsize: 10,
-			autoempty: true
-		}
-	});*/
+
 	$("#url").addValidation({
 		regex: SGValidateType.URL,
 		cases: {

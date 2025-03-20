@@ -5,6 +5,7 @@ import com.basicspringboot.annotations.BSTable;
 import com.basicspringboot.annotations.BSValidation;
 import com.basicspringboot.enums.APStatus;
 import com.basicspringboot.models._BSModel;
+import com.basicspringboot.models.others.FileModel;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,9 @@ public class AdminMenu extends _BSModel {
 
     @BSColumn(name = "am_idx")
     private Long idx;
+
+    @BSColumn(name = "f_idx", nullable = true)
+    private Long file_idx;
 
     @BSColumn(name = "am_fk")
     private Long parent_fk;
@@ -48,14 +52,14 @@ public class AdminMenu extends _BSModel {
     @BSColumn(name = "am_link")
     private String link;
 
-    @BSColumn(name = "am_icon_name", nullable = true)
-    private String icon_name;
-
     @BSColumn(name = "am_is_basic")
     private Boolean is_basic;
 
     @BSColumn(name = "am_status", reqName = "menu_status")
     private APStatus status;
+
+    @BSColumn(name = "am_is_show")
+    private Boolean is_show;
 
     @BSColumn(name = "am_crdt")
     private Timestamp created_at;
@@ -69,10 +73,13 @@ public class AdminMenu extends _BSModel {
     @BSColumn(name = "parent_name")
     private String parent_name;
 
+    private FileModel icon;
+
     private List<AdminMenu> children = new ArrayList<>();
 
     public AdminMenu(ResultSet rs, int row_num) {
         super(rs, row_num);
+        if(file_idx != null) icon = new FileModel(rs, row_num);
     }
 
     public AdminMenu(HttpServletRequest req) {
@@ -81,6 +88,7 @@ public class AdminMenu extends _BSModel {
 
     public AdminMenu(Integer offset, long count, ResultSet rs, int rowNum) {
         super(offset, count, rs, rowNum);
+        if(file_idx != null) icon = new FileModel(rs, rowNum);
     }
 
     public void addChildren(AdminMenu menu) {
@@ -120,7 +128,7 @@ public class AdminMenu extends _BSModel {
         sb.append("<a href='javascript:;' class='on_page'")
                 .append(" data-idx='").append(idx).append("'")
                 .append(">");
-        if(icon_name != null) sb.append("<img src='/admin/images/").append(icon_name).append("'>");
+        if(icon != null) sb.append("<img class='icon' src='").append(icon.getUrl()).append("'>");
         sb.append(title).append("</a>");
         sb.append(childrenHtml());
         sb.append("</li>");
@@ -147,7 +155,7 @@ public class AdminMenu extends _BSModel {
                 .append("' data-idx='").append(idx).append("'");
         if(parent_fk != null) sb.append(" data-parent='").append(parent_fk).append("'");
         sb.append(">");
-        if(icon_name != null) sb.append("<img src='/admin/images/").append(icon_name).append("'>");
+        if(icon != null) sb.append("<img class='icon' src='").append(icon.getUrl()).append("'>");
         sb.append(title).append("</a></li>");
 
         return sb.toString();
@@ -190,5 +198,9 @@ public class AdminMenu extends _BSModel {
 
     public String linkToRole() {
         return link.substring(1).replaceAll("/", "_").toUpperCase();
+    }
+
+    public String isShowToString() {
+        return is_show ? "노출" : "미노출";
     }
 }

@@ -30,6 +30,11 @@ public class AdminPopupController extends _BSAdminController {
     private PopupService service;
 
     @Override
+    public String getPrefixPath() {
+        return "admin/popup";
+    }
+
+    @Override
     public ModelAndView index(ModelAndView mv) {
 
         final BSQuery bsq = new BSQuery(Popup.class);
@@ -46,31 +51,22 @@ public class AdminPopupController extends _BSAdminController {
 
         mv.addObject("data", service.findAllListView(bsq, Popup::new));
 
-        mv.setViewName("admin/popup/index");
-
-        return mv;
-    }
-
-    @Override
-    public ModelAndView view(Long idx, ModelAndView mv) {
-        return null;
+        return super.index(mv);
     }
 
     @Override
     public ModelAndView insert(ModelAndView mv) {
-        mv.setViewName("admin/popup/insert");
-        return mv;
+        return super.insert(mv);
     }
 
     @Override
     public ModelAndView update(Long idx, ModelAndView mv) {
         mv.addObject("data", findPopupFromIdx(idx));
-        mv.setViewName("admin/popup/update");
-        return mv;
+        return super.update(idx, mv);
     }
 
     @Override
-    public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) throws IOException {
+    public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) {
         final Popup data = new Popup(request);
         final FileModel file = getFile(UPLOAD_DIR, "image_file", MAX_SIZE);
 
@@ -81,17 +77,16 @@ public class AdminPopupController extends _BSAdminController {
         if(service.insert(data, true)) {
             if(file.create(data.getWidth(), data.getHeight())) file.createThumbnail(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
             ra.addFlashAttribute("msg", "팝업이 입력되었습니다.");
-            mv.setViewName(redirect("/admin/popup"));
+            return super.insertProcess(mv, ra);
         } else {
             ra.addFlashAttribute("err", "팝업이 입력되지 않았습니다.");
-            mv.setViewName(redirect("/admin/popup/insert"));
+            return super.insert(mv);
         }
-        return mv;
     }
 
     @Override
     @Transactional
-    public ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) throws IOException {
+    public ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) {
         final Popup data = new Popup(request);
         final FileModel file = getFile(UPLOAD_DIR, "image_file", MAX_SIZE);
         Popup beforePopup = null;
@@ -110,12 +105,11 @@ public class AdminPopupController extends _BSAdminController {
                 }
             }
             ra.addFlashAttribute("msg", "팝업이 수정되었습니다.");
-            mv.setViewName(redirect("/admin/popup"));
+            return super.updateProcess(mv, ra);
         } else {
             ra.addFlashAttribute("err", "팝업이 수정되지 않았습니다.");
-            mv.setViewName(redirect("/admin/popup/update"));
+            return super.update(data.getIdx(), mv);
         }
-        return mv;
     }
 
     @Override
@@ -141,8 +135,7 @@ public class AdminPopupController extends _BSAdminController {
         } else {
             ra.addFlashAttribute("err", "팝업이 삭제되지 않았습니다.");
         }
-        mv.setViewName(redirect("/admin/popup"));
-        return mv;
+        return super.deleteProcess(mv, ra);
     }
 
     private Popup findPopupFromIdx(Long idx) {
