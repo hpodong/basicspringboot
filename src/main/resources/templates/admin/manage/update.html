@@ -206,7 +206,6 @@
                 "전화번호를 입력해주세요.": (value) => !value.length,
                 "전화번호를 정확히 입력해주세요.": (value, regex) => !regex.test(value),
             },
-            onvalidate: () => cellCheck()
         });
 
     $("#email")
@@ -216,7 +215,6 @@
                 "이메일을 입력해주세요.": (value) => !value.length,
                 "이메일을 정확히 입력해주세요.": (value, regex) => !regex.test(value),
             },
-            onvalidate: () => emailCheck()
         });
 
     $form.submit(function(event) {
@@ -236,56 +234,6 @@
             })
         }
     });
-
-    const cellCheck = () => {
-        const url = "/admin/manage/cell-check";
-        const $cell = $("#cell");
-        const cell = $cell.val();
-        $.ajax({
-            url,
-            data: {
-                cell,
-                exclude: data?.cell
-            },
-            type: "POST",
-            async: false,
-            success: function(res) {
-                if(!res) {
-                    $cell
-                        .removeValidationText()
-                        .addValidationText("이미 사용중인 연락처입니다.");
-                }
-            },
-            error: function(err) {
-                console.error(err);
-            }
-        });
-    }
-
-    const emailCheck = () => {
-        const url = "/admin/manage/email-check";
-        const $email = $("#email");
-        const email = $email.val();
-        $.ajax({
-            url,
-            data: {
-                email,
-                exclude: data?.email
-            },
-            type: "POST",
-            async: false,
-            success: function(res) {
-                if(!res) {
-                    $email
-                        .removeValidationText()
-                        .addValidationText("이미 사용중인 이메일입니다.");
-                }
-            },
-            error: function(err) {
-                console.error(err);
-            }
-        });
-    }
 </script>
 </body>
 </html>
