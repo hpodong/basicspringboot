@@ -234,7 +234,7 @@ public class AppErrorController {
     public ResponseEntity<ResponseDTO> handler (IllegalArgumentException e){
         log.error("[IllegalArgumentException] cause: {}, message: {}", e.getCause(), e.getLocalizedMessage());
 
-        res.setStatusCode(HttpStatus.BAD_REQUEST);
+        res.setStatusCode(HttpStatus.UNAUTHORIZED);
         res.setMessage(e.getMessage());
         res.setError(e.getLocalizedMessage());
         return ResponseEntity.status(res.getStatusCode()).body(res);
