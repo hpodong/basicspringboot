@@ -127,12 +127,6 @@ public class AdminMemberController extends _BSAdminController {
         return service.findOne(bsq, Member::new);
     }
 
-    @ResponseBody
-    @GetMapping("/download/excel")
-    public void excelDownload() throws IOException {
-        service.downloadExcel(getBSQ());
-    }
-
     private BSQuery getBSQ() {
         final BSQuery bsq = new BSQuery(Member.class);
         bsq.setSelect("member.*");

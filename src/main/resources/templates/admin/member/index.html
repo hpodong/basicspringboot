@@ -149,7 +149,7 @@
                                             </td>
                                             <td th:data-idx="${row.idx}" th:text="${row.row_num}"></td>
                                             <td th:data-idx="${row.idx}" th:class="${row.status.getClassName()}" th:text="${row.status.getName()}"></td>
-                                            <td th:data-idx="${row.idx}" th:text="${row.socialsToString()}"></td>
+                                            <td th:data-idx="${row.idx}" th:class="${row.social?.type?.getClassName()}" th:text="${row.social?.type?.getName() ?: '이메일'}"></td>
                                             <td th:data-idx="${row.idx}" class="txt_l" th:text="${row.id}"></td>
                                             <td th:data-idx="${row.idx}" th:text="${row.name}"></td>
                                             <td th:data-idx="${row.idx}" th:text="${row.cell}"></td>

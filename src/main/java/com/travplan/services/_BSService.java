@@ -71,8 +71,7 @@ public abstract class _BSService<T extends _BSModel> implements BSServiceI<T> {
     }
 
     @Transactional
-    public AdminListview<T> findAllListView(BSQuery<T> bsq, Long count, AdminListViewSetter<T> setter, Object ... objects) {
-        bsq.addArgs(objects);
+    public AdminListview<T> findAllListView(BSQuery<T> bsq, Long count, AdminListViewSetter<T> setter) {
         final List<T> list = this.findAll(bsq, (rs, rn) -> setter.setter(bsq.getOffset(), count, rs, rn));
         return new AdminListview<>(list, count, bsq.getLimit(), bsq.getPage());
     }
@@ -94,12 +93,14 @@ public abstract class _BSService<T extends _BSModel> implements BSServiceI<T> {
         sb.append("SELECT COUNT(*) FROM (");
         sb.append(bsq.toSql(true));
         sb.append(") as row_count");
-        return slave.queryForObject(sb.toString(), Long.class);
+        return slave.queryForObject(sb.toString(), bsq.toJDBCTemplate(), Long.class);
     }
 
     @Override
     public T findOne(BSQuery<T> bsq, RowMapper<T> rm) {
         bsq.setLimit(1);
+        log.info(bsq.toSql());
+        log.info("ARGS : {}", bsq.getArgs());
         try {
             return slave.queryForObject(bsq.toSql(), bsq.toJDBCTemplate(), rm);
         } catch (EmptyResultDataAccessException e) {

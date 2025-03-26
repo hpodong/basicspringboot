@@ -53,6 +53,16 @@ public class MemberService extends _BSService<Member> {
         return findOne(bsq, Member::new);
     }
 
+    public List<Member> findByCell(String cell) {
+        final BSQuery<Member> bsq = new BSQuery<>(Member.class);
+        bsq.setSelect("*");
+        bsq.addJoin("LEFT JOIN member_social ON member_social.m_idx = member.m_idx");
+        bsq.setWhere("m_cell = ?", "m_dldt IS NULL");
+        bsq.addArgs(cell);
+        bsq.setLimit(null);
+        return findAll(bsq, Member::new);
+    }
+
     public Map<String, Object> reissueToken(String refreshToken) throws ExpiredJwtException {
         final BSQuery<Member> bsq = new BSQuery<>(Member.class);
         jwtProvider.getTokenData(refreshToken);
@@ -63,10 +73,10 @@ public class MemberService extends _BSService<Member> {
         return loginHandler(idx, refreshToken);
     }
 
-    public Member findByEmail(String id) {
+    public Member findByEmail(String email) {
         final BSQuery<Member> bsq = new BSQuery<>(Member.class);
         bsq.setWhere("m_email = ?", "m_dldt IS NULL");
-        bsq.addArgs(id);
+        bsq.addArgs(email);
         return findOne(bsq, Member::new);
     }
 
@@ -88,7 +98,7 @@ public class MemberService extends _BSService<Member> {
     public Map<String, Object> login(MemberSocial social) throws APIException {
         final MemberSocial foundSocial = socialService.findByTypeAndId(social.getType(), social.getId());
         if(foundSocial == null || foundSocial.getMember_idx() == null) {
-            throw new APIException("연결된 회원 데이터가 없습니다.");
+            throw new APIException("연결된 회원 데이터가 없습니다", "회원가입을 진행해주세요");
         }
 
         return loginHandler(foundSocial.getIdx());
@@ -111,7 +121,7 @@ public class MemberService extends _BSService<Member> {
 
     @Transactional
     public Map<String, Object> signup(SignupDTO req) {
-        req.getMember().setPassword(passwordEncoder.encode(req.getMember().getPassword()));
+        if(req.getMember().getPassword() != null) req.getMember().setPassword(passwordEncoder.encode(req.getMember().getPassword()));
         final Long idx = insertReturnKey(req.getMember());
         if(idx == null) throw new InsertException();
         insertAgreements(req.getAgreements(), idx);
@@ -168,73 +178,5 @@ public class MemberService extends _BSService<Member> {
                 WHERE member_social.m_idx = member.m_idx
                 ) socials
                 """;
-    }
-
-    public void downloadExcel(BSQuery bsq) throws IOException {
-        bsq.setLimit(null);
-        final List<Member> list = findAll(bsq, Member::new);
-        downloadExcel(list, new SheetSetter() {
-            int rowIndex = 1;
-
-            @Override
-            public String setFileName() {
-                return "개인 회원 관리";
-            }
-
-            @Override
-            public void setHeaders(List<String> headers) {
-                headers.add("번호");
-                headers.add("가입경로");
-                headers.add("아이디");
-                headers.add("이름");
-                headers.add("연락처");
-                headers.add("최근 로그인일자");
-                headers.add("가입일");
-            }
-
-            @Override
-            public void setRows(int index, Row row, Workbook workbook) {
-                final Member member = list.get(index);
-                final CellStyle centerStyle = getCenterStyle(workbook);
-                final CellStyle leftStyle = getLeftStyle(workbook);
-
-                row.createCell(0).setCellValue(rowIndex++);
-                row.createCell(1).setCellValue(member.socialsToString());
-                row.createCell(2).setCellValue(member.getId());
-                row.createCell(3).setCellValue(member.getName());
-                row.createCell(4).setCellValue(member.getCell());
-                row.createCell(5).setCellValue(Utils.formatTimestamp(member.getLatest_logged_at(), "yyyy-MM-dd HH:mm:ss"));
-                row.createCell(6).setCellValue(Utils.formatTimestamp(member.getCreated_at(), "yyyy-MM-dd HH:mm:ss"));
-
-                row.getCell(0).setCellStyle(centerStyle);
-                row.getCell(1).setCellStyle(centerStyle);
-                row.getCell(2).setCellStyle(leftStyle);
-                row.getCell(3).setCellStyle(centerStyle);
-                row.getCell(4).setCellStyle(centerStyle);
-                row.getCell(5).setCellStyle(centerStyle);
-                row.getCell(6).setCellStyle(centerStyle);
-            }
-
-            @Override
-            public void setSheet(Sheet sheet) {
-                sheet.setColumnWidth(0, 10 * BASIC_WIDTH);
-                sheet.setColumnWidth(1, 15 * BASIC_WIDTH);
-                sheet.setColumnWidth(2, 30 * BASIC_WIDTH);
-                sheet.setColumnWidth(3, 20 * BASIC_WIDTH);
-                sheet.setColumnWidth(4, 20 * BASIC_WIDTH);
-                sheet.setColumnWidth(5, 20 * BASIC_WIDTH);
-                sheet.setColumnWidth(6, 20 * BASIC_WIDTH);
-            }
-
-            @Override
-            public void onSuccess(Workbook workbook, String filename) throws IOException {
-                response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-                response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename + ".xlsx");
-                response.setCharacterEncoding("UTF-8");
-
-                workbook.write(response.getOutputStream());
-                workbook.close();
-            }
-        });
     }
 }

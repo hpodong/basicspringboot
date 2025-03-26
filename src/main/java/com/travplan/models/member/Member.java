@@ -13,6 +13,7 @@ import lombok.*;
 
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -76,13 +77,7 @@ public class Member extends _BSModel {
     @BSColumn(name = "m_dldt")
     private Timestamp deleted_at;
 
-    @BSColumn(name = """
-            (
-                SELECT GROUP_CONCAT(ms_type) FROM member_social
-                WHERE member_social.m_idx = member.m_idx
-            )
-            """, isQuerySelect = true)
-    private String[] socials;
+    private MemberSocial social;
 
     public Member(HttpServletRequest req) {
         super(req);
@@ -90,6 +85,8 @@ public class Member extends _BSModel {
 
     public Member(ResultSet rs, int row_num) {
         super(rs, row_num);
+        social = new MemberSocial(rs, row_num);
+        if(social.getIdx() == null) social = null;
     }
 
     public Member(Integer offset, long count, ResultSet rs, int row_num) {
@@ -106,19 +103,6 @@ public class Member extends _BSModel {
         this.status = MemberStatus.ACTIVE;
     }
 
-    private SocialType[] socialsToEnums() {
-        if(socials == null) return null;
-        else return Arrays.stream(socials).map(SocialType::fromValue).toArray(SocialType[]::new);
-    }
-
-    public String socialsToString() {
-        if(socials == null) {
-            return "직접가입";
-        } else {
-            final SocialType[] types = Arrays.stream(socials).map(SocialType::fromValue).toArray(SocialType[]::new);
-            return String.join(", ", Arrays.stream(types).map(SocialType::getName).toArray(String[]::new));
-        }
-    }
 
     public String birthdayToString() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

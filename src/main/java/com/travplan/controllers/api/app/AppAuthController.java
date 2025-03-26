@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/api/app/auth")
@@ -53,8 +54,13 @@ public class AppAuthController extends _BSAPIController<Member, MemberService>{
     @PostMapping("/signup")
     public ResponseEntity<ResponseDTO> signup(@RequestBody SignupDTO req) throws InsertException {
         return returnResponse(setter -> {
-            setter.setStatusCode(HttpStatus.CREATED);
-            setter.setData(service.signup(req));
+            try {
+                setter.setStatusCode(HttpStatus.CREATED);
+                setter.setData(service.signup(req));
+            } catch (Exception e) {
+                if(e.getMessage().contains("member_id_UN")) throw new APIException("이미 사용중인 아이디입니다", "다른 아이디를 사용해주세요");
+                throw e;
+            }
         });
     }
 
@@ -75,8 +81,30 @@ public class AppAuthController extends _BSAPIController<Member, MemberService>{
     public ResponseEntity<ResponseDTO> verifyAuthMessage(String cell, String authNumber) {
         return returnResponse(setter -> {
             aligoService.verifyAuthNumber(cell, authNumber);
+            final List<Member> members = service.findByCell(cell);
             setter.setStatusCode(HttpStatus.OK);
+            if(!members.isEmpty()) setter.setData(members);
             setter.setMessage("인증이 완료되었습니다.");
+        });
+    }
+
+    @PostMapping("/duplicate/email")
+    public ResponseEntity<ResponseDTO> duplicateEmail(String email) {
+        return returnResponse(setter -> {
+            final Member member = service.findByEmail(email);
+            if(member != null) throw new APIException("이미 사용중인 이메일 주소입니다.", "다른 이메일 주소를 사용해주세요");
+            setter.setStatusCode(HttpStatus.OK);
+            setter.setMessage("사용 가능한 이메일 주소입니다.");
+        });
+    }
+
+    @PostMapping("/duplicate/id")
+    public ResponseEntity<ResponseDTO> duplicateId(String id) {
+        return returnResponse(setter -> {
+            final Member member = service.findById(id);
+            if(member != null) throw new APIException("이미 사용중인 닉네임입니다.");
+            setter.setStatusCode(HttpStatus.OK);
+            setter.setMessage("사용 가능한 닉네임입니다.");
         });
     }
 

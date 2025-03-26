@@ -226,7 +226,7 @@ public class AppErrorController {
 
         res.setStatusCode(HttpStatus.BAD_REQUEST);
         res.setMessage(e.getMessage());
-        res.setError(e.getLocalizedMessage());
+        res.setError(e.getError());
         return ResponseEntity.status(res.getStatusCode()).body(res);
     }
 
