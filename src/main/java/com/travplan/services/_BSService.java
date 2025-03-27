@@ -99,8 +99,6 @@ public abstract class _BSService<T extends _BSModel> implements BSServiceI<T> {
     @Override
     public T findOne(BSQuery<T> bsq, RowMapper<T> rm) {
         bsq.setLimit(1);
-        log.info(bsq.toSql());
-        log.info("ARGS : {}", bsq.getArgs());
         try {
             return slave.queryForObject(bsq.toSql(), bsq.toJDBCTemplate(), rm);
         } catch (EmptyResultDataAccessException e) {

@@ -35,7 +35,6 @@ public class JdbcConfig {
     @Bean
     @Primary
     public JdbcTemplate masterJdbcTemplate(@Qualifier(MASTER_DATA_SOURCE) DataSource dataSource) {
-        log.info("DATA SOURCE : {}", dataSource);
         return new JdbcTemplate(dataSource);
     }
 

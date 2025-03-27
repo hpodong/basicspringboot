@@ -4,15 +4,19 @@ import com.travplan.dto.BSQuery;
 import com.travplan.enums.APStatus;
 import com.travplan.models.board.Agreement;
 import com.travplan.models.board.AgreementCategory;
+import com.travplan.models.member.MemberPushLogCategory;
 import com.travplan.services._BSService;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
+@Slf4j
 public class AgreementService extends _BSService<Agreement> {
 
     @Getter
@@ -63,14 +67,13 @@ public class AgreementService extends _BSService<Agreement> {
         return findAll(bsq, Agreement::new);
     }
 
-    public List<Agreement> findFooterAgreements() {
-        final BSQuery bsq = new BSQuery(Agreement.class);
-        bsq.addSelect("agmc_name");
-        bsq.addJoin("JOIN agreement_category ON agreement_category.agmc_idx = agreement.agmc_idx AND agmc_include_footer AND agmc_status = ?");
-        bsq.setWhere("agm_status = ?", "agm_dldt IS NULL");
-        bsq.setOrderBy("agm_sort", "agm_crdt");
+    public List<Agreement> getInitData(Timestamp updatedAt) {
+        final BSQuery<Agreement> bsq = new BSQuery<>(Agreement.class);
+        if(updatedAt != null) {
+            bsq.addWhere("agm_updt >= ?");
+            bsq.addArgs(updatedAt);
+        }
         bsq.setLimit(null);
-        bsq.addArgs(APStatus.ACTIVATED.getValue(), APStatus.ACTIVATED.getValue());
         return findAll(bsq, Agreement::new);
     }
 }

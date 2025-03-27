@@ -2,10 +2,12 @@ package com.travplan.controllers.api.app;
 
 import com.travplan.dto.BSQuery;
 import com.travplan.dto.ResponseDTO;
+import com.travplan.interfaces.ResponseSetter;
 import com.travplan.models.board.Agreement;
 import com.travplan.models.others.AppVersion;
 import com.travplan.services.contents.AgreementService;
 import com.travplan.services.contents.AppVersionService;
+import com.travplan.services.member.MemberPushLogCategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class AppVersionController extends _BSAPIController<AppVersion, AppVersio
 
     @Autowired
     private AgreementService agreementService;
+    @Autowired
+    private MemberPushLogCategoryService pushLogCategoryService;
 
     protected AppVersionController(AppVersionService service) {
         super(AppVersion.class, service);
@@ -38,7 +42,8 @@ public class AppVersionController extends _BSAPIController<AppVersion, AppVersio
     @Transactional
     @PostMapping("/check")
     public ResponseEntity<ResponseDTO> check(
-            @RequestParam(required = false) Timestamp agreement_updated_at
+            @RequestParam(required = false) Timestamp agreement_updated_at,
+            @RequestParam(required = false) Timestamp member_push_log_category_updated_at
     ) {
         final AppVersion data = new AppVersion(request);
         return returnResponse(setter -> {
@@ -56,14 +61,11 @@ public class AppVersionController extends _BSAPIController<AppVersion, AppVersio
             assert latestVersion != null;
 
             if(requestVersion.isHigh(latestVersion) || requestVersion.isSame(latestVersion)) {
-                setter.setStatusCode(HttpStatus.OK);
-                setter.setMessage("최신 버전입니다.");
+                onSuccess(agreement_updated_at, member_push_log_category_updated_at, setter);
             } else if(latestVersion.isHigh(requestVersion)) {
                 switch (latestVersion.getStatus()) {
                     case "pass":
-                        setter.setStatusCode(HttpStatus.OK);
-                        setter.setMessage("최신 버전입니다.");
-                        setter.addMetadata("agreements", findAgreements(agreement_updated_at));
+                        onSuccess(agreement_updated_at, member_push_log_category_updated_at, setter);
                         break;
                     case "update":
                         setter.setStatusCode(HttpStatus.UNAUTHORIZED);
@@ -85,14 +87,10 @@ public class AppVersionController extends _BSAPIController<AppVersion, AppVersio
         });
     }
 
-    private List<Agreement> findAgreements(Timestamp updatedAt) {
-        final List<Object> objs = new ArrayList<>();
-        final BSQuery<Agreement> agreementBSQ = new BSQuery<>(Agreement.class);
-        if(updatedAt != null) {
-            agreementBSQ.addWhere("agm_updt > ?");
-            objs.add(updatedAt);
-        }
-        agreementBSQ.addArgs(objs.toArray());
-        return agreementService.findAll(agreementBSQ, Agreement::new);
+    private void onSuccess(Timestamp agreement_updated_at, Timestamp push_log_category_updated_at, ResponseDTO setter) {
+        setter.setStatusCode(HttpStatus.OK);
+        setter.setMessage("최신 버전입니다.");
+        setter.addMetadata("agreements", agreementService.getInitData(agreement_updated_at));
+        setter.addMetadata("push_log_categories", pushLogCategoryService.getInitData(push_log_category_updated_at));
     }
 }
