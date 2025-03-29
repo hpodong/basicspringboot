@@ -127,9 +127,9 @@
                                             <td th:text="${row.row_num}"></td>
                                             <td th:text="${row.versionToString()}" class="txt-r"></td>
                                             <td th:text="${row.build_number}" class="txt-r"></td>
-                                            <td th:text="${row.osToString()}" ></td>
+                                            <td th:text="${row.os.getName()}" ></td>
                                             <td class="txt_l" th:text="${row.description}" ></td>
-                                            <td class="txt_l" th:text="${row.statusToString()}" ></td>
+                                            <td class="txt_l" th:text="${row.status.getName()}" ></td>
                                             <td th:text="${#dates.format(row.created_at, 'yyyy-MM-dd')}"></td>
                                             <td>
                                                 <button type="button" class="btn btn-primary m0auto" th:data-update-idx="${row.idx}">수정하기</button>

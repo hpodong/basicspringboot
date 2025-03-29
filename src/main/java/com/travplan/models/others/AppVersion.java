@@ -3,6 +3,8 @@ package com.travplan.models.others;
 import com.travplan.annotations.BSColumn;
 import com.travplan.annotations.BSTable;
 import com.travplan.annotations.BSValidation;
+import com.travplan.enums.AppVersionOs;
+import com.travplan.enums.AppVersionStatus;
 import com.travplan.models._BSModel;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
@@ -46,13 +48,13 @@ public class AppVersion extends _BSModel {
     @BSColumn(name = "av_build_number")
     private Integer build_number;
 
-    @BSValidation(label = "상태", min = 1)
+    @BSValidation(label = "상태")
     @BSColumn(name = "av_status", reqName = "version_status")
-    private String status;
+    private AppVersionStatus status;
 
     @BSValidation(label = "디바이스 종류", min = 1)
     @BSColumn(name = "av_os")
-    private String os;
+    private AppVersionOs os;
 
     @BSColumn(name = "av_desc")
     private String description;
@@ -88,23 +90,5 @@ public class AppVersion extends _BSModel {
 
     public String versionToString() {
         return major + "." + minor + "." + fetch;
-    }
-
-    public String osToString() {
-        return switch (os) {
-            case "A" -> "AOS";
-            case "I" -> "IOS";
-            default -> "";
-        };
-    }
-
-    public String statusToString() {
-        return switch (status) {
-            case "pass" -> "업데이트 진행 안함";
-            case "update" -> "강제 업데이트";
-            case "push" -> "업데이트 알림만 확인";
-            case "inspection" -> "현재 서버 점검중";
-            default -> "";
-        };
     }
 }

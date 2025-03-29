@@ -2,6 +2,7 @@ package com.travplan.controllers.api.app;
 
 import com.travplan.dto.BSQuery;
 import com.travplan.dto.ResponseDTO;
+import com.travplan.enums.AppVersionStatus;
 import com.travplan.interfaces.ResponseSetter;
 import com.travplan.models.board.Agreement;
 import com.travplan.models.others.AppVersion;
@@ -21,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RequestMapping("/api/app/version")
 @RestController
 public class AppVersionController extends _BSAPIController<AppVersion, AppVersionService>{
@@ -39,7 +41,6 @@ public class AppVersionController extends _BSAPIController<AppVersion, AppVersio
         return super.findByIdx(idx, AppVersion::new);
     }
 
-    @Transactional
     @PostMapping("/check")
     public ResponseEntity<ResponseDTO> check(
             @RequestParam(required = false) Timestamp agreement_updated_at,
@@ -53,44 +54,35 @@ public class AppVersionController extends _BSAPIController<AppVersion, AppVersio
             if(latestVersion == null && service.insert(data)) {
                 latestVersion = service.findLatestVersion(data.getOs());
                 requestVersion = latestVersion;
+                log.info("LAST : {}", latestVersion);
+                log.info("REQ : {}", requestVersion);
+            } else if(requestVersion == null && service.insert(data)) {
+                requestVersion = service.findRequestVersion(data.getOs(), data.getBuild_number());
             }
-
-            if(requestVersion == null && service.insert(data)) requestVersion = service.findRequestVersion(data.getOs(), data.getBuild_number());
 
             assert requestVersion != null;
             assert latestVersion != null;
 
-            if(requestVersion.isHigh(latestVersion) || requestVersion.isSame(latestVersion)) {
-                onSuccess(agreement_updated_at, member_push_log_category_updated_at, setter);
-            } else if(latestVersion.isHigh(requestVersion)) {
-                switch (latestVersion.getStatus()) {
-                    case "pass":
-                        onSuccess(agreement_updated_at, member_push_log_category_updated_at, setter);
-                        break;
-                    case "update":
-                        setter.setStatusCode(HttpStatus.UNAUTHORIZED);
-                        setter.setMessage("업데이트가 필요합니다.");
-                        break;
-                    case "push":
-                        setter.setStatusCode(HttpStatus.BAD_REQUEST);
-                        setter.setMessage("새로운 업데이트가 있습니다.");
-                        break;
-                    case "inspection":
-                        setter.setStatusCode(HttpStatus.UNAUTHORIZED);
-                        setter.setMessage("점검중입니다.");
-                        break;
-                }
-            } else {
-                setter.setStatusCode(HttpStatus.BAD_REQUEST);
-                setter.setMessage("알 수 없는 오류가 발생했습니다.");
+            switch (requestVersion.getStatus()) {
+                case AppVersionStatus.PASS:
+                    setter.setStatusCode(HttpStatus.OK);
+                    setter.setMessage("최신 버전입니다.");
+                    setter.addMetadata("agreements", agreementService.getInitData(agreement_updated_at));
+                    setter.addMetadata("push_log_categories", pushLogCategoryService.getInitData(member_push_log_category_updated_at));
+                    break;
+                case AppVersionStatus.UPDATE:
+                    setter.setStatusCode(HttpStatus.UNAUTHORIZED);
+                    setter.setMessage("업데이트가 필요합니다.");
+                    break;
+                case AppVersionStatus.PUSH:
+                    setter.setStatusCode(HttpStatus.BAD_REQUEST);
+                    setter.setMessage("새로운 업데이트가 있습니다.");
+                    break;
+                case AppVersionStatus.INSPECTION:
+                    setter.setStatusCode(HttpStatus.UNAUTHORIZED);
+                    setter.setMessage("점검중입니다.");
+                    break;
             }
         });
-    }
-
-    private void onSuccess(Timestamp agreement_updated_at, Timestamp push_log_category_updated_at, ResponseDTO setter) {
-        setter.setStatusCode(HttpStatus.OK);
-        setter.setMessage("최신 버전입니다.");
-        setter.addMetadata("agreements", agreementService.getInitData(agreement_updated_at));
-        setter.addMetadata("push_log_categories", pushLogCategoryService.getInitData(push_log_category_updated_at));
     }
 }
