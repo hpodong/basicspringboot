@@ -17,8 +17,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Slf4j
 public class AligoService {
     private static final String BASE_URL = "https://apis.aligo.in/send";
-    private static final String SEND_AUTH_NUMBER_TITLE = "트랩플랜 인증번호입니다.";
-    private static final String SEND_AUTH_NUMBER_DESCRIPTION = "트랩플랜 인증번호 [%인증번호%]을 입력해주세요.";
+    private static final String SEND_AUTH_NUMBER_TITLE = "인증번호입니다.";
+    private static final String SEND_AUTH_NUMBER_DESCRIPTION = "인증번호 [%인증번호%]을 입력해주세요.";
 
     private final Set<AligoAuthNumber> authNumbers = new CopyOnWriteArraySet<>();
 
