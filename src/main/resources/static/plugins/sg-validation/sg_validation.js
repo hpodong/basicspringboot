@@ -304,9 +304,9 @@ const FileType = {
                 $this.val(uppercaseString);
                 break;
             case SGValidateType.NUMBER:
-                /*if(value.length) $this.val(value.replace(number_regex, ""));
-                else $this.val("");
-                break;*/
+            /*if(value.length) $this.val(value.replace(number_regex, ""));
+            else $this.val("");
+            break;*/
             case SGValidateType.PRICE:
                 let price_value = value.replace(price_regex, "");
                 if(price_value) $this.val(parseInt(price_value, 10).toLocaleString());

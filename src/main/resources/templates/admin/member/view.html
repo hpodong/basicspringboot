@@ -67,7 +67,7 @@
 										<tbody>
 										<tr>
 											<th>가입경로</th>
-											<td th:text="${data.socialsToString()}"></td>
+											<td th:text="${data.social?.type?.getClassName() ?: '이메일'}"></td>
 										</tr>
 										<tr>
 											<th>아이디</th>
