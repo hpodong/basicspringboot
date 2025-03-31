@@ -26,7 +26,7 @@
             <input class="preview" type="file" name="${name}" id="${id}" accept="image/jpg, image/png, image/jpeg">
             <div class="image-view">
                 <div class="photo-delete">
-                    <img src="/admin/images/ico_x.svg" alt="x아이콘" width="10">
+                    <img src="/admin/images/ico_close_wht.svg" alt="x아이콘" width="10">
                 </div>
             </div>
             <div>
