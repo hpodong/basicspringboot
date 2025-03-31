@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/example")
-public class ExampleController extends _BSAdminController {
+public class ExampleController extends BSAdminController {
 
     @Autowired
     private _ExampleService service;

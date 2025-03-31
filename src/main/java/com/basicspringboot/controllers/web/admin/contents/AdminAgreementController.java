@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.contents;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.enums.APStatus;
 import com.basicspringboot.models.board.Agreement;
@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/agreement")
-public class AdminAgreementController extends _BSAdminController {
+public class AdminAgreementController extends BSAdminController {
 
     @Autowired
     private AgreementService service;

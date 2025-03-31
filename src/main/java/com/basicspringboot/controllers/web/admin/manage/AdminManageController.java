@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.manage;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.enums.AdminStatus;
 import com.basicspringboot.models.admin.Admin;
@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/manage")
-public class AdminManageController extends _BSAdminController {
+public class AdminManageController extends BSAdminController {
 
     @Autowired
     private AdminService service;

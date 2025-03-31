@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.visit;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.models.logs.InflowLog;
 import com.basicspringboot.services.visit.InflowLogService;
@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/admin/inflow")
-public class AdminInflowController extends _BSAdminController {
+public class AdminInflowController extends BSAdminController {
 
     @Autowired
     private InflowLogService service;

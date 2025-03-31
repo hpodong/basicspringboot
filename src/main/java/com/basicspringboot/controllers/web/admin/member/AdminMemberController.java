@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.member;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.enums.MemberStatus;
 import com.basicspringboot.models.member.Member;
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/admin/member")
 @RequiredArgsConstructor
-public class AdminMemberController extends _BSAdminController {
+public class AdminMemberController extends BSAdminController {
 
     private final MemberService service;
     public final BCryptPasswordEncoder bCryptPasswordEncoder;

@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.visit;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.models.others.ClientPageInflowLog;
 import com.basicspringboot.services.client.ClientPageInflowLogService;
@@ -17,7 +17,7 @@ import java.io.IOException;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/log/page-history")
-public class AdminPageLogController extends _BSAdminController {
+public class AdminPageLogController extends BSAdminController {
 
     private final ClientPageService service;
     private final ClientPageInflowLogService clientPageInflowLogService;

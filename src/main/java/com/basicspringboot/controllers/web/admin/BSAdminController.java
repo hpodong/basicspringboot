@@ -2,8 +2,10 @@ package com.basicspringboot.controllers.web.admin;
 
 import com.basicspringboot.exceptions.FileSizeException;
 import com.basicspringboot.interfaces.BSAdminControllerI;
+import com.basicspringboot.models._BSModel;
 import com.basicspringboot.models.admin.Admin;
 import com.basicspringboot.models.others.FileModel;
+import com.basicspringboot.services._BSService;
 import com.basicspringboot.services.others.FileService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +28,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
-public abstract class _BSAdminController implements BSAdminControllerI {
+public abstract class BSAdminController implements BSAdminControllerI {
     @Autowired
     protected FileService fileService;
     @Autowired
@@ -138,18 +140,20 @@ public abstract class _BSAdminController implements BSAdminControllerI {
 
     @Override
     public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) {
-        mv.setViewName(redirect("/"+getPrefixPath()));
-        return mv;
+        return redirectIndex(mv);
     }
 
     @Override
     public ModelAndView updateProcess(ModelAndView mv, RedirectAttributes ra) {
-        mv.setViewName(redirect("/"+getPrefixPath()));
-        return mv;
+        return redirectIndex(mv);
     }
 
     @Override
     public ModelAndView deleteProcess(ModelAndView mv, RedirectAttributes ra) {
+        return redirectIndex(mv);
+    }
+
+    private ModelAndView redirectIndex(ModelAndView mv) {
         mv.setViewName(redirect("/"+getPrefixPath()));
         return mv;
     }

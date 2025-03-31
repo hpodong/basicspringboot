@@ -18,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 @Slf4j
-public class AdminController extends _BSAdminController {
+public class AdminController extends BSAdminController {
 
     private static final String EDITOR_UPLOAD_DIR = "/editor";
 

@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.contents;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.models.others.AppVersion;
 import com.basicspringboot.services.contents.AppVersionService;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/appver")
-public class AdminAppVersionController extends _BSAdminController {
+public class AdminAppVersionController extends BSAdminController {
 
     @Autowired
     private AppVersionService service;

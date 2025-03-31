@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.visit;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.models.others.FileModel;
 import com.basicspringboot.models.site.SEO;
@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
 @RequestMapping("/admin/seo")
-public class AdminSEOController extends _BSAdminController {
+public class AdminSEOController extends BSAdminController {
 
     private static final String UPLOAD_DIR = "/seo";
     private static final int PC_THUMBNAIL_WIDTH = 100;

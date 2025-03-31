@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.member;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.models.member.Member;
 import com.basicspringboot.services.member.MemberService;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/delete/member")
-public class AdminDeleteMemberController extends _BSAdminController {
+public class AdminDeleteMemberController extends BSAdminController {
 
     @Autowired
     private MemberService service;

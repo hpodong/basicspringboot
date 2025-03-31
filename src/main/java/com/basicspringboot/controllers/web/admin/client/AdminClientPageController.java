@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.client;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.enums.APStatus;
 import com.basicspringboot.models.others.ClientPage;
@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/client_page")
-public class AdminClientPageController extends _BSAdminController {
+public class AdminClientPageController extends BSAdminController {
 
     @Autowired
     private ClientPageService service;

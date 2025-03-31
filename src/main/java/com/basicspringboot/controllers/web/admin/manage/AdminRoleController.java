@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.manage;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.models.admin.AdminMenu;
 import com.basicspringboot.models.admin.AdminRole;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/role")
-public class AdminRoleController extends _BSAdminController {
+public class AdminRoleController extends BSAdminController {
 
     @Autowired
     private AdminRoleService service;

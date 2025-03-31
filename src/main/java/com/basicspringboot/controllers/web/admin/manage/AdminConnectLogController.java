@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.manage;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.models.logs.AdminConnectLog;
 import com.basicspringboot.services.manage.AdminConnectLogService;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/log/connect")
-public class AdminConnectLogController extends _BSAdminController {
+public class AdminConnectLogController extends BSAdminController {
 
     @Autowired
     private AdminConnectLogService service;
