@@ -108,6 +108,7 @@ const productInfoCard = (index, row) => {
 						<button data-category_idx="${pc.idx}" type="button" class="btn bl max150" onClick="openPopup('#searchProductPopup', 'normal', this)">조회
 						</button>
 						<div class="flex-box align-items-center productNameAddArea">
+							<!--<button type="button" class="delete-btn"><img src="/admin/images/ico_close.svg" width="12"></button>-->
 							<p class="t-rw rw-1 select-name"></p>
 						</div>
 					</div>

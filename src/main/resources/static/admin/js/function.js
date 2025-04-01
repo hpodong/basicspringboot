@@ -81,7 +81,7 @@ const logout = () => {
         onsuccess: (res) => {
             if(res) {
                 $.ajax({
-                    url: "/admin/logout",
+                    url: "/logout",
                     type: "POST",
                     async: false,
                     success: function(res) {
@@ -144,6 +144,7 @@ const setData = (data, setinitialvalue = false) => {
                     default: {
                         let type = input_element.attr("type");
                         switch (type) {
+                            case "checkbox":
                             case "radio":
                                 const $checkedElement = input_element.filter(`[value='${value}']`);
                                 $checkedElement.prop("checked", true).change();

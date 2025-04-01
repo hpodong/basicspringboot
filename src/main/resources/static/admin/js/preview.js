@@ -1,5 +1,142 @@
+class MultiFile {
+    constructor(idx, name, unique) {
+        this.idx = idx;
+        this.name = name;
+        this.unique = unique;
+    }
+
+    toHtml() {
+        return `<div class="file-box flex-box align-items-center justify-content-between gap-5 wid-fit">
+            <div class="flex-box align-items-center gap-5">
+                <p class="file-name t-rw rw-1" >${this.name}</p>
+            </div>
+            <a href="javascript:;" ${this.unique === undefined ? "" : `data-unique="${this.unique}"`} class="delete-btn" ${!this.idx ? "" : `data-file-idx="${this.idx}"`}><img src="/admin/images/ico_close.svg" alt="" width="10"></a>
+        </div>`;
+    }
+}
+
 (function($) {
+
     const defaultMaxSize = 500;
+
+    /**
+     * @function $.fn.validate
+     * @description 이 플러그인은 여러개의 파일 뷰를 보여줍니다.
+     * @param {Object} options - 옵션 객체
+     * @param {MultiFile[]} [options.default_files] - 초기 파일 목록
+     * @param {number} [options.max_size] - 최대 사이즈(MB 기준)
+     * @param {number} [options.max_length] - 최대 갯수
+     * @param {FileType[]} [options.allows] - 허용할 파일 목록
+     * @return jQuery
+     */
+    $.fn.multifile = function(options) {
+
+        const id = this.attr("id");
+        const preHtml = this.prop('outerHTML');
+        const {
+            default_files= this.data("default_files"),
+            max_size,
+            max_length,
+            allows,
+        } = options;
+        const dataTransfer = new DataTransfer();
+        const filesHtml = default_files?.map(file => file.toHtml()).join("") ?? "";
+        const field_idx = `files_field_${id}`;
+        const replaceHtml =
+            `<div class="multiple-file-attach" id="${field_idx}">
+                <div class="file-select-box">
+                    <div>
+                        <label for="${id}" class="flex-box align-items-center justify-content-center btn bl">파일 찾기</label>
+                        <span class="file-caution-txt">선택된 파일이 없습니다.</span>
+                    </div>
+                    ${preHtml}
+                </div>
+                <div class="file-upload-area flex-box gap-5 flex-wrap">${filesHtml ?? ""}</div>
+            </div>`;
+        this.replaceWith(replaceHtml);
+
+        const $newInput = $(`[type='file'][id='${id}']`);
+
+        const $removeText = $(`#${field_idx}`).find(".file-caution-txt");
+        if(default_files?.length) $removeText.hide()
+        else $removeText.css("display", "inline-block")
+
+        $newInput.change(function(event) {
+            const $newHtml = $(`[id='files_field_${id}']`);
+            const $fileArea = $newHtml.find(".file-upload-area");
+            const $fileBox = $fileArea.find(".file-box");
+            const fileLength = $fileBox.length;
+            const newFiles = Array.from(event.target.files);
+            const newFilesLength = newFiles.length;
+            const totalLength = fileLength + newFilesLength;
+
+            if(max_length && totalLength > max_length) {
+                SGAlert({
+                    title: `최대 ${max_length}개까지만 등록이 가능합니다.`,
+                    type: SGAlertType.ERROR
+                })
+                return;
+            }
+
+
+            for(let index = 0; index < newFilesLength; index++) {
+                const file = newFiles[index];
+                const size = file.size;
+                if(max_size && size > (max_size*1024*1024)) {
+                    SGAlert({
+                        title: `최대 ${max_size}MB까지 등록이 가능합니다.`,
+                        type: SGAlertType.ERROR
+                    })
+                } else {
+                    $fileArea.append(new MultiFile(null, file.name, dataTransfer.items.length).toHtml());
+                    dataTransfer.items.add(file);
+                }
+            }
+
+            $newInput[0].files = dataTransfer.files;
+
+            if(dataTransfer.items.length) {
+                $removeText.hide();
+            } else {
+                $removeText.css("display", "inline-block");
+            }
+        });
+
+        $newInput.attr("accept", allows?.join(", "));
+
+        // 삭제 버튼 이벤트 위임 등록 추천
+        $(document).on("click", `#${field_idx} .delete-btn`, function(e) {
+
+            const unique = $(this).data("unique");
+            const file_idx = $(this).data("file-idx");
+            const delete_form = $(this).closest("form");
+
+            Array.from(dataTransfer.files).forEach((f, index) => {
+                if(Object.is(unique, index)) dataTransfer.items.remove(f);
+            });
+
+            $newInput[0].files = dataTransfer.files;
+
+            // DOM에서 파일 제거
+            $(this).closest(".file-box").remove();
+            if(file_idx != null) delete_form.append(`<input type='hidden' name='delete_file_idx' value='${file_idx}'>`);
+
+            const $field = $(`#${field_idx}`);
+
+            $field.find("a[data-unique]").each(function(index) {
+                $(this).data("unique", index);
+            });
+
+            const afterTotalCount = $field.find(".file-box").length;
+            if (!afterTotalCount) {
+                $removeText.css("display", "inline-block");
+            } else {
+                $removeText.hide();
+            }
+        });
+
+        return $newInput;
+    }
 
     /**
      * @function $.fn.validate

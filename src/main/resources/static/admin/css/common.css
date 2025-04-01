@@ -115,7 +115,7 @@
 .header h1 a {
     display: block;
     width: 400px;
-    height: 80px; /*background-image: url('/images/logo.png');*/
+    height: 80px; /*background-image: url('/admin/images/logo.png');*/
     background-size: 258px 70px;
     background-position: 50% 50%;
 }
@@ -497,6 +497,16 @@
     background-repeat: no-repeat;
     background-position: 50% 50%;
     cursor: pointer;
+}
+
+.tabWrap .tab .tab-button-next {
+    right: 34px;
+    background-image: url(/assets/images_images/tab_next.png);
+}
+
+.tabWrap .tab .tab-button-prev {
+    right: 67px;
+    background-image: url(/assets/images_images/tab_prev.png);
 }
 
 .tabWrap > .arrow > ul > li {

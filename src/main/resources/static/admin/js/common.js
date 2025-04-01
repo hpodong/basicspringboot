@@ -129,7 +129,9 @@ function closePopup(is_clear = true){
   })
 }
 
-function openImgPopup(id, type) {
+let imgPopupSwiper; // Swiper 인스턴스를 저장할 변수
+
+function openListImgPopup(id, type) {
   // 팝업 열기
   if(type == "normal"){
     $(id).attr('data-open-type', 'normal');
@@ -150,8 +152,6 @@ function openImgPopup(id, type) {
   $(id).find('.img-area').html('' +
       '<img src="' + clickedImageSrc + '" alt="popup image" />');
 }
-
-let imgPopupSwiper; // Swiper 인스턴스를 저장할 변수
 
 function viewOpenImgPopup(id, type, clickedImg) {
   // 팝업 열기
@@ -184,7 +184,7 @@ function viewOpenImgPopup(id, type, clickedImg) {
   }).get();
 
   // 생성된 HTML을 swiper-wrapper에 삽입
-  $(id).find(".swiper-wrapper.img-area").html(imgList.join(""));
+  /*$(id).find(".swiper-wrapper.img-area").html(imgList.join(""));*/
 
   // Swiper 새로 초기화 (클릭한 이미지부터 시작)
   imgPopupSwiper = new Swiper(".imgPopupSwiper", {
@@ -315,7 +315,7 @@ $(document).ready(function () {
   $(".alarm-popup .more-btn").on("click", function(){
     get_push_list();
   });
-
+  
   //데이트타임피커
   $(".datetimepicker").datetimepicker({
     format: "Y-m-d H:i:s",
@@ -361,13 +361,14 @@ $(document).ready(function () {
     $(this).text($(this).text() + "년");
   }); */
 
-  //멀티업로드
+  /*//멀티업로드
   $(".multiple-file-attach input[type='file']").change(function(event) {
     const $this = $(this);
     const files = event.target.files;
     const length = files.length;
     const max_count = $this.data("max-count");
-    let $file_area_tag = $this.closest(".multiple-file-attach").find(".file-upload-area");
+    const $file_area_tag = $this.closest(".multiple-file-attach").find(".file-upload-area");
+    const $select_box = $this.closest(".file-select-box");
     if(!$file_area_tag.length) {
       SGAlert({
         title: "파일 영역을 생성해주세요. (ex. file-upload-area)"
@@ -384,18 +385,19 @@ $(document).ready(function () {
             <div class="flex-box align-items-center gap-5">
               <p class="file-name t-rw rw-1">${files[i].name}</p>
             </div>
-            <a href="javascript:;" class="delete-btn"><img src="/images/ico_close.svg" alt="" width="10"></a>
+            <a href="javascript:;" class="delete-btn"><img src="/admin/images/ico_close.svg" alt="" width="10"></a>
           </div>
         `;
 
+
         $file_area_tag.append(fileBox);
-        $file_area_tag.find(".file-caution-txt").css("display", "none");
+        $select_box.find(".file-caution-txt").css("display", "none");
       }
     }
-  });
+  });*/
 
   // 파일 삭제 기능
-  $(document).on("click", ".file-upload-area .delete-btn", function() {
+  /*$(document).on("click", ".file-upload-area .delete-btn", function() {
     const $parent = $(this).closest(".file-box");
 
     const file_idx = $(this).data("file-idx");
@@ -414,10 +416,14 @@ $(document).ready(function () {
     if(file_idx != null) delete_form.append(`<input type='hidden' name='delete_file_idx' value='${file_idx}'>`);
     $parent.remove();
 
+    const $file_text = $(".file-caution-txt");
+
     if (!$('.multiple-file-attach .file-box').length) {
-      $(".file-caution-txt").css("display", "inline-block");
+      $file_text.css("display", "inline-block");
+    } else {
+      $file_text.hide();
     }
-  });
+  });*/
 
   //파일 이름 색깔
   $(".file-name").each(function() {
@@ -428,11 +434,11 @@ $(document).ready(function () {
     }
   });
 
-  if($(".file-img-box .image-view").is(':visible')){
-    $('.page-footer').css('bottom', 'auto');
-  } else {
-    $('.page-footer').css('bottom', '0');
-  }
+if($(".file-img-box .image-view").is(':visible')){
+  $('.page-footer').css('bottom', 'auto');
+} else {
+  $('.page-footer').css('bottom', '0');
+}
 
   if($(".footer_").is(':visible')){
     $('.page-footer').css('bottom', 'auto');
@@ -583,3 +589,42 @@ var win_zip = function(frm_name, frm_zipcode, frm_address1, frm_address2, frm_ad
   }
 }
 
+// 테이블 드래그 앤 드롭
+let isDown = false;
+let isDragging = false;
+let startX;
+let scrollLeft;
+
+$('.scroll_list_wrap')
+    .on('mousedown', function(e) {
+      isDown = true;
+      isDragging = false;
+      $(this).addClass('active');
+      startX = e.pageX - $(this).offset().left;
+      scrollLeft = $(this).scrollLeft();
+    })
+    .on('mouseleave mouseup', function() {
+      isDown = false;
+      setTimeout(() => {
+        isDragging = false; // 약간의 지연 후 드래그 종료
+      }, 50);
+      $(this).removeClass('active');
+    })
+    .on('mousemove', function(e) {
+      if (!isDown) return;
+      isDragging = true;
+      e.preventDefault();
+      const x = e.pageX - $(this).offset().left;
+      const walk = (x - startX) * 1; // 드래그 속도 조절
+      $(this).scrollLeft(scrollLeft - walk);
+    });
+
+// 업로드 양식 다운로드 클릭 이벤트
+$('.uploadDown-btn').on('click', function(){
+  SGAlert({
+    title: "합·포인 경우, 최초 한 행만 작성하시고 상품정보(양식 내 G열 ~N열까지)는 순차적으로 모두 작성해주세요.",
+    type: SGAlertType.SUCCESS,
+    // onsuccess: (res) => {
+    // }
+  })
+});

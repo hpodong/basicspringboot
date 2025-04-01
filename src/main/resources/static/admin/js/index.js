@@ -45,7 +45,11 @@ $(function() {
 		let isChecked = $(this).is(":checked");
 		$("input[name='idx']").prop("checked", isChecked);
 	});
-	$("td[data-idx], button[data-idx]").css("cursor", "pointer").on("click", function() {
+	$("td[data-idx], button[data-idx]").css("cursor", "pointer").on("click", function(e) {
+		if (isDragging) {
+			e.preventDefault(); // 드래그 후 클릭 방지
+			return;
+		}
 		let idx = $(this).data("idx");
 		location.href = `${location.pathname}/view?idx=${idx}`;
 	});
@@ -86,9 +90,6 @@ $(function() {
 			case "1개월":
 				sd_time.setMonth(now.getMonth()-1);
 				break;
-			case "3개월":
-				sd_time.setMonth(now.getMonth()-3);
-				break;
 			case "6개월":
 				sd_time.setMonth(now.getMonth()-6);
 				break;
@@ -124,6 +125,11 @@ $(function() {
 		autoclose: true,
 		todayHighlight: true,
 	});
+
+
+$("sdoifsaidofids").change();
+
+
 
 });
 
