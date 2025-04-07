@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.application;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.exceptions.FileSizeException;
 import com.basicspringboot.models.consults.Consult;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Controller
 @RequestMapping("/admin/consult")
 @RequiredArgsConstructor
-public class AdminConsultController extends _BSAdminController {
+public class AdminConsultController extends BSAdminController {
 
     private static final String UPLOAD_DIR = "/consult/answer";
     private static final int MAX_SIZE = 1024*1024*10;

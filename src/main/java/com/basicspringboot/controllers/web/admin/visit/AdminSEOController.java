@@ -1,11 +1,14 @@
 package com.basicspringboot.controllers.web.admin.visit;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
+import com.basicspringboot.exceptions.InsertException;
+import com.basicspringboot.exceptions.UpdateException;
 import com.basicspringboot.models.others.FileModel;
 import com.basicspringboot.models.site.SEO;
 import com.basicspringboot.models.site.SEOImage;
 import com.basicspringboot.services.visit.SEOService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
+@Slf4j
 @RequestMapping("/admin/seo")
-public class AdminSEOController extends _BSAdminController {
+public class AdminSEOController extends BSAdminController {
 
     private static final String UPLOAD_DIR = "/seo";
     private static final int PC_THUMBNAIL_WIDTH = 100;
@@ -34,7 +38,7 @@ public class AdminSEOController extends _BSAdminController {
 
     @Override
     public ModelAndView index(ModelAndView mv) {
-        final BSQuery bsq = new BSQuery(SEO.class, request);
+        final BSQuery<SEO> bsq = new BSQuery<>(SEO.class, request);
         bsq.addSelect("pf.f_url pc_image, mf.f_url m_image");
         bsq.addJoin("LEFT JOIN search_engine_optimization_image pci ON pci.seo_idx = search_engine_optimization.seo_idx AND pci.seoi_type = 'PC'");
         bsq.addJoin("LEFT JOIN file pf ON pci.f_idx = pf.f_idx");
@@ -48,7 +52,7 @@ public class AdminSEOController extends _BSAdminController {
     @Override
     @Transactional
     public ModelAndView view(Long idx, ModelAndView mv) {
-        final BSQuery bsq = new BSQuery(SEO.class);
+        final BSQuery<SEO> bsq = new BSQuery<>(SEO.class);
         bsq.setIdx(idx);
         final SEO data = service.findOne(bsq, SEO::new);
 
@@ -70,7 +74,7 @@ public class AdminSEOController extends _BSAdminController {
     @Override
     @Transactional
     public ModelAndView update(Long idx, ModelAndView mv) {
-        final BSQuery bsq = new BSQuery(SEO.class);
+        final BSQuery<SEO> bsq = new BSQuery<>(SEO.class);
         bsq.setIdx(idx);
         final SEO data = service.findOne(bsq, SEO::new);
 
@@ -88,6 +92,7 @@ public class AdminSEOController extends _BSAdminController {
     @Override
     public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra)  {
         final SEO data = new SEO(request);
+
 
         final FileModel pc_file = getFile(UPLOAD_DIR+"/PC", "pc_image");
         final FileModel mo_file = getFile(UPLOAD_DIR+"/MO", "mo_image");
@@ -112,10 +117,9 @@ public class AdminSEOController extends _BSAdminController {
                 }
             }
             ra.addFlashAttribute("msg", "SEO가 등록되었습니다.");
-            return insertProcess(mv, ra);
+            return super.insertProcess(mv, ra);
         } else {
-            ra.addFlashAttribute("err", "SEO가 등록되지 않았습니다.");
-            return insert(mv);
+            throw new InsertException("SEO가 등록되지 않았습니다.");
         }
     }
 
@@ -163,8 +167,7 @@ public class AdminSEOController extends _BSAdminController {
             }
         }
         if(!service.update(data)) {
-            ra.addFlashAttribute("msg", "SEO가 수정되지 않았습니다.");
-            return super.update(idx, mv);
+            throw new UpdateException("SEO가 수정되지 않았습니다.");
         } else {
             ra.addFlashAttribute("msg", "SEO가 수정되었습니다.");
             return super.updateProcess(mv, ra);

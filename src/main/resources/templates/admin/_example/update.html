@@ -28,12 +28,18 @@
 										<table class="row_line">
 											<caption>등록정보</caption>
 											<colgroup>
-												<col width="10.6%">
-												<col width="39.4%">
-												<col width="10.6%">
-												<col width="39.4%">
+												<col width="8.7%">
+												<col width="41.3%">
+												<col width="8.7%">
+												<col width="41.3%">
 											</colgroup>
 											<tbody>
+											<tr>
+												<th>등록일시</th>
+												<td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+												<th>마지막 수정일</th>
+												<td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+											</tr>
 											<tr>
 												<th><label for="status">상태</label></th>
 												<td>
@@ -47,22 +53,24 @@
 													<input class="max200" type="text" name="sort" id="sort">
 												</td>
 											</tr>
-											<tr>
-												<th>회원 종류</th>
-												<td>
-													<select id="category_idx" name="category_idx" class="max200 select_drop" >
-														<option value="">선택</option>
-														<option th:each="c : ${categories}" th:value="${c.idx}" th:text="${c.name}"></option>
-													</select>
-												</td>
-												<th>필수 여부</th>
-												<td>
-													<select id="is_required" name="is_required" class="max200 select_drop" >
-														<option value="0">선택</option>
-														<option value="1">필수</option>
-													</select>
-												</td>
-											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="tbl_wrap tbl_wrap1">
+									<div class="tit_box">
+										<h3 class="sTit">게시글 정보</h3>
+									</div>
+									<div class="tbl_box tbl_box2">
+										<table class="row_line">
+											<caption>게시글 정보</caption>
+											<colgroup>
+												<col width="10.6%">
+												<col width="39.4%">
+												<col width="10.6%">
+												<col width="39.4%">
+											</colgroup>
+											<tbody>
 											<tr>
 												<th><label for="title">제목</label></th>
 												<td colspan="3">
@@ -74,7 +82,7 @@
 													<label for="desc">내용</label>
 												</th>
 												<td colspan="3">
-													<textarea id="desc" name="desc" rows="10"></textarea>
+													<textarea data-height="300px" id="desc" class="editor" name="desc" rows="10"></textarea>
 												</td>
 											</tr>
 											</tbody>
@@ -94,34 +102,53 @@
 	</div>
 	<th:block th:insert="~{admin/includes/footer.html}"/>
 </div>
-<script>
-	let form = $("form");
-	$("#status").setValidate(form, {
-		label: "상태",
-		minLength: 1,
+<script th:inline="javascript">
+	const $form = $("form");
+
+	const data = /*[[${data}]]*/ null;
+	if(data) setData(data);
+
+	$("#status").addValidation({
+		cases: {
+			"상태를 선택해주세요.": (value) => !value
+		}
 	});
-	$("#category_idx").setValidate(form, {
-		label: "회원 종류",
-		required: true,
+	$("#sort").addValidation({
+		regex: SGValidateType.NUMBER,
+		cases: {
+			"순서를 입력해주세요.": (value) => !value
+		},
+		maxlength: 13
 	});
-	$("#is_required").setValidate(form, {
-		label: "필수 여부",
-		required: true,
+	$("#title").addValidation({
+		cases: {
+			"제목을 입력해주세요.": (value) => !value.length
+		},
+		maxlength: 100
 	});
-	$("#sort").setValidate(form, {
-		label: "순서",
-		maxLength: 11,
-		required: false,
-		type: "number"
+	$("#desc").addValidation({
+		regex: SGValidateType.QL_EDITOR,
+		cases: {
+			"내용을 입력해주세요.": (value) => !value.length
+		},
+		focusElement: $("#desc").parent()
 	});
-	$("#title").setValidate(form, {
-		label: "제목",
-		minLength: 1,
-		maxLength: 100
-	});
-	$("#desc").setValidate(form, {
-		label: "내용",
-		minLength: 1,
+
+	$form.on("submit", function(event) {
+		if($form.isValidate()) {
+			SGConfirm({
+				title: "데이터를 저장하시겠습니까?",
+				onsuccess: (res) => {
+					if(res) {
+						SGProcess({
+							title: "데이터를 저장중입니다...",
+						});
+						this.submit();
+					}
+				}
+			});
+		}
+		event.preventDefault();
 	});
 </script>
 </body>

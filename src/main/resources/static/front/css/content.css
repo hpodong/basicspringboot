@@ -6343,18 +6343,36 @@ input[name="stock"] {
     padding-left: 30px !important;
 }
 
+.popups {
+    max-width: 420px;
+    position: absolute;
+    top: 70px;
+    z-index: 100;
+    overflow: hidden;
+    padding: 0 15px;
+    box-sizing: border-box;
+    width: 100%;
+}
 
+.popups .btnSet {
+    justify-content: space-between;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
 
+.popups .popups_wrap {
+    overflow: auto;
+}
 
+.popups .img-box {
+    padding-bottom: 100%;
+}
 
+.popups .lined {
+    width: 100%;
+}
 
-
-
-
-
-
-
-
-
-
-
+.popups .img-box img {
+    width: 100% !important;
+    height: 100% !important;
+}

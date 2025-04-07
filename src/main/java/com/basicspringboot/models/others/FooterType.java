@@ -54,4 +54,8 @@ public class FooterType extends _BSModel {
     public FooterType(Integer offset, Long count, ResultSet rs, int row_num) {
         super(offset, count, rs, row_num);
     }
+
+    public boolean isExists() {
+        return idx != null;
+    }
 }

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head th:replace="~{front/includes/head.html}"></head>
+<body>
+<div class="wrapper">
+    <!--헤더 부분-->
+    <th:block th:insert="~{front/includes/header.html}"/>
+    <!--콘텐츠 부분-->
+
+    <form method="post" action="/login">
+        <input name="id">
+        <input name="password">
+        <input type="submit">
+    </form>
+    <!--푸터 부분-->
+    <th:block th:insert="~{front/includes/footer.html}"/>
+</div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!--favicon-->
+<link rel="icon" href="/favicon.ico" type="image/png"/>
+
+<th:block th:with="company_name=${@environment.getProperty('spring.application.name')}">
+    <th:block th:if="${page_data == null}">
+        <title th:text="${company_name}"></title>
+    </th:block>
+    <th:block th:unless="${page_data == null}" >
+        <th:block><title th:text="${page_data.title} + ' - ' + ${company_name}"></title></th:block>
+    </th:block>
+</th:block>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.css">
+<link href="/front/css/content.css" rel="stylesheet"/>
+<link href="/front/css/responsive.css" rel="stylesheet"/>
+<link href="/front/css/common.css" rel="stylesheet"/>
+<link href="/front/css/niceselect.css" rel="stylesheet"/>
+<link href="/front/css/reset.css" rel="stylesheet"/>
+<link href="/front/css/datepicker.css" rel="stylesheet"/>
+<link href="/plugins/sg-validation/sg_validation.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<!--plugins-->
+<script type="text/javascript" src="/plugins/jQuery/jquery.min.js"></script>
+<script type="text/javascript" src="/plugins/jQuery/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="/plugins/jQuery/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/plugins/jQuery/jquery.nice-select.js"></script>
+<script type="text/javascript" src="/plugins/jQuery/jquery.nice-select.min.js"></script>
+<script type="text/javascript" src="/plugins/jQuery/function_jquery.js"></script>
+<script type="text/javascript" src="/plugins/swiper/swiper.min.js"></script>
+<script type="text/javascript" src="/plugins/swiper/swiper-6.3.5.min.js"></script>
+
+<script type="text/javascript" src="/plugins/sg-validation/sg_validation.js"></script>
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+
+<script type="text/javascript" src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<script type="text/javascript" src="/front/js/datepicker.js"></script>
+<script type="text/javascript" src="/front/js/function.js"></script>
+
+<!-- SEO 영역 -->
+<th:block th:with="company_name=${@environment.getProperty('spring.application.name')}, server_url=${@environment.getProperty('server.url')}">
+    <th:block th:if="${seo_data != null}">
+        <meta name="description" th:content="${seo_data.desc}" />
+        <meta name="keywords" th:content="${seo_data.keyword}" />
+        <meta name="author" th:content="${company_name}" />
+        <link rel="canonical" th:href="${server_url+seo_data.url}" />
+
+        <!-- OG 태그 -->
+        <meta property="og:title" th:content="${seo_data.title}" />
+        <meta property="og:description" th:content="${seo_data.desc}" />
+        <meta property="og:image" th:content="${server_url+seo_data.image_url}" />
+        <meta property="og:url" th:content="${server_url+seo_data.url}" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" th:content="${company_name}" />
+        <meta property="og:locale" content="ko_KR" />
+
+        <!-- 트위터 카드 -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" th:content="${seo_data.title}" />
+        <meta name="twitter:description" th:content="${seo_data.desc}" />
+        <meta name="twitter:image" th:content="${server_url+seo_data.image_url}" />
+        <meta name="twitter:site" th:content="${company_name}" />
+        <meta name="twitter:creator" th:content="${company_name}" />
+    </th:block>
+    <th:block th:unless="${seo_data != null}" th:with="og_img=${server_url}+'/front/images/og_img.jpg'">
+        <meta name="author" th:content="${company_name}" />
+        <link rel="canonical" th:href="${server_url}" />
+        <!-- OG 태그 -->
+        <meta property="og:title" th:content="${company_name}" />
+        <meta property="og:image" th:content="${og_img}" />
+        <meta property="og:url" th:content="${server_url}" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" th:content="${company_name}" />
+        <meta property="og:locale" content="ko_KR" />
+
+        <!-- 트위터 카드 -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" th:content="${company_name}" />
+        <meta name="twitter:image" th:content="${og_img}" />
+        <meta name="twitter:site" th:content="${company_name}" />
+        <meta name="twitter:creator" th:content="${company_name}" />
+    </th:block>
+</th:block>
+<th:block th:with="google_site_verification=${@environment.getProperty('google.site.verification')}">
+    <meta th:if="${google_site_verification != null}" name="google-site-verification" th:content="${google_site_verification}" />
+</th:block>

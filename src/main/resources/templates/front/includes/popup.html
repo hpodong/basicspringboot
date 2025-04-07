@@ -1,0 +1,20 @@
+<div class="popups" th:each="popup: ${activated_popups}" th:id="'preview_popup' + ${popup.idx}">
+    <div class="popups_wrap" style="left: 50px">
+        <div class="lined"
+             th:style="${popup.is_center ? 'position: relative; z-index: 500; max-width: ' + popup.width + 'px; height: ' + (popup.height + 35) + 'px;'
+                            : 'position: absolute; transform: translate(-50%, -50%); top: 50%; left: 50%; max-width: ' + popup.width + 'px; height: ' + (popup.height + 35) + 'px;'}">
+            <a th:href="${popup.url}" target="_blank">
+                <div class="img-box">
+                    <img th:src="${popup.file?.url}" th:style="'width: ' + ${popup.width} + 'px; height: ' + ${popup.height} + 'px;'">
+                </div>
+            </a>
+            <div class="btnSet flex-box justify-content-between align-items-center" style="background-color: #FFFFFF; margin-top: 0; height: 35px;">
+                <div class="check_box">
+                    <input type="checkbox" th:id="'not_open' + ${popup.idx}" name="open_type">
+                    <label th:for="'not_open' + ${popup.idx}">오늘 하루 이 창을 열지 않음</label>
+                </div>
+                <button type="button" th:onclick="'closeActivePopup(this,' + ${popup.idx} + ');'">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>

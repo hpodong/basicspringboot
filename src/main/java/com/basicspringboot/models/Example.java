@@ -22,7 +22,7 @@ import java.sql.Timestamp;
         updatedAt = "_updt",
         deletedAt = "_dldt"
 )
-public class _Example extends _BSModel {
+public class Example extends _BSModel {
 
     @BSColumn(name = "_idx")
     private Long idx;
@@ -36,15 +36,15 @@ public class _Example extends _BSModel {
     @BSColumn(name = "_dldt")
     private Timestamp deleted_at;
 
-    public _Example(ResultSet rs, int rn) {
+    public Example(ResultSet rs, int rn) {
         super(rs, rn);
     }
 
-    public _Example(HttpServletRequest request) {
+    public Example(HttpServletRequest request) {
         super(request);
     }
 
-    public _Example(Integer offset, Long count, ResultSet rs, int row_num) {
+    public Example(Integer offset, Long count, ResultSet rs, int row_num) {
         super(offset, count, rs, row_num);
     }
 }

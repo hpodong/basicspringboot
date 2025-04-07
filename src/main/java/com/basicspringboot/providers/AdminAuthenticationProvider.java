@@ -84,7 +84,7 @@ public class AdminAuthenticationProvider implements AuthenticationProvider {
     }
 
     private Admin findById(String id) {
-        final BSQuery bsq = new BSQuery(Admin.class);
+        final BSQuery<Admin> bsq = new BSQuery<>(Admin.class);
         bsq.setWhere("a_dldt IS NULL", "a_id = ?");
         bsq.setLimit(1);
         bsq.addArgs(id);

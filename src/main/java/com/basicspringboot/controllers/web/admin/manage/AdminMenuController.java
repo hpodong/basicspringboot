@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.manage;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.enums.APStatus;
 import com.basicspringboot.models.admin.AdminMenu;
@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/admin/menu")
-public class AdminMenuController extends _BSAdminController {
+public class AdminMenuController extends BSAdminController {
 
     private static final String UPLOAD_DIR = "/admin/menu";
     private static final int MAX_SIZE = 1024 * 1024;

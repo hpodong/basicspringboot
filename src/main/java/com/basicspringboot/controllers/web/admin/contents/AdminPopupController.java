@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.contents;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.models.others.FileModel;
 import com.basicspringboot.models.site.Popup;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/popup")
-public class AdminPopupController extends _BSAdminController {
+public class AdminPopupController extends BSAdminController {
 
     private final String UPLOAD_DIR = "/popup";
 

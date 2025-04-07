@@ -10,7 +10,7 @@ class MultiFile {
             <div class="flex-box align-items-center gap-5">
                 <p class="file-name t-rw rw-1" >${this.name}</p>
             </div>
-            <a href="javascript:;" ${this.unique === undefined ? "" : `data-unique="${this.unique}"`} class="delete-btn" ${!this.idx ? "" : `data-file-idx="${this.idx}"`}><img src="/admin/images/ico_close.svg" alt="" width="10"></a>
+            <a href="javascript:;" ${this.unique === undefined ? "" : `data-unique="${this.unique}"`} class="delete-btn" ${!this.idx ? "" : `data-file-idx="${this.idx}"`}><img src="/admin/images/ico_close_wht.svg" alt="" width="10"></a>
         </div>`;
     }
 }
@@ -163,7 +163,7 @@ class MultiFile {
             <input class="preview" type="file" name="${name}" id="${id}" accept="image/jpg, image/png, image/jpeg">
             <div class="image-view">
                 <div class="photo-delete">
-                    <img src="/admin/images/ico_x.svg" alt="x아이콘" width="10">
+                    <img src="/admin/images/ico_close_wht.svg" alt="x아이콘" width="10">
                 </div>
             </div>
             <div>

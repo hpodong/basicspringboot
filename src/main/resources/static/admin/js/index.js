@@ -90,6 +90,9 @@ $(function() {
 			case "1개월":
 				sd_time.setMonth(now.getMonth()-1);
 				break;
+			case "3개월":
+				sd_time.setMonth(now.getMonth()-3);
+				break;
 			case "6개월":
 				sd_time.setMonth(now.getMonth()-6);
 				break;

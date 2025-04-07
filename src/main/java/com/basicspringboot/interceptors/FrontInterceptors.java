@@ -1,4 +1,4 @@
-package com.basicspringboot.web;
+package com.basicspringboot.interceptors;
 
 import com.basicspringboot.models.member.Member;
 import com.basicspringboot.models.others.ClientPage;
@@ -18,8 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Interceptor
@@ -42,6 +41,8 @@ public class FrontInterceptors implements HandlerInterceptor {
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
         final ClientPage clientPage = (ClientPage) request.getAttribute(PAGE_DATA_KEY);
         if(clientPage != null) clientPageService.addClientPageInflowLogs(clientPage.getIdx());
+        final HttpSession session = request.getSession();
+        session.removeAttribute("msg");
     }
 
     @Override
@@ -49,16 +50,9 @@ public class FrontInterceptors implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
         if(isAjaxRequest(request)) return true;
-        final HttpSession session = request.getSession();
 
         final String method = request.getMethod();
         if(method.equals("GET")) {
-            session.removeAttribute("msg");
-            session.removeAttribute("err");
-            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-            response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-            response.setHeader("Expires", "0"); // Proxies.
-
             setSEO(request);
             popupInterceptor(request);
             autoLogin(request);
@@ -109,7 +103,7 @@ public class FrontInterceptors implements HandlerInterceptor {
 
         final List<Popup> activatedPopup;
         if(uri.equals("/")) activatedPopup = popupService.getMains();
-        else activatedPopup = popupService.getExcludeMains();
+        else activatedPopup = popupService.getPopups();
         // 쿠키에 있는 idx 값들을 제외한 팝업들만 필터링
         List<Popup> filteredPopups = activatedPopup.stream()
                 .filter(popup -> !closedPopups.contains(popup.getIdx()))

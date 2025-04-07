@@ -1,0 +1,43 @@
+<th:block th:if="${page_data != null && page_data?.footer_type.isExists() != null}" th:utext="${page_data?.footer_type?.html}"></th:block>
+<th:block th:insert="~{front/includes/popup}"></th:block>
+<script>
+    ajaxRequest({
+        url: "/api/add/page-log",
+        data: {
+            url: document.location.href
+        },
+        type: "POST",
+        async: true,
+        processData: undefined,
+        contentType: undefined
+    });
+
+    function closeActivePopup(_this,idx)
+    {
+        const div = _this.closest('.popups');
+        const checkbox = div.querySelector('input[type="checkbox"]'); // 체크박스 선택
+
+        if (checkbox && checkbox.checked) {
+            // 체크박스가 체크된 경우, 쿠키에 idx 저장 (하루 동안 유지)
+            const expires = new Date();
+            expires.setDate(expires.getDate() + 1); // 만료일을 1일 후로 설정
+            document.cookie = `popup_closed_${idx}=true; expires=${expires.toUTCString()}; path=/;`;
+
+        }
+
+        if(div){
+            div.style.display = "none";
+        }
+    }
+</script>
+
+<script th:inline="javascript">
+    const msg = /*[[${session?.msg}]]*/ null;
+    if(msg) alert(msg);
+
+    console.log(/*[[${activated_popups}]]*/ null);
+
+    $("img").on("error", function() {
+        $(this).attr("src", "/front/images/noimg.png");
+    });
+</script>

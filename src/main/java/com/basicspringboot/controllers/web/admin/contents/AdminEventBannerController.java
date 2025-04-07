@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.contents;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.models.others.FileModel;
 import com.basicspringboot.models.site.EventBanner;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/event-banner")
-public class AdminEventBannerController extends _BSAdminController {
+public class AdminEventBannerController extends BSAdminController {
 
     private final String UPLOAD_DIR = "/event_banner";
     private final int MAX_SIZE = 1024*1024*10;

@@ -3,6 +3,7 @@ package com.basicspringboot.services.contents;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.models.site.Popup;
 import com.basicspringboot.services._BSService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 @Slf4j
+@Getter
 public class PopupService extends _BSService<Popup> {
 
     private final List<Popup> popups = new CopyOnWriteArrayList<>();

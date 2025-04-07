@@ -1,6 +1,6 @@
 package com.basicspringboot.configs;
 
-import com.basicspringboot.handlers.BasicAuthenticationFailureHandler;
+import com.basicspringboot.handlers.AdminAuthenticationFailureHandler;
 import com.basicspringboot.models.admin.AdminMenu;
 import com.basicspringboot.providers.AdminAuthenticationProvider;
 import com.basicspringboot.services.manage.AdminConnectLogService;
@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +24,7 @@ import java.util.List;
 @Configuration
 @Slf4j
 @RequiredArgsConstructor
+@Order(1)
 public class AdminSecurityConfig {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -37,7 +39,7 @@ public class AdminSecurityConfig {
             "/admin/images/**",
             "/plugins/**",
             "/uploads/**",
-            "/favicon.png",
+            "/favicon.**",
             "/admin/recent/**"
     };
 
@@ -71,7 +73,7 @@ public class AdminSecurityConfig {
                 .formLogin(login -> login
                         .loginPage("/admin/login")
                         .defaultSuccessUrl("/admin")
-                        .failureHandler(new BasicAuthenticationFailureHandler())
+                        .failureHandler(new AdminAuthenticationFailureHandler())
                         .usernameParameter("id")
                         .passwordParameter("password")
                         .permitAll()

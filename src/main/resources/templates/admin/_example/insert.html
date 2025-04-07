@@ -47,22 +47,6 @@
 												</td>
 											</tr>
 											<tr>
-												<th>회원 종류</th>
-												<td>
-													<select id="category_idx" name="category_idx" class="max200 select_drop" >
-														<option value="">선택</option>
-														<option th:each="c : ${categories}" th:value="${c.idx}" th:text="${c.name}"></option>
-													</select>
-												</td>
-												<th>필수 여부</th>
-												<td>
-													<select id="is_required" name="is_required" class="max200 select_drop" >
-														<option value="0">선택</option>
-														<option value="1">필수</option>
-													</select>
-												</td>
-											</tr>
-											<tr>
 												<th><label for="title">제목</label></th>
 												<td colspan="3">
 													<input type="text" name="title" id="title">
@@ -73,7 +57,7 @@
 													<label for="desc">내용</label>
 												</th>
 												<td colspan="3">
-													<textarea id="desc" name="desc" rows="10"></textarea>
+													<textarea data-height="300px" id="desc" class="editor" name="desc" rows="10"></textarea>
 												</td>
 											</tr>
 											</tbody>
@@ -94,33 +78,49 @@
 	<th:block th:insert="~{admin/includes/footer.html}"/>
 </div>
 <script>
-	let form = $("form");
-	$("#status").setValidate(form, {
-		label: "상태",
-		minLength: 1,
+	const $form = $("form");
+
+	$("#status").addValidation({
+		cases: {
+			"상태를 선택해주세요.": (value) => !value
+		}
 	});
-	$("#category_idx").setValidate(form, {
-		label: "회원 종류",
-		required: true,
+	$("#sort").addValidation({
+		regex: SGValidateType.NUMBER,
+		cases: {
+			"순서를 입력해주세요.": (value) => !value
+		},
+		maxlength: 13
 	});
-	$("#is_required").setValidate(form, {
-		label: "필수 여부",
-		required: true,
+	$("#title").addValidation({
+		cases: {
+			"제목을 입력해주세요.": (value) => !value.length
+		},
+		maxlength: 100
 	});
-	$("#sort").setValidate(form, {
-		label: "순서",
-		maxLength: 11,
-		required: false,
-		type: "number"
+	$("#desc").addValidation({
+		regex: SGValidateType.QL_EDITOR,
+		cases: {
+			"내용을 입력해주세요.": (value) => !value.length
+		},
+		focusElement: $("#desc").parent()
 	});
-	$("#title").setValidate(form, {
-		label: "제목",
-		minLength: 1,
-		maxLength: 100
-	});
-	$("#desc").setValidate(form, {
-		label: "내용",
-		minLength: 1,
+
+	$form.on("submit", function(event) {
+		if($form.isValidate()) {
+			SGConfirm({
+				title: "데이터를 저장하시겠습니까?",
+				onsuccess: (res) => {
+					if(res) {
+						SGProcess({
+							title: "데이터를 저장중입니다...",
+						});
+						this.submit();
+					}
+				}
+			});
+		}
+		event.preventDefault();
 	});
 </script>
 </body>

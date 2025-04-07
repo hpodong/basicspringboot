@@ -2,14 +2,14 @@ package com.basicspringboot.configs;
 
 import com.basicspringboot.converters.StringToAPStatusConverter;
 import com.basicspringboot.converters.StringToSocialTypeConverter;
+import com.basicspringboot.interceptors.FrontInterceptors;
 import com.basicspringboot.services.client.ClientPageService;
 import com.basicspringboot.services.contents.PopupService;
 import com.basicspringboot.services.manage.AdminMenuService;
 import com.basicspringboot.services.manage.AdminPushLogService;
 import com.basicspringboot.services.member.MemberService;
 import com.basicspringboot.services.visit.SEOService;
-import com.basicspringboot.web.AdminInterceptors;
-import com.basicspringboot.web.FrontInterceptors;
+import com.basicspringboot.interceptors.AdminInterceptors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -63,7 +63,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/admin/**")
                 .excludePathPatterns("/api/**")
                 .excludePathPatterns("/front/css/**", "/front/js/**", "/front/images/**")
-                .excludePathPatterns("/front/images/**")
                 .excludePathPatterns("/favicon.ico", "/.well-known/**", "/uploads/**")
                 .excludePathPatterns("/add/page-log");
     }

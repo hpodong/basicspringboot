@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.board;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.exceptions.FileSizeException;
 import com.basicspringboot.models.board.Notice;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/admin/notice")
-public class AdminNoticeController extends _BSAdminController {
+public class AdminNoticeController extends BSAdminController {
 
     private final String UPLOAD_DIR = "/notice";
     private final int MAX_SIZE = 1024*1024*10;

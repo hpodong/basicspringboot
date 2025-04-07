@@ -1,4 +1,4 @@
-package com.basicspringboot.web;
+package com.basicspringboot.interceptors;
 
 import com.basicspringboot.models.admin.Admin;
 import com.basicspringboot.services.manage.AdminMenuService;
@@ -61,15 +61,8 @@ public class AdminInterceptors implements HandlerInterceptor {
     @Override
     @Transactional
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        final String uri = request.getRequestURI();
         final Admin a = getLoggedAdmin();
         if(a == null) return false;
-
-        /*if(!adminMenuService.getAdminRoleCheck(a.getIdx(), uri) || isAjaxRequest(request)) {
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            response.sendRedirect("/admin");
-            return false;
-        }*/
         return true;
     }
 

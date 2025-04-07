@@ -1,5 +1,5 @@
 package com.basicspringboot.controllers.web.admin.board;
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.enums.APStatus;
 import com.basicspringboot.models.board.FAQ;
@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/faq")
-public class AdminFAQController extends _BSAdminController {
+public class AdminFAQController extends BSAdminController {
 
     @Autowired
     private FAQService service;

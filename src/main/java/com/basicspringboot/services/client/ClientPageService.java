@@ -90,8 +90,7 @@ public class ClientPageService extends _BSService<ClientPage> {
     }
 
     public void insertClientPageInflowLogs() {
-        final List<ClientPageInflowLog> logs = new ArrayList<>();
-        logs.addAll(client_page_inflow_logs);
+        final List<ClientPageInflowLog> logs = new ArrayList<>(client_page_inflow_logs);
         insertMany(ClientPageInflowLog.class, logs.size(), new InsertSetter() {
             @Override
             public void columnSetter(List<String> columns) {

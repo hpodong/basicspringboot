@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.client;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.models.others.FooterType;
 import com.basicspringboot.services.client.FooterTypeService;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/client/footer")
-public class AdminFooterTypeController extends _BSAdminController {
+public class AdminFooterTypeController extends BSAdminController {
 
     @Autowired
     private FooterTypeService service;

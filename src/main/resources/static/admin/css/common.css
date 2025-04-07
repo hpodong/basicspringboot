@@ -866,7 +866,7 @@ textarea::placeholder {
     content: '';
     font-size: 0;
     background-color: #3DBBC6;
-    background-image: url(/images/ico_check.svg);
+    background-image: url(/admin/images/ico_check.svg);
 }
 
 .check_box label.normal {

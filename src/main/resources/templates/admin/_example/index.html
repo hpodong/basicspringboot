@@ -20,12 +20,12 @@
                     <div class="searchWrap">
                         <form id="searchForm" th:action="${cm.link}">
                             <table class="searchTable">
-                                <caption> 게시글검색 </caption>
+                                <caption> 게시글검색</caption>
                                 <colgroup>
                                     <col width="10.3%">
-                                        <col width="39.7%">
-                                        <col width="10.3%">
-                                        <col width="39.7%">
+                                    <col width="39.7%">
+                                    <col width="10.3%">
+                                    <col width="39.7%">
                                 </colgroup>
                                 <tbody>
                                 <tr>
@@ -34,15 +34,17 @@
                                         <div class="regist_date">
                                             <div class="calendar_wrap clear">
                                                 <p class="calendar">
-                                                    <input type="text" class="input datepicker" name="sd" readonly="readonly" th:value="${param.sd}">
+                                                    <input type="text" class="input datepicker" name="sd"
+                                                           readonly="readonly" th:value="${param.sd}">
                                                     <span class="calendar_ico"><img
-                                                                src="/admin/images/ico_calendar.svg"></span>
+                                                            src="/admin/images/ico_calendar.svg"></span>
                                                 </p>
                                                 <span>~</span>
                                                 <p class="calendar">
-                                                    <input type="text" class="input datepicker" name="ed" readonly="readonly" th:value="${param.ed}">
+                                                    <input type="text" class="input datepicker" name="ed"
+                                                           readonly="readonly" th:value="${param.ed}">
                                                     <span class="calendar_ico"><img
-                                                                src="/admin/images/ico_calendar.svg"></span>
+                                                            src="/admin/images/ico_calendar.svg"></span>
                                                 </p>
                                                 <div class="period">
                                                     <!-- 기간 클릭했을때 class="on" 추가 부탁드립니다. -->
@@ -68,7 +70,7 @@
                                             </div>
                                             <div class="btn_box btn_box2 clear">
                                                 <input type="submit" value="검색" class="btn_search">
-<input type="reset" value="초기화" class="btn_search">
+                                                <input type="reset" value="초기화" class="btn_search">
 
                                             </div>
                                         </div>
@@ -83,50 +85,50 @@
                     <form th:action="${cm.link + '/delete'}" class="form-inline" method="post" onsubmit="return deleteCheck(this);">
                         <div class="tbl_area">
                             <div class="tbl_tit">
-                                전체 <strong th:text="${data.count}"></strong><em>건</em> <span>(<i th:text="${data.curPage}"></i>/<i th:text="${data.lastPage}"></i> 페이지)</span>
+                                전체 <strong th:text="${data.count}"></strong><em>건</em>
+                                <!--<span>(<i th:text="${data.curPage}"></i>/<i th:text="${data.lastPage}"></i> 페이지)</span>-->
                             </div>
-                            <div class="tbl_box tbl_box4">
-                                <table>
-                                    <caption>목록</caption>
-                                    <colgroup>
-                                        <col width="50px" />
-                                        <col width="5%" />
-                                        <col width="*" />
-                                        <col width="10%" />
-                                        <col width="10%" />
-                                    </colgroup>
-                                    <thead>
-                                    <tr>
-                                        <th class="chk_th" scope="col">
-                                            <div class="check_box">
-                                                <input type="checkbox" id="all_chk">
-                                                <label for="all_chk">전체선택</label>
-                                            </div>
-                                        </th>
-                                        <th scope="col">번호</th>
-                                        <th scope="col">내용</th>
-                                        <th scope="col">생성일</th>
-                                        <th scope="col">수정일</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:if="${data.count == 0}">
-                                        <td colspan="5">약관 항목이 없습니다.</td>
-                                    </tr>
-                                    <tr th:if="${data.count != 0}" th:each="row: ${data.list}">
-                                        <td class="chk_td">
-                                            <div class="check_box">
-                                                <input type="checkbox" th:id="'chk_'+${row.idx}" name="idx" class="list-chkbox" th:value="${row.idx}">
-                                                <label th:for="'chk_'+${row.idx}"></label>
-                                            </div>
-                                        </td>
-                                        <td th:data-idx="${row.idx}" th:text="${row.row_num}"></td>
-                                        <td th:text="'내용'" th:data-idx="${row.idx}"></td>
-                                        <td th:text="${#dates.format(row.created_at, 'yyyy-MM-dd')}" th:data-idx="${row.idx}"></td>
-                                        <td th:text="${#dates.format(row.updated_at, 'yyyy-MM-dd')}" th:data-idx="${row.idx}"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                            <div class="scroll_list_wrap">
+                                <div class="tbl_box tbl_box5 list-page">
+                                    <table>
+                                        <caption>목록</caption>
+                                        <colgroup>
+                                            <col width="70px" />
+                                            <col width="70px" />
+                                            <col width="*" />
+                                            <col width="10%" />
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th class="chk_th" scope="col">
+                                                <div class="check_box">
+                                                    <input type="checkbox" id="all_chk">
+                                                    <label for="all_chk">전체선택</label>
+                                                </div>
+                                            </th>
+                                            <th scope="col">번호</th>
+                                            <th scope="col">제목</th>
+                                            <th scope="col">등록일</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:if="${data.count == 0}">
+                                            <td colspan="4">데이터가 없습니다.</td>
+                                        </tr>
+                                        <tr th:if="${data.count != 0}" th:each="row: ${data.list}">
+                                            <td class="chk_td">
+                                                <div class="check_box">
+                                                    <input type="checkbox" th:id="'chk_'+${row.idx}" name="idx" class="list-chkbox" th:value="${row.idx}">
+                                                    <label th:for="'chk_'+${row.idx}"></label>
+                                                </div>
+                                            </td>
+                                            <td th:data-idx="${row.idx}" th:text="${row.row_num}"></td>
+                                            <td th:text="'내용입니다.'" th:data-idx="${row.idx}" class="txt-l"></td>
+                                            <td th:text="${#dates.format(row.created_at, 'yyyy-MM-dd')}" th:data-idx="${row.idx}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div><!-- //tbl_area -->
                         <div class="btnSet clear">

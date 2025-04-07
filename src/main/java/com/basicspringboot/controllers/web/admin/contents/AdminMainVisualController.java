@@ -1,6 +1,6 @@
 package com.basicspringboot.controllers.web.admin.contents;
 
-import com.basicspringboot.controllers.web.admin._BSAdminController;
+import com.basicspringboot.controllers.web.admin.BSAdminController;
 import com.basicspringboot.dto.BSQuery;
 import com.basicspringboot.models.others.FileModel;
 import com.basicspringboot.models.site.MainVisual;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/mainvisual")
-public class AdminMainVisualController extends _BSAdminController {
+public class AdminMainVisualController extends BSAdminController {
 
     private final String UPLOAD_DIR = "/mainvisual";
     private final int MAX_SIZE = 1024*1024*10;

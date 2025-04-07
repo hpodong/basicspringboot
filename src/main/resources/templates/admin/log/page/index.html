@@ -94,15 +94,11 @@
                                             <th scope="col">페이지</th>
                                             <th scope="col">방문자 수</th>
                                             <th scope="col">비율</th>
-                                            <!--<th scope="col">OS</th>
-                                            <th scope="col">아이피</th>
-                                            <th scope="col">브라우저</th>
-                                            <th scope="col">USER AGENT</th>-->
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr th:if="${data.count eq 0}">
-                                            <td colspan="7">페이지 내역 항목이 없습니다.</td>
+                                            <td colspan="5">페이지 내역 항목이 없습니다.</td>
                                         </tr>
                                         <tr th:if="${data.count != 0}" th:each="row: ${data.list}" th:with="log=${row.client_page}">
                                             <td th:text="${row.row_num}"></td>
@@ -112,10 +108,6 @@
                                             <td class="txt-r">
                                                 <th:block th:text="${row.getRate(total_count)}"></th:block>%
                                             </td>
-                                            <!--<td th:text="${row.os}"></td>
-                                            <td th:text="${row.ip}"></td>
-                                            <td th:text="${row.browser}"></td>
-                                            <td th:text="${row.useragent}"></td>-->
                                         </tr>
                                         </tbody>
                                     </table>

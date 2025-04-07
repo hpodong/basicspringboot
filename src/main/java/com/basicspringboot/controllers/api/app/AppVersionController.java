@@ -46,8 +46,6 @@ public class AppVersionController extends _BSAPIController<AppVersion, AppVersio
             if(latestVersion == null && service.insert(data)) {
                 latestVersion = service.findLatestVersion(data.getOs());
                 requestVersion = latestVersion;
-                log.info("LAST : {}", latestVersion);
-                log.info("REQ : {}", requestVersion);
             } else if(requestVersion == null && service.insert(data)) {
                 requestVersion = service.findRequestVersion(data.getOs(), data.getBuild_number());
             }

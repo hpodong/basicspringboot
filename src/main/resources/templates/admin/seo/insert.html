@@ -98,6 +98,9 @@
 	<th:block th:insert="~{admin/includes/footer.html}"/>
 </div>
 <script>
+
+	const $form = $("form");
+
 	$("#seo_status").addValidation({
 		cases: {
 			"활성화 여부를 선택해주세요.": (value) => !value

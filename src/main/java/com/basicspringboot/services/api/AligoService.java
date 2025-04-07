@@ -40,7 +40,6 @@ public class AligoService {
         final String randomCode = generateVerificationCode();
         final LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(3);
         authNumbers.add(new AligoAuthNumber(target, randomCode, expiredAt));
-        log.info(randomCode);
         return sendMessage(target, SEND_AUTH_NUMBER_TITLE, SEND_AUTH_NUMBER_DESCRIPTION, randomCode);
     }
 

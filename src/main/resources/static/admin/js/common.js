@@ -385,7 +385,7 @@ $(document).ready(function () {
             <div class="flex-box align-items-center gap-5">
               <p class="file-name t-rw rw-1">${files[i].name}</p>
             </div>
-            <a href="javascript:;" class="delete-btn"><img src="/admin/images/ico_close.svg" alt="" width="10"></a>
+            <a href="javascript:;" class="delete-btn"><img src="/admin/images/ico_close_wht.svg" alt="" width="10"></a>
           </div>
         `;
 
