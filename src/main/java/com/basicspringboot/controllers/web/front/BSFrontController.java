@@ -199,6 +199,11 @@ public abstract class BSFrontController implements BSAdminControllerI {
         if(seo != null && !newDescription.isBlank()) seo.setDesc(newDescription);
     }
 
+    protected void setKeyword(String keyword) {
+        final SEO seo = getSeo();
+        if(seo != null) seo.setKeyword(keyword);
+    }
+
     protected void setSubtitle(String subtitle) {
         final ClientPage page_data = getClientPage();
         if(page_data != null) page_data.setSubtitle(subtitle);

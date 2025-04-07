@@ -39,7 +39,7 @@ public class FileService extends _BSService<FileModel> {
 
         final boolean result = insertMany(FileModel.class, cols, values.toArray()) > 0;
         if(result) {
-            final BSQuery bsq = new BSQuery(FileModel.class);
+            final BSQuery<FileModel> bsq = new BSQuery<>(FileModel.class);
             bsq.setOrderBy("f_idx DESC");
             bsq.setLimit(files.size());
             return findAll(bsq, FileModel::new);
@@ -49,7 +49,7 @@ public class FileService extends _BSService<FileModel> {
     }
 
     public FileModel findByIdx(Long idx) {
-        final BSQuery bsq = new BSQuery(FileModel.class);
+        final BSQuery<FileModel> bsq = new BSQuery<>(FileModel.class);
         bsq.setIdx(idx);
         return findOne(bsq, FileModel::new);
     }

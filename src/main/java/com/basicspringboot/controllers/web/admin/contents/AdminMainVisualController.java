@@ -21,10 +21,10 @@ import java.util.List;
 @RequestMapping("/admin/mainvisual")
 public class AdminMainVisualController extends BSAdminController {
 
-    private final String UPLOAD_DIR = "/mainvisual";
-    private final int MAX_SIZE = 1024*1024*10;
-    private final int THUMBNAIL_WIDTH = 200;
-    private final int THUMBNAIL_HEIGHT = 100;
+    private static final String UPLOAD_DIR = "/mainvisual";
+    private static final int MAX_SIZE = 1024*1024*10;
+    private static final int THUMBNAIL_WIDTH = 200;
+    private static final int THUMBNAIL_HEIGHT = 100;
 
     @Autowired
     private MainVisualService service;

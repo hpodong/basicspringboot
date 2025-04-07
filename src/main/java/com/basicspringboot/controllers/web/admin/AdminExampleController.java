@@ -63,6 +63,7 @@ public class AdminExampleController extends BSAdminController {
     @Override
     public ModelAndView insertProcess(ModelAndView mv, RedirectAttributes ra) {
         final Example data = new Example(request);
+
         if(service.insert(data)) {
             ra.addFlashAttribute("msg", "데이터가 등록되었습니다.");
             return super.insertProcess(mv, ra);
