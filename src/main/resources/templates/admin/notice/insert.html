@@ -84,19 +84,7 @@
 											<tr>
 												<th>첨부파일</th>
 												<td>
-													<div class="multiple-file-attach">
-														<div class="file-select-box">
-															<div>
-																<label for="fileAttach"
-																	   class="flex-box align-items-center justify-content-center">
-																	파일선택
-																</label>
-																<span class="file-caution-txt">선택된 파일이 없습니다.</span>
-															</div>
-															<input type="file" id="fileAttach" name="input_files" multiple data-max-count="10">
-														</div>
-														<div class="file-upload-area flex-box gap-5 flex-wrap"></div>
-													</div>
+													<input type="file" id="fileAttach" name="input_files">
 													<p class="mt5">10Mb (doc, docx, xls, xlsx, ppt, pptx, hwp, txt, pdf, jpg, jpeg, png, gif, bmp, tif 만 파일 등록가능)</p>
 												</td>
 											</tr>
@@ -140,7 +128,26 @@
 		focusElement: $("#desc").parent()
 	});
 
-	$("input[name='input_files']").addValidation({
+	$("input[name='input_files']")
+			.multifile({
+				max_size: 10,
+				max_length: 5,
+				allows: [
+					FileType.DOC,
+					FileType.DOCX,
+					FileType.XLS,
+					FileType.XLSX,
+					FileType.PPT,
+					FileType.PPTX,
+					FileType.HWP,
+					FileType.TXT,
+					FileType.PDF,
+					FileType.JPG,
+					FileType.JPEG,
+					FileType.PNG,
+				]
+			})
+			.addValidation({
 		regex: SGValidateType.FILE,
 		fileoptions: {
 			types: [

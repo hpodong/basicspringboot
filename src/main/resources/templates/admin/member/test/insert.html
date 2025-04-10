@@ -35,7 +35,7 @@
 												<th>상태값</th>
 												<td colspan="3">
 													<div th:each="status:${statuses}" class="radio_box">
-														<input th:value="${status.getValue()}" th:id="'status_'+${status}" type="radio" name="ex_status" th:checked="${status.name() eq 'ACTIVATED'}">
+														<input th:value="${status.getValue()}" th:id="'status_'+${status}" type="radio" name="t_status" th:checked="${status.name() eq 'ACTIVATED'}">
 														<label th:for="'status_'+${status}" th:text="${status.getName()}"></label>
 													</div>
 												</td>

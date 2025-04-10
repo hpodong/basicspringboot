@@ -2,6 +2,7 @@ package com.basicspringboot.controllers.web.admin;
 
 import com.basicspringboot.exceptions.*;
 import com.basicspringboot.interfaces.BSAdminControllerI;
+import com.basicspringboot.models._BSModel;
 import com.basicspringboot.models.admin.Admin;
 import com.basicspringboot.models.others.FileModel;
 import com.basicspringboot.services.others.FileService;
@@ -167,5 +168,15 @@ public abstract class BSAdminController implements BSAdminControllerI {
 
     public Long getLoggedAdminIdx() {
         return getLoggedAdmin().getIdx();
+    }
+
+    protected void createFiles(List<FileModel> files) {
+        this.createFiles(files, null, null);
+    }
+
+    protected void createFiles(List<FileModel> files, Integer width, Integer height) {
+        files.forEach(file -> {
+            if(file.create() && width != null && height != null) file.createThumbnail(width, height);
+        });
     }
 }

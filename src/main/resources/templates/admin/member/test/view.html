@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="kr" class="semi-dark">
+<head th:replace="~{admin/includes/head.html}">
+<body>
+<div id="bodyWrap">
+	<th:block th:insert="~{admin/includes/header.html}"/>
+	<!--start page wrapper -->
+	<div id="sub" class="notice-view-page">
+		<div class="sub_visual">
+			<div class="sub_tit">
+				<h2>
+					<th:block th:text="${cm.title}"></th:block>
+				</h2>
+			</div>
+		</div>
+		<div class="sec_wrap common-box">
+			<div class="section section1">
+				<div class="inner">
+					<div class="board">
+						<div class="tbl_area">
+							<div class="tbl_wrap tbl_wrap1">
+								<div class="tit_box">
+									<h3 class="sTit">등록정보</h3>
+								</div>
+								<div class="tbl_box tbl_box2">
+									<table class="row_line">
+										<caption>등록정보</caption>
+										<colgroup>
+											<col width="8.7%">
+											<col width="41.3%">
+											<col width="8.7%">
+											<col width="41.3%">
+										</colgroup>
+										<tbody>
+										<tr>
+											<th>등록일시</th>
+											<td th:text="${#dates.format(data.created_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+											<th>마지막 수정일</th>
+											<td th:text="${#dates.format(data.updated_at, 'yyyy-MM-dd HH:mm:ss')}"></td>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="tbl_wrap tbl_wrap1">
+								<div class="tit_box">
+									<h3 class="sTit">게시글 정보</h3>
+								</div>
+								<div class="tbl_box tbl_box2">
+									<table class="row_line">
+										<caption>게시글 정보</caption>
+										<colgroup>
+											<col width="8.7%">
+											<col width="*">
+										</colgroup>
+										<tbody>
+										<tr>
+											<th>제목</th>
+											<td th:text="'제목 영역'"></td>
+										</tr>
+										<tr>
+											<th>내용</th>
+											<td th:utext="'내용 영역'"></td>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="btnSet flex-box justify-content-between">
+                                        <input type="hidden" name="idx" th:value="${data.idx}">
+                                        <div class="left">
+                                            <a th:href="${cm.link}" class="btn gr wid80px">목록</a>
+                                        </div>
+                                        <div class="right">
+                                            <a th:href="${cm.link} + '/update?idx=' + ${data.idx}" class="btn gr wid80px">수정</a>
+                                        </div>
+                                    </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:insert="~{admin/includes/footer.html}"/>
+</div>
+<!--end wrapper-->
+<!--start switcher-->
+
+<script th:inline="javascript">
+	const idx = /*[[${data.idx}]]*/ null;
+
+	function deleteCheck (form) {
+		SGConfirm({
+			title: `데이터를 삭제하시겠습니까?`,
+			type: SGAlertType.WARNING,
+			onsuccess: function(res) {
+				if(res) form.submit();
+			}
+		});
+		return false;
+	}
+</script>
+</body>
+</html>

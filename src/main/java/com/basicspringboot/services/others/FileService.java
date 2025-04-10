@@ -1,6 +1,8 @@
 package com.basicspringboot.services.others;
 
+import com.basicspringboot.annotations.BSTable;
 import com.basicspringboot.dto.BSQuery;
+import com.basicspringboot.models._BSModel;
 import com.basicspringboot.models.others.FileModel;
 import com.basicspringboot.services._BSService;
 import lombok.Getter;

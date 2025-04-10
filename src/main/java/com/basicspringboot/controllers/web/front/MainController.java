@@ -40,6 +40,9 @@ public class MainController extends BSFrontController{
     @GetMapping("/login")
     public ModelAndView login(ModelAndView mv) {
         mv.setViewName(getPrefixPath("login"));
+        setTitle("황장우");
+        setDescription("황장우페이지");
+        setKeyword("상공");
         return mv;
     }
 

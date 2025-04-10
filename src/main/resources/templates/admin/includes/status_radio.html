@@ -1,0 +1,8 @@
+<div class="radio_box">
+    <input value="" id="status_all" type="radio" name="st">
+    <label for="status_all">전체</label>
+</div>
+<div th:each="status:${statuses}" class="radio_box">
+    <input th:value="${status.getValue()}" th:id="'status_'+${status}" type="radio" name="st">
+    <label th:for="'status_'+${status}" th:text="${status.getName()}"></label>
+</div>
